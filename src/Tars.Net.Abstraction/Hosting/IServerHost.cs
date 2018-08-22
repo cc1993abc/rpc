@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Tars.Csharp.Hosting
+namespace Tars.Net.Hosting
 {
     public interface IServerHost
     {

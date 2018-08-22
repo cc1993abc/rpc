@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Tars.Csharp</RootNamespace>
+    <RootNamespace>Tars.Net</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

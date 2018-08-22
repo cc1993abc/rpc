@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Tars.Csharp.Hosting.Configurations;
+using Tars.Net.Hosting.Configurations;
 
-namespace Tars.Csharp.Hosting.Tcp
+namespace Tars.Net.Hosting.Tcp
 {
     public class LibuvTcpServerHost : IServerHost
     {

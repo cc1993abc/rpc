@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Tars.Csharp.Hosting</RootNamespace>
+    <RootNamespace>Tars.Net.Hosting</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tars.Csharp.Core\Tars.Csharp.Core.csproj" />
+    <ProjectReference Include="..\Tars.Net.Core\Tars.Net.Core.csproj" />
   </ItemGroup>
 
 </Project>

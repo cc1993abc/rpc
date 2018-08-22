@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using Tars.Csharp.Hosting;
+using Tars.Net.Hosting;
 
 namespace Tcp
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tars.Csharp.Attributes
+namespace Tars.Net.Attributes
 {
     public class RpcAttribute : Attribute
     {

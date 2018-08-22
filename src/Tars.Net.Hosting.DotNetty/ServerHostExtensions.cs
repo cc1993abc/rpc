@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
-using Tars.Csharp.Hosting.Configurations;
-using Tars.Csharp.Hosting.Tcp;
+using Tars.Net.Hosting.Configurations;
+using Tars.Net.Hosting.Tcp;
 
-namespace Tars.Csharp.Hosting
+namespace Tars.Net.Hosting
 {
     public static class ServerHostExtensions
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Tars.Csharp</RootNamespace>
+    <RootNamespace>Tars.Net</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tars.Csharp.Abstraction\Tars.Csharp.Abstraction.csproj" />
+    <ProjectReference Include="..\Tars.Net.Abstraction\Tars.Net.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Tars.Csharp.Hosting.DotNetty\Tars.Csharp.Hosting.DotNetty.csproj" />
+    <ProjectReference Include="..\..\src\Tars.Net.Hosting.DotNetty\Tars.Net.Hosting.DotNetty.csproj" />
   </ItemGroup>
 
   <ItemGroup>

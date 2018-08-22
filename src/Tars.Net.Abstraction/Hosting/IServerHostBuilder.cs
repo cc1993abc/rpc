@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Tars.Csharp.Hosting
+namespace Tars.Net.Hosting
 {
     public interface IServerHostBuilder
     {

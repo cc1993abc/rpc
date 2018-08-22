@@ -7,15 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1DF558DF-E7D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{78DADB7E-7D72-4D78-AF92-DE7841E38582}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tars.Csharp.Abstraction", "src\Tars.Csharp.Abstraction\Tars.Csharp.Abstraction.csproj", "{BA370C5F-117E-4B11-B15F-07983E829779}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tars.Net.Abstraction", "src\Tars.Net.Abstraction\Tars.Net.Abstraction.csproj", "{BA370C5F-117E-4B11-B15F-07983E829779}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tars.Csharp.Hosting.DotNetty", "src\Tars.Csharp.Hosting.DotNetty\Tars.Csharp.Hosting.DotNetty.csproj", "{A502AC58-E5F6-40F8-B6CC-198BB1A15632}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tars.Net.Hosting.DotNetty", "src\Tars.Net.Hosting.DotNetty\Tars.Net.Hosting.DotNetty.csproj", "{A502AC58-E5F6-40F8-B6CC-198BB1A15632}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "exapmles", "exapmles", "{6F29A37C-9052-4BEE-AFAC-5B16667D0633}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tcp", "exapmles\Tcp\Tcp.csproj", "{EAE9F81C-EB21-4A0D-8995-E2BE15D9BA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tars.Csharp.Core", "src\Tars.Csharp.Core\Tars.Csharp.Core.csproj", "{7F527B31-3623-4818-ADA2-80EE0066EC19}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tars.Net.Core", "src\Tars.Net.Core\Tars.Net.Core.csproj", "{7F527B31-3623-4818-ADA2-80EE0066EC19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

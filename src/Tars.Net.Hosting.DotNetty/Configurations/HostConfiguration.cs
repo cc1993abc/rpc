@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Tars.Csharp.Hosting.Configurations
+namespace Tars.Net.Hosting.Configurations
 {
     public class HostConfiguration
     {
