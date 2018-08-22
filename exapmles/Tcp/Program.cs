@@ -16,6 +16,7 @@ namespace Tcp
                 .AddHostConfiguration()
                 .ConfigureLog(i => i.AddConsole())
                 .UseLibuvTcp()
+                .ReigsterRpc()
                 .Build();
 
             await host.RunAsync(async () => 
