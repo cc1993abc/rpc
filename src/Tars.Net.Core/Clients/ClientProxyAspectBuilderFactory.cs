@@ -8,11 +8,11 @@ namespace Tars.Net.Clients.Proxy
     public class ClientProxyAspectBuilderFactory : IAspectBuilderFactory
     {
         private readonly IInterceptorCollector interceptorCollector;
-        private readonly IRpcClientInvokeBuilder invokeBuilder;
+        private readonly IRpcClientFactory clientFactory;
         private readonly IAspectCaching aspectCaching;
 
         public ClientProxyAspectBuilderFactory(IInterceptorCollector interceptorCollector,
-            IAspectCachingProvider aspectCachingProvider, IRpcClientInvokeBuilder invokeBuilder)
+            IAspectCachingProvider aspectCachingProvider, IRpcClientFactory clientFactory)
         {
             if (aspectCachingProvider == null)
             {
@@ -20,7 +20,7 @@ namespace Tars.Net.Clients.Proxy
             }
             this.interceptorCollector =
                 interceptorCollector ?? throw new ArgumentNullException(nameof(interceptorCollector));
-            this.invokeBuilder = invokeBuilder;
+            this.clientFactory = clientFactory;
             aspectCaching = aspectCachingProvider.GetAspectCaching(nameof(ClientProxyAspectBuilderFactory));
         }
 
@@ -41,7 +41,8 @@ namespace Tars.Net.Clients.Proxy
         private IAspectBuilder Create(Tuple<MethodInfo, MethodInfo> tuple)
         {
             var aspectBuilder = new AspectBuilder(context => context.Complete(), null);
-            aspectBuilder.AddAspectDelegate(invokeBuilder.Build(tuple.Item2));
+            var invoker = clientFactory.GetClientInvoker(tuple.Item2);
+            aspectBuilder.AddAspectDelegate(async (context, next) => await invoker.InvokeAsync(context));
             foreach (var interceptor in interceptorCollector.Collect(tuple.Item1, tuple.Item2))
             {
                 aspectBuilder.AddAspectDelegate(interceptor.Invoke);

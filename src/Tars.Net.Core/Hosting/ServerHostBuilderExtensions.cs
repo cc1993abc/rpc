@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Tars.Net.Attributes;
+using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
 
 namespace Tars.Net.Hosting
@@ -15,7 +16,8 @@ namespace Tars.Net.Hosting
         private static void ReigsterRpcDep(IServiceCollection services)
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
-            services.TryAddSingleton<IRpcClientInvokeBuilder, RpcClientInvokeBuilder>();
+            services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
+            services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
         }
 
         public static IServerHostBuilder ReigsterRpc(this IServerHostBuilder builder, params Assembly[] assemblies)
