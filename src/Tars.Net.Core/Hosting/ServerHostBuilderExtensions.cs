@@ -1,5 +1,4 @@
-﻿using AspectCore.DynamicProxy;
-using AspectCore.Extensions.Reflection;
+﻿using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -7,17 +6,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Tars.Net.Attributes;
+using Tars.Net.Clients.Proxy;
 
 namespace Tars.Net.Hosting
 {
     public static class ServerHostBuilderExtensions
     {
+        private static void ReigsterRpcDep(IServiceCollection services)
+        {
+            services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
+            services.TryAddSingleton<IRpcClientInvokeBuilder, RpcClientInvokeBuilder>();
+        }
+
         public static IServerHostBuilder ReigsterRpc(this IServerHostBuilder builder, params Assembly[] assemblies)
         {
             var all = GetAllHasAttributeTypes<RpcAttribute>();
             var (RpcServices, RpcClients) = GetAllRpcServicesAndClients(all);
             return builder.ConfigureServices(i =>
             {
+                ReigsterRpcDep(i);
                 foreach (var (Service, Implementation) in RpcServices)
                 {
                     i.TryAddSingleton(Service.GetMemberInfo().AsType(), Implementation.GetMemberInfo().AsType());
@@ -28,9 +35,7 @@ namespace Tars.Net.Hosting
                     var type = client.GetMemberInfo().AsType();
                     i.AddSingleton(type, j =>
                     {
-                        var t = j.GetRequiredService<IProxyTypeGenerator>().CreateInterfaceProxyType(type);
-                        return Activator.CreateInstance(t, null, null);
-                        //return Activator.CreateInstance(t, new TestAspectActivatorFactory(i.GetRequiredService<IAspectContextFactory>(), i.GetRequiredService<IAspectBuilderFactory>()));
+                        return j.GetRequiredService<IClientProxyCreater>().Create(type);
                     });
                 }
             });
