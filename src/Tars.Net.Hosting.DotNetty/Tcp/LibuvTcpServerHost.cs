@@ -48,9 +48,7 @@ namespace Tars.Net.Hosting.Tcp
                    .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                    {
                        IChannelPipeline pipeline = channel.Pipeline;
-                       //pipeline.AddLast(new HttpServerCodec());
-                       //pipeline.AddLast(new HttpObjectAggregator(65536));
-                       //pipeline.AddLast(new WebSocketServerHandler());
+                       //ToDo: 设置编码和解码
                    }));
                 IChannel bootstrapChannel = await bootstrap.BindAsync(configuration.IPAddress, configuration.Port);
                 logger.LogInformation($"Server start at {configuration.Ip}:{configuration.Port}.");
