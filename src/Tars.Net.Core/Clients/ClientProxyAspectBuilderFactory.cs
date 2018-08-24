@@ -8,11 +8,11 @@ namespace Tars.Net.Clients.Proxy
     public class ClientProxyAspectBuilderFactory : IAspectBuilderFactory
     {
         private readonly IInterceptorCollector interceptorCollector;
-        private readonly IRpcClientFactory clientFactory;
+        private readonly IRpcClientInvokerFactory clientFactory;
         private readonly IAspectCaching aspectCaching;
 
         public ClientProxyAspectBuilderFactory(IInterceptorCollector interceptorCollector,
-            IAspectCachingProvider aspectCachingProvider, IRpcClientFactory clientFactory)
+            IAspectCachingProvider aspectCachingProvider, IRpcClientInvokerFactory clientFactory)
         {
             if (aspectCachingProvider == null)
             {
@@ -41,8 +41,7 @@ namespace Tars.Net.Clients.Proxy
         private IAspectBuilder Create(Tuple<MethodInfo, MethodInfo> tuple)
         {
             var aspectBuilder = new AspectBuilder(context => context.Complete(), null);
-            var invoker = clientFactory.GetClientInvoker(tuple.Item2);
-            aspectBuilder.AddAspectDelegate(async (context, next) => await invoker.InvokeAsync(context));
+            aspectBuilder.AddAspectDelegate(clientFactory.GetClientInvoker(tuple.Item1));
             foreach (var interceptor in interceptorCollector.Collect(tuple.Item1, tuple.Item2))
             {
                 aspectBuilder.AddAspectDelegate(interceptor.Invoke);

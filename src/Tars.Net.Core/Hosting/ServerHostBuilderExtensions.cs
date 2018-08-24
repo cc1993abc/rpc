@@ -16,7 +16,6 @@ namespace Tars.Net.Hosting
         private static void ReigsterRpcDep(IServiceCollection services)
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
-            services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
         }
 
@@ -29,21 +28,22 @@ namespace Tars.Net.Hosting
                 ReigsterRpcDep(i);
                 foreach (var (Service, Implementation) in RpcServices)
                 {
-                    i.TryAddSingleton(Service.GetMemberInfo().AsType(), Implementation.GetMemberInfo().AsType());
+                    i.TryAddSingleton(Service.GetReflector().GetMemberInfo().AsType(), Implementation.GetReflector().GetMemberInfo().AsType());
                 }
 
                 foreach (var client in RpcClients)
                 {
-                    var type = client.GetMemberInfo().AsType();
+                    var type = client.GetReflector().GetMemberInfo().AsType();
                     i.AddSingleton(type, j =>
                     {
                         return j.GetRequiredService<IClientProxyCreater>().Create(type);
                     });
                 }
+                i.TryAddSingleton<IRpcClientInvokerFactory>(new RpcClientInvokerFactory(RpcClients));
             });
         }
 
-        public static IEnumerable<(TypeReflector Service, TypeReflector Implementation)> GetAllHasAttributeTypes<Attribute>()
+        public static IEnumerable<(Type Service, Type Implementation)> GetAllHasAttributeTypes<Attribute>()
         {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
@@ -62,23 +62,22 @@ namespace Tars.Net.Hosting
                 {
                     var reflector = i.GetReflector();
                     var services = i.GetInterfaces()
-                    .Select(j => j.GetReflector())
-                    .Where(j => j.IsDefined<RpcAttribute>())
-                    .Select(j => (Service: j, Implementation: reflector));
+                    .Where(j => j.GetReflector().IsDefined<RpcAttribute>())
+                    .Select(j => (Service: j, Implementation: i));
                     return i.IsInterface && reflector.IsDefined<RpcAttribute>()
-                        ? services.Union(new (TypeReflector Service, TypeReflector Implementation)[1] { (Service: reflector, Implementation: null) })
+                        ? services.Union(new (Type Service, Type Implementation)[1] { (Service: i, Implementation: null) })
                         : services;
                 })
                 .Distinct();
         }
 
-        public static (IEnumerable<(TypeReflector Service, TypeReflector Implementation)> RpcServices, IEnumerable<TypeReflector> RpcClients)
-            GetAllRpcServicesAndClients(IEnumerable<(TypeReflector Service, TypeReflector Implementation)> services)
+        public static (IEnumerable<(Type Service, Type Implementation)> RpcServices, IEnumerable<Type> RpcClients)
+            GetAllRpcServicesAndClients(IEnumerable<(Type Service, Type Implementation)> services)
         {
             var groups = services.GroupBy(i => i.Service)
                 .ToArray();
-            var clients = new List<TypeReflector>();
-            var rpcServices = new List<(TypeReflector Service, TypeReflector Implementation)>();
+            var clients = new List<Type>();
+            var rpcServices = new List<(Type Service, Type Implementation)>();
             foreach (var group in groups)
             {
                 foreach (var kv in group)
@@ -87,7 +86,7 @@ namespace Tars.Net.Hosting
                     {
                         clients.Add(kv.Service);
                     }
-                    else if (kv.Implementation.GetMemberInfo().IsClass)
+                    else if (kv.Implementation.GetReflector().GetMemberInfo().IsClass)
                     {
                         rpcServices.Add(kv);
                     }

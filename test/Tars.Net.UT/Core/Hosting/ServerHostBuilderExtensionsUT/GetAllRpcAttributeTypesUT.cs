@@ -1,4 +1,4 @@
-﻿using AspectCore.Extensions.Reflection;
+﻿using System;
 using System.Linq;
 using Tars.Net.Attributes;
 using Tars.Net.Hosting;
@@ -17,12 +17,12 @@ namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT1
 
 namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT
 {
-    [Rpc]
+    [Rpc("")]
     public interface ITestAttributeTypeScan
     {
     }
 
-    [Rpc]
+    [Rpc("")]
     public interface ITestRpcInterface : ITestAttributeTypeScan
     {
     }
@@ -33,7 +33,7 @@ namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT
 
     public class GetAllRpcAttributeTypesUT
     {
-        private (TypeReflector Service, TypeReflector Implementation)[] result;
+        private (Type Service, Type Implementation)[] result;
 
         public GetAllRpcAttributeTypesUT()
         {
@@ -70,8 +70,8 @@ namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT
 
     public class GetAllRpcServicesAndClientsUT
     {
-        private TypeReflector[] clients;
-        private (TypeReflector Service, TypeReflector Implementation)[] services;
+        private Type[] clients;
+        private (Type Service, Type Implementation)[] services;
 
         public GetAllRpcServicesAndClientsUT()
         {
