@@ -33,7 +33,8 @@ namespace Tars.Net.Clients
                     dictionary.Add(method, async (context, next) =>
                     {
                         var rpc = context.ServiceProvider.GetRequiredService<IRpcClient>();
-                        context.ReturnValue = await rpc.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway, attribute.Codec, context.Parameters);
+                        context.ReturnValue = await rpc.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway, 
+                            attribute.Codec, attribute.Timeout, context.Parameters);
                     });
                 }
             }

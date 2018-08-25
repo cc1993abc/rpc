@@ -17,6 +17,7 @@ namespace Tars.Net.Hosting
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
+            services.TryAddSingleton<IRpcClient, RpcClient>();
         }
 
         public static IServerHostBuilder ReigsterRpc(this IServerHostBuilder builder, params Assembly[] assemblies)

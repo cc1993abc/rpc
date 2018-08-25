@@ -6,6 +6,6 @@ namespace Tars.Net.Clients
 {
     public interface IRpcClient
     {
-        Task<object> SendAsync(string servantName, string name, ParameterInfo[] outParameters, bool isOneway, Codec codec, object[] parameters);
+        Task<object> SendAsync(string servantName, string name, ParameterInfo[] outParameters, bool isOneway, Codec codec, int timeout, object[] parameters);
     }
 }
