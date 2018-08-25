@@ -20,5 +20,9 @@ namespace Tars.Net.Hosting.Configurations
         public TimeSpan ShutdownTimeoutTimeSpan => TimeSpan.FromSeconds(ShutdownTimeoutSeconds);
 
         public int SoBacklog { get; set; } = 8192;
+
+        public int MaxFrameLength { get; set; } = 100 * 1024 * 1024;
+
+        public int LengthFieldLength { get; set; } = 4;
     }
 }

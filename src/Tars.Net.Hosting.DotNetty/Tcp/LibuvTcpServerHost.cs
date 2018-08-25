@@ -1,10 +1,13 @@
-﻿using DotNetty.Transport.Bootstrapping;
+﻿using DotNetty.Buffers;
+using DotNetty.Codecs;
+using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Libuv;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Tars.Net.Codecs;
 using Tars.Net.Hosting.Configurations;
 
 namespace Tars.Net.Hosting.Tcp
@@ -15,14 +18,22 @@ namespace Tars.Net.Hosting.Tcp
 
         private readonly HostConfiguration configuration;
         private readonly ILogger<LibuvTcpServerHost> logger;
+        private readonly RequestDecoder decoder;
+        private readonly ResponseEncoder encoder;
+        private readonly ServerHandler handler;
         private DispatcherEventLoopGroup bossGroup;
         private WorkerEventLoopGroup workerGroup;
 
-        public LibuvTcpServerHost(IServiceProvider provider, HostConfiguration configuration, ILogger<LibuvTcpServerHost> logger)
+        public LibuvTcpServerHost(IServiceProvider provider, HostConfiguration configuration,
+            ILogger<LibuvTcpServerHost> logger, RequestDecoder decoder, ResponseEncoder encoder,
+            ServerHandler handler)
         {
             Provider = provider;
             this.configuration = configuration;
             this.logger = logger;
+            this.decoder = decoder;
+            this.encoder = encoder;
+            this.handler = handler;
         }
 
         public async Task RunAsync(Func<Task> stopFunc)
@@ -48,7 +59,11 @@ namespace Tars.Net.Hosting.Tcp
                    .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                    {
                        IChannelPipeline pipeline = channel.Pipeline;
-                       //ToDo: 设置编码和解码
+                       pipeline.AddLast(new TcpHandler());
+                       var lengthFieldLength = configuration.LengthFieldLength;
+                       pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
+                            configuration.MaxFrameLength, 0, lengthFieldLength, -1 * lengthFieldLength, 0, true));
+                       pipeline.AddLast(decoder, encoder, handler);
                    }));
                 IChannel bootstrapChannel = await bootstrap.BindAsync(configuration.IPAddress, configuration.Port);
                 logger.LogInformation($"Server start at {configuration.Ip}:{configuration.Port}.");

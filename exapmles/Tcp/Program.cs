@@ -19,12 +19,12 @@ namespace Tcp
                 .ReigsterRpc()
                 .Build();
 
-            await host.RunAsync(async () =>
+            await host.RunAsync(() => Task.Run(() =>
                 {
                     var logger = host.Provider.GetRequiredService<ILogger<Program>>();
                     logger.LogInformation("Press any key to stop.");
                     Console.ReadLine();
-                });
+                }));
         }
     }
 }

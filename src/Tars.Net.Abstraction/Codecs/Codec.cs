@@ -1,4 +1,4 @@
-﻿namespace Tars.Net
+﻿namespace Tars.Net.Codecs
 {
     public enum Codec
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Tars.Net.Codecs;
 
 namespace Tars.Net.Attributes
 {

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
+using Tars.Net.Codecs;
 
 namespace Tars.Net.Clients
 {
