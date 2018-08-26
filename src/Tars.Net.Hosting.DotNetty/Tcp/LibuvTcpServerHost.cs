@@ -3,12 +3,14 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Libuv;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Tars.Net.Clients;
 using Tars.Net.Codecs;
-using Tars.Net.Hosting.Configurations;
+using Tars.Net.Configurations;
 
 namespace Tars.Net.Hosting.Tcp
 {
@@ -16,7 +18,7 @@ namespace Tars.Net.Hosting.Tcp
     {
         public IServiceProvider Provider { get; }
 
-        private readonly HostConfiguration configuration;
+        private readonly RpcConfiguration configuration;
         private readonly ILogger<LibuvTcpServerHost> logger;
         private readonly RequestDecoder decoder;
         private readonly ResponseEncoder encoder;
@@ -24,7 +26,7 @@ namespace Tars.Net.Hosting.Tcp
         private DispatcherEventLoopGroup bossGroup;
         private WorkerEventLoopGroup workerGroup;
 
-        public LibuvTcpServerHost(IServiceProvider provider, HostConfiguration configuration,
+        public LibuvTcpServerHost(IServiceProvider provider, RpcConfiguration configuration,
             ILogger<LibuvTcpServerHost> logger, RequestDecoder decoder, ResponseEncoder encoder,
             ServerHandlerBase handler)
         {
@@ -80,6 +82,10 @@ namespace Tars.Net.Hosting.Tcp
                 var shutdownTimeout = configuration.ShutdownTimeoutTimeSpan;
                 await workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
                 await bossGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
+                foreach (var item in Provider.GetServices<IRpcClient>())
+                {
+                    await item.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
+                }
             }
         }
     }

@@ -12,10 +12,19 @@ namespace Tcp
         private static async Task Main(string[] args)
         {
             var host = new ServerHostBuilder()
+                .ConfigureServices(i =>
+                {
+                    //todo: add Decoder and Encoder
+                    //services.TryAddSingleton<RequestDecoder, >();
+                    //services.TryAddSingleton<RequestEncoder, >();
+                    //services.TryAddSingleton<ResponseDecoder, >();
+                    //services.TryAddSingleton<ResponseEncoder, >();
+                    i.AddLibuvTcpClient();
+                })
                 .ConfigureConfiguration(i => i.AddJsonFile("app.json"))
                 .AddHostConfiguration()
                 .ConfigureLog(i => i.AddConsole())
-                .UseLibuvTcp()
+                .UseLibuvTcpHost()
                 .ReigsterRpc()
                 .Build();
 

@@ -17,5 +17,7 @@ namespace Tars.Net.Codecs
         }
 
         public abstract Request DecodeRequest(IByteBuffer input);
+
+        public abstract void DecodeRequestContent(Request req);
     }
 }

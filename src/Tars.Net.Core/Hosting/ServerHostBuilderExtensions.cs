@@ -8,6 +8,7 @@ using System.Reflection;
 using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
+using Tars.Net.Codecs;
 
 namespace Tars.Net.Hosting
 {
@@ -19,9 +20,6 @@ namespace Tars.Net.Hosting
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
             services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             services.TryAddSingleton<ServerHandlerBase, ServerHandler>();
-            //todo: add Decoder and Encoder
-            //services.TryAddSingleton<RequestDecoder, >();
-            //services.TryAddSingleton<ResponseEncoder, >();
         }
 
         public static IServerHostBuilder ReigsterRpc(this IServerHostBuilder builder, params Assembly[] assemblies)
@@ -35,6 +33,7 @@ namespace Tars.Net.Hosting
                 {
                     i.TryAddSingleton(service.GetReflector().GetMemberInfo().AsType(), implementation.GetReflector().GetMemberInfo().AsType());
                 }
+                i.TryAddSingleton<IServerInvoker>(j => new ServerInvoker(rpcServices, j, j.GetRequiredService<RequestDecoder>()));
 
                 foreach (var client in rpcClients)
                 {

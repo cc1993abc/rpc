@@ -26,7 +26,6 @@ namespace Tars.Net.Clients
             foreach (var item in rpcClients)
             {
                 var attribute = item.GetCustomAttribute<RpcAttribute>();
-                var codec = item.GetCustomAttribute<RpcAttribute>();
                 foreach (var method in item.GetMethods(BindingFlags.Public | BindingFlags.Instance))
                 {
                     var isOneway = method.GetReflector().IsDefined<OnewayAttribute>();

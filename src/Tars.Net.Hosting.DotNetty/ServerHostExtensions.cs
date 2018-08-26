@@ -3,14 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
-using Tars.Net.Hosting.Configurations;
+using Tars.Net.Configurations;
 using Tars.Net.Hosting.Tcp;
 
 namespace Tars.Net.Hosting
 {
     public static class ServerHostExtensions
     {
-        public static IServerHostBuilder UseLibuvTcp(this IServerHostBuilder builder)
+        public static IServerHostBuilder UseLibuvTcpHost(this IServerHostBuilder builder)
         {
             return builder.ConfigureServices(i =>
             {
@@ -24,7 +24,7 @@ namespace Tars.Net.Hosting
             {
                 i.TryAddSingleton(j =>
                 {
-                    HostConfiguration config = new HostConfiguration();
+                    var config = new RpcConfiguration();
                     j.GetRequiredService<IConfiguration>().Bind(key, config);
                     return config;
                 });

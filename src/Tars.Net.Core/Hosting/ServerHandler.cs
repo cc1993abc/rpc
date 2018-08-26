@@ -25,9 +25,10 @@ namespace Tars.Net.Hosting
                 }
                 else
                 {
-                    var (returnValue, returnParameters) = serverInvoker.Invoke(msg);
+                    var (returnValue, returnParameters, codec) = serverInvoker.Invoke(msg);
                     response.ReturnValue = returnValue;
                     response.ReturnParameters = returnParameters;
+                    response.Codec = codec;
                 }
             }
             catch (TarsException ex)

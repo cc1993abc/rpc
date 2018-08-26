@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 
-namespace Tars.Net.Hosting.Configurations
+namespace Tars.Net.Configurations
 {
-    public class HostConfiguration
+    public class RpcConfiguration
     {
         public string Ip { get; set; } = "127.0.0.1";
 
@@ -24,5 +25,7 @@ namespace Tars.Net.Hosting.Configurations
         public int MaxFrameLength { get; set; } = 100 * 1024 * 1024;
 
         public int LengthFieldLength { get; set; } = 4;
+
+        public IDictionary<string, ClientConfiguration> ClientConfig { get; set; } = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase);
     }
 }

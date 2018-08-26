@@ -5,6 +5,6 @@ namespace Tars.Net.Codecs
 {
     public abstract class RequestEncoder
     {
-        public abstract IByteBuffer Encode(Request req, Codec codec);
+        public abstract IByteBuffer Encode(Request req);
     }
 }

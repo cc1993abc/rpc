@@ -1,6 +1,7 @@
 ﻿using DotNetty.Buffers;
 using System;
 using System.Collections.Generic;
+using Tars.Net.Codecs;
 
 namespace Tars.Net.Metadata
 {
@@ -31,6 +32,8 @@ namespace Tars.Net.Metadata
         #endregion Packet
 
         public object[] Parameters { get; set; }
+
+        public Codec Codec { get; set; }
 
         public Response CreateResponse()
         {
