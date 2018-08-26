@@ -1,11 +1,13 @@
-﻿using System.Reflection;
+﻿using DotNetty.Buffers;
 using System.Threading.Tasks;
-using Tars.Net.Codecs;
+using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
 {
     public interface IRpcClient
     {
-        Task<object> SendAsync(string servantName, string name, ParameterInfo[] outParameters, bool isOneway, Codec codec, int timeout, object[] parameters);
+        RpcProtocol Protocol { get; }
+
+        Task SendAsync(IByteBuffer request);
     }
 }

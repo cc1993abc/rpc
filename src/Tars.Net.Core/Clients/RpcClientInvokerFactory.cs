@@ -13,10 +13,12 @@ namespace Tars.Net.Clients
     public class RpcClientInvokerFactory : IRpcClientInvokerFactory
     {
         private readonly IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> invokers;
+        private readonly IRpcClientFactory clientFactory;
 
-        public RpcClientInvokerFactory(IEnumerable<Type> rpcClients)
+        public RpcClientInvokerFactory(IEnumerable<Type> rpcClients, IRpcClientFactory clientFactory)
         {
             invokers = CreateRpcClientInvokers(rpcClients);
+            this.clientFactory = clientFactory;
         }
 
         public IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> CreateRpcClientInvokers(IEnumerable<Type> rpcClients)
@@ -32,8 +34,7 @@ namespace Tars.Net.Clients
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
-                        var rpc = context.ServiceProvider.GetRequiredService<IRpcClient>();
-                        context.ReturnValue = await rpc.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway, 
+                        context.ReturnValue = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway, 
                             attribute.Codec, attribute.Timeout, context.Parameters);
                     });
                 }

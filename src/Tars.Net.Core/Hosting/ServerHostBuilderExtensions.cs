@@ -8,6 +8,7 @@ using System.Reflection;
 using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
+using Tars.Net.Codecs;
 
 namespace Tars.Net.Hosting
 {
@@ -17,22 +18,26 @@ namespace Tars.Net.Hosting
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
-            services.TryAddSingleton<IRpcClient, RpcClient>();
+            services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
+            services.TryAddSingleton<ServerHandlerBase, ServerHandler>();
+            //todo: add Decoder and Encoder
+            //services.TryAddSingleton<RequestDecoder, >();
+            //services.TryAddSingleton<ResponseEncoder, >();
         }
 
         public static IServerHostBuilder ReigsterRpc(this IServerHostBuilder builder, params Assembly[] assemblies)
         {
             var all = GetAllHasAttributeTypes<RpcAttribute>();
-            var (RpcServices, RpcClients) = GetAllRpcServicesAndClients(all);
+            var (rpcServices, rpcClients) = GetAllRpcServicesAndClients(all);
             return builder.ConfigureServices(i =>
             {
                 ReigsterRpcDep(i);
-                foreach (var (Service, Implementation) in RpcServices)
+                foreach (var (service, implementation) in rpcServices)
                 {
-                    i.TryAddSingleton(Service.GetReflector().GetMemberInfo().AsType(), Implementation.GetReflector().GetMemberInfo().AsType());
+                    i.TryAddSingleton(service.GetReflector().GetMemberInfo().AsType(), implementation.GetReflector().GetMemberInfo().AsType());
                 }
 
-                foreach (var client in RpcClients)
+                foreach (var client in rpcClients)
                 {
                     var type = client.GetReflector().GetMemberInfo().AsType();
                     i.AddSingleton(type, j =>
@@ -40,7 +45,7 @@ namespace Tars.Net.Hosting
                         return j.GetRequiredService<IClientProxyCreater>().Create(type);
                     });
                 }
-                i.TryAddSingleton<IRpcClientInvokerFactory>(new RpcClientInvokerFactory(RpcClients));
+                i.TryAddSingleton<IRpcClientInvokerFactory>(j => new RpcClientInvokerFactory(rpcClients, j.GetRequiredService<IRpcClientFactory>()));
             });
         }
 

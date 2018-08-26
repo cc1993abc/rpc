@@ -2,6 +2,7 @@
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using System.Collections.Generic;
+using Tars.Net.Metadata;
 
 namespace Tars.Net.Codecs
 {

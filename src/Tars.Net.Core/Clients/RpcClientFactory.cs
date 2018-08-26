@@ -1,34 +1,48 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Tars.Net.Codecs;
+using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
 {
-    public class RpcClient : IRpcClient
+    public class RpcClientFactory : IRpcClientFactory
     {
+        private readonly Task<object> completedTask = Task.FromResult<object>(null);
+        private readonly RequestEncoder encoder;
+        private readonly Dictionary<RpcProtocol, IRpcClient> clients;
+
         private ConcurrentDictionary<int, TaskCompletionSource<Response>> callBacks = new ConcurrentDictionary<int, TaskCompletionSource<Response>>();
         private int requestId = 0;
+
+        public RpcClientFactory(IEnumerable<IRpcClient> rpcClients, RequestEncoder encoder)
+        {
+            this.encoder = encoder;
+            clients = rpcClients.ToDictionary(i => i.Protocol);
+        }
 
         public async Task<object> SendAsync(string servantName, string funcName, ParameterInfo[] outParameters, bool isOneway, Codec codec, int timeout, object[] parameters)
         {
             var req = new Request()
             {
-                Id = NewRequestId(),
+                RequestId = NewRequestId(),
                 ServantName = servantName,
                 FuncName = funcName,
-                IsOneway = isOneway
+                Timeout = timeout,
+                Parameters = parameters
             };
-            await SendAsync(req);
+            await SendAsync(req, codec);
             if (isOneway)
             {
-                return Task.FromResult<object>(null);
+                return completedTask;
             }
             else
             {
-                var id = req.Id;
+                var id = req.RequestId;
                 var source = new TaskCompletionSource<Response>();
                 var tokenSource = new CancellationTokenSource();
                 tokenSource.Token.Register(() =>
@@ -40,7 +54,8 @@ namespace Tars.Net.Clients
                 tokenSource.CancelAfter(timeout);
                 return source.Task.ContinueWith(t =>
                 {
-                    var (returnValue, returnParameters) = DecodeResponse(t.Result);
+                    object returnValue = t.Result.ReturnValue;
+                    object[] returnParameters = t.Result.ReturnParameters;
                     if (returnParameters == null)
                     {
                         return returnValue;
@@ -61,13 +76,22 @@ namespace Tars.Net.Clients
             }
         }
 
-        private (object, object[]) DecodeResponse(Response result)
+        private async Task SendAsync(Request req, Codec codec)
         {
-            throw new NotImplementedException();
+            var protocol = GetProtocol(req);
+            if (clients.TryGetValue(protocol, out IRpcClient client))
+            {
+                await client.SendAsync(encoder.Encode(req, codec));
+            }
+            else
+            {
+                throw new NotSupportedException($"No find Rpc client which supported {Enum.GetName(typeof(RpcProtocol), protocol)}");
+            }
         }
 
-        private Task SendAsync(Request req)
+        private RpcProtocol GetProtocol(Request req)
         {
+            // TODO : find rpc func use protocol
             throw new NotImplementedException();
         }
 
@@ -78,7 +102,7 @@ namespace Tars.Net.Clients
 
         public void SetResult(Response response)
         {
-            if (callBacks.TryRemove(response.Id, out TaskCompletionSource<Response> source))
+            if (callBacks.TryRemove(response.RequestId, out TaskCompletionSource<Response> source))
             {
                 source.SetResult(response);
             }
