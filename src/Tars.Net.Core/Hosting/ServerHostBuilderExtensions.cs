@@ -8,7 +8,6 @@ using System.Reflection;
 using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
-using Tars.Net.Codecs;
 
 namespace Tars.Net.Hosting
 {

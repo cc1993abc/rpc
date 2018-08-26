@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Exceptions

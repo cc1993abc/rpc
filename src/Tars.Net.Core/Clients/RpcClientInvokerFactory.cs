@@ -1,6 +1,5 @@
 ﻿using AspectCore.DynamicProxy;
 using AspectCore.Extensions.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace Tars.Net.Clients
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
-                        context.ReturnValue = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway, 
+                        context.ReturnValue = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway,
                             attribute.Codec, attribute.Timeout, context.Parameters);
                     });
                 }
