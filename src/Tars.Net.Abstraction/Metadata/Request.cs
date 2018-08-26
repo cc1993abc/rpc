@@ -35,6 +35,8 @@ namespace Tars.Net.Metadata
 
         public Codec Codec { get; set; }
 
+        public bool IsOneway { get; set; }
+
         public Response CreateResponse()
         {
             return new Response()

@@ -39,7 +39,8 @@ namespace Tars.Net.Clients
                 FuncName = funcName,
                 Timeout = timeout,
                 Parameters = parameters,
-                Codec = codec
+                Codec = codec,
+                IsOneway = isOneway
             };
             await SendAsync(req);
             if (isOneway)
