@@ -6,10 +6,6 @@ namespace Tars.Net.Configurations
 {
     public class RpcConfiguration
     {
-        public string Ip { get; set; } = "127.0.0.1";
-
-        public IPAddress IPAddress => IPAddress.Parse(Ip);
-
         public int Port { get; set; } = 8989;
 
         public int QuietPeriodSeconds { get; set; } = 1;

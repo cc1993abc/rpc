@@ -1,11 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Tars.Net.Clients;
+using Tars.Net.Codecs;
 using Tars.Net.Hosting;
+using TcpCommon;
 
-namespace Tcp
+namespace TcpServer
 {
     internal class Program
     {
@@ -15,17 +19,18 @@ namespace Tcp
                 .ConfigureServices(i =>
                 {
                     //todo: add Decoder and Encoder
-                    //services.TryAddSingleton<RequestDecoder, >();
-                    //services.TryAddSingleton<RequestEncoder, >();
-                    //services.TryAddSingleton<ResponseDecoder, >();
-                    //services.TryAddSingleton<ResponseEncoder, >();
+                    i.TryAddSingleton<RequestDecoder, TestRequestDecoder>();
+                    i.TryAddSingleton<RequestEncoder, TestRequestEncoder>();
+                    i.TryAddSingleton<ResponseDecoder, TestResponseDecoder>();
+                    i.TryAddSingleton<ResponseEncoder, TestResponseEncoder>();
                     i.AddLibuvTcpClient();
+                    i.ReigsterRpcClients();
+                    i.ReigsterRpcServices();
                 })
                 .ConfigureConfiguration(i => i.AddJsonFile("app.json"))
-                .AddHostConfiguration()
+                .AddConfiguration()
                 .ConfigureLog(i => i.AddConsole())
                 .UseLibuvTcpHost()
-                .ReigsterRpc()
                 .Build();
 
             await host.RunAsync(() => Task.Run(() =>

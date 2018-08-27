@@ -6,6 +6,7 @@ using DotNetty.Transport.Libuv;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Tars.Net.Clients;
@@ -67,8 +68,8 @@ namespace Tars.Net.Hosting.Tcp
                             configuration.MaxFrameLength, 0, lengthFieldLength, -1 * lengthFieldLength, 0, true));
                        pipeline.AddLast(decoder, encoder, handler);
                    }));
-                IChannel bootstrapChannel = await bootstrap.BindAsync(configuration.IPAddress, configuration.Port);
-                logger.LogInformation($"Server start at {configuration.Ip}:{configuration.Port}.");
+                IChannel bootstrapChannel = await bootstrap.BindAsync(configuration.Port);
+                logger.LogInformation($"Server start at {IPAddress.Any}:{configuration.Port}.");
                 await stopFunc();
                 await bootstrapChannel.CloseAsync();
             }

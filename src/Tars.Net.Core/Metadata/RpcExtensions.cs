@@ -9,42 +9,24 @@ using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
 using Tars.Net.Codecs;
+using Tars.Net.Hosting;
 
-namespace Tars.Net.Hosting
+namespace Tars.Net
 {
-    public static class ServerHostBuilderExtensions
+    public static class RpcExtensions
     {
-        private static void ReigsterRpcDep(IServiceCollection services)
+        public static IServiceCollection ReigsterRpcDep(this IServiceCollection services)
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
             services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             services.TryAddSingleton<ServerHandlerBase, ServerHandler>();
-        }
-
-        public static IServerHostBuilder ReigsterRpc(this IServerHostBuilder builder, params Assembly[] assemblies)
-        {
-            var all = GetAllHasAttributeTypes<RpcAttribute>();
-            var (rpcServices, rpcClients) = GetAllRpcServicesAndClients(all);
-            return builder.ConfigureServices(i =>
-            {
-                ReigsterRpcDep(i);
-                foreach (var (service, implementation) in rpcServices)
-                {
-                    i.TryAddSingleton(service.GetReflector().GetMemberInfo().AsType(), implementation.GetReflector().GetMemberInfo().AsType());
-                }
-                i.TryAddSingleton<IServerInvoker>(j => new ServerInvoker(rpcServices, j, j.GetRequiredService<RequestDecoder>()));
-
-                foreach (var client in rpcClients)
-                {
-                    var type = client.GetReflector().GetMemberInfo().AsType();
-                    i.AddSingleton(type, j =>
-                    {
-                        return j.GetRequiredService<IClientProxyCreater>().Create(type);
-                    });
-                }
-                i.TryAddSingleton<IRpcClientInvokerFactory>(j => new RpcClientInvokerFactory(rpcClients, j.GetRequiredService<IRpcClientFactory>()));
-            });
+            //todo: add Decoder and Encoder
+            //services.TryAddSingleton<RequestDecoder, TestRequestDecoder>();
+            //services.TryAddSingleton<RequestEncoder, TestRequestEncoder>();
+            //services.TryAddSingleton<ResponseDecoder, TestResponseDecoder>();
+            //services.TryAddSingleton<ResponseEncoder, TestResponseEncoder>();
+            return services;
         }
 
         public static IEnumerable<(Type Service, Type Implementation)> GetAllHasAttributeTypes<Attribute>()

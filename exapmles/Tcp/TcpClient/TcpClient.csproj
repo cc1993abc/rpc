@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Tars.Net.Hosting.DotNetty\Tars.Net.Hosting.DotNetty.csproj" />
+    <ProjectReference Include="..\..\..\src\Tars.Net.DotNetty\Tars.Net.DotNetty.csproj" />
+    <ProjectReference Include="..\TcpCommon\TcpCommon.csproj" />
   </ItemGroup>
 
   <ItemGroup>

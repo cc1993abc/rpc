@@ -2,10 +2,10 @@
 using System.Linq;
 using Tars.Net.Attributes;
 using Tars.Net.Hosting;
-using Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT;
+using Tars.Net.UT.Core.Hosting.RpcExtensionsUT;
 using Xunit;
 
-namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT1
+namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT1
 {
     public partial class TestPartialClass_AttributeTypeScan : ITestInherited_AttributeTypeScan
     {
@@ -15,7 +15,7 @@ namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT1
     { }
 }
 
-namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT
+namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 {
     [Rpc("")]
     public interface ITestAttributeTypeScan
@@ -37,7 +37,7 @@ namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT
 
         public GetAllRpcAttributeTypesUT()
         {
-            result = ServerHostBuilderExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
+            result = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
         }
 
         [Fact]
@@ -75,10 +75,10 @@ namespace Tars.Net.UT.Core.Hosting.ServerHostBuilderExtensionsUT
 
         public GetAllRpcServicesAndClientsUT()
         {
-            var all = ServerHostBuilderExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
-            var (RpcServices, RpcClients) = ServerHostBuilderExtensions.GetAllRpcServicesAndClients(all);
-            clients = RpcClients.ToArray();
-            services = RpcServices.ToArray();
+            var all = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
+            var (rpcServices, rpcClients) = RpcExtensions.GetAllRpcServicesAndClients(all);
+            clients = rpcClients.ToArray();
+            services = rpcServices.ToArray();
         }
 
         [Fact]

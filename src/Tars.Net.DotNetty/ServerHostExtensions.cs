@@ -18,7 +18,7 @@ namespace Tars.Net.Hosting
             });
         }
 
-        public static IServerHostBuilder AddHostConfiguration(this IServerHostBuilder builder, string key = "Host")
+        public static IServerHostBuilder AddConfiguration(this IServerHostBuilder builder, string key = "Host")
         {
             return builder.ConfigureServices(i =>
             {
