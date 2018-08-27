@@ -1,5 +1,4 @@
-﻿using AspectCore.DynamicProxy;
-using AspectCore.Extensions.DependencyInjection;
+﻿using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,8 +8,6 @@ using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
 using TcpCommon;
-using AspectCore.Extensions.Reflection;
-using Tars.Net.Attributes;
 
 namespace TcpClient
 {
@@ -22,10 +19,8 @@ namespace TcpClient
             {
                 var builder = new ConfigurationBuilder();
                 var service = new ServiceCollection()
-                    .AddSingleton<RequestDecoder, TestRequestDecoder>()
-                    .AddSingleton<RequestEncoder, TestRequestEncoder>()
-                    .AddSingleton<ResponseDecoder, TestResponseDecoder>()
-                    .AddSingleton<ResponseEncoder, TestResponseEncoder>()
+                    .AddSingleton<IDecoder, TestDecoder>()
+                    .AddSingleton<IEncoder, TestEncoder>()
                     .AddSingleton<IConfiguration>(i => builder.AddJsonFile("app.json").Build())
                     .AddLogging(j => j.AddConsole())
                     .AddConfiguration()
@@ -41,7 +36,7 @@ namespace TcpClient
             {
                 Console.WriteLine(ex);
             }
-            
+            //Console.ReadLine();
         }
     }
 }

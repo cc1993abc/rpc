@@ -5,6 +5,8 @@ namespace Tars.Net.Hosting
 {
     public abstract class ServerHandlerBase : SimpleChannelInboundHandler<Request>
     {
+        public override bool IsSharable => true;
+
         protected override void ChannelRead0(IChannelHandlerContext ctx, Request msg)
         {
             ctx.WriteAsync(Process(msg));

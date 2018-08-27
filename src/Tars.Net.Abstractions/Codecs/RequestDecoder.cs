@@ -2,22 +2,24 @@
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using System.Collections.Generic;
-using Tars.Net.Metadata;
 
 namespace Tars.Net.Codecs
 {
-    public abstract class RequestDecoder : ByteToMessageDecoder
+    public class RequestDecoder : ByteToMessageDecoder
     {
+        private readonly IDecoder decoder;
+
+        public RequestDecoder(IDecoder decoder)
+        {
+            this.decoder = decoder;
+        }
+
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
         {
             while (input.IsReadable())
             {
-                output.Add(DecodeRequest(input));
+                output.Add(decoder.DecodeRequest(input));
             }
         }
-
-        public abstract Request DecodeRequest(IByteBuffer input);
-
-        public abstract void DecodeRequestContent(Request req);
     }
 }

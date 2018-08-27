@@ -21,14 +21,14 @@ namespace Tars.Net.Hosting.Tcp
 
         private readonly RpcConfiguration configuration;
         private readonly ILogger<LibuvTcpServerHost> logger;
-        private readonly RequestDecoder decoder;
-        private readonly ResponseEncoder encoder;
+        private readonly IDecoder decoder;
+        private readonly IEncoder encoder;
         private readonly ServerHandlerBase handler;
         private DispatcherEventLoopGroup bossGroup;
         private WorkerEventLoopGroup workerGroup;
 
         public LibuvTcpServerHost(IServiceProvider provider, RpcConfiguration configuration,
-            ILogger<LibuvTcpServerHost> logger, RequestDecoder decoder, ResponseEncoder encoder,
+            ILogger<LibuvTcpServerHost> logger, IDecoder decoder, IEncoder encoder,
             ServerHandlerBase handler)
         {
             Provider = provider;
@@ -65,8 +65,8 @@ namespace Tars.Net.Hosting.Tcp
                        pipeline.AddLast(new TcpHandler());
                        var lengthFieldLength = configuration.LengthFieldLength;
                        pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
-                            configuration.MaxFrameLength, 0, lengthFieldLength, -1 * lengthFieldLength, 0, true));
-                       pipeline.AddLast(decoder, encoder, handler);
+                            configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
+                       pipeline.AddLast(new RequestDecoder(decoder), new LengthFieldPrepender(lengthFieldLength), new ResponseEncoder(encoder), handler);
                    }));
                 IChannel bootstrapChannel = await bootstrap.BindAsync(configuration.Port);
                 logger.LogInformation($"Server start at {IPAddress.Any}:{configuration.Port}.");

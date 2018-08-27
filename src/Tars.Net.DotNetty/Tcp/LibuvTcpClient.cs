@@ -18,11 +18,10 @@ namespace Tars.Net.Clients.Tcp
         private MultithreadEventLoopGroup group = new MultithreadEventLoopGroup();
         private Bootstrap bootstrap = new Bootstrap();
         private readonly ConcurrentDictionary<EndPoint, IChannel> channels = new ConcurrentDictionary<EndPoint, IChannel>();
-        private readonly ResponseDecoder decoder;
 
         public RpcProtocol Protocol => RpcProtocol.Tcp;
 
-        public LibuvTcpClient(RpcConfiguration configuration, ResponseDecoder decoder)
+        public LibuvTcpClient(RpcConfiguration configuration, IDecoder decoder)
         {
             bootstrap
                 .Group(group)
@@ -32,10 +31,9 @@ namespace Tars.Net.Clients.Tcp
                 {
                     var lengthFieldLength = configuration.LengthFieldLength;
                     channel.Pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
-                         configuration.MaxFrameLength, 0, lengthFieldLength, -1 * lengthFieldLength, 0, true));
-                    channel.Pipeline.AddLast(decoder);
+                         configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
+                    channel.Pipeline.AddLast(new ResponseDecoder(decoder), new LengthFieldPrepender(lengthFieldLength));
                 }));
-            this.decoder = decoder;
         }
 
         public async Task SendAsync(EndPoint endPoint, IByteBuffer request)

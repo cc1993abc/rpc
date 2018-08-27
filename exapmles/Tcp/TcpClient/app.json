@@ -6,7 +6,8 @@
     "ClientConfig": {
       "TestApp.HelloServer.HelloObj": {
         "Protocol": "Tcp",
-        "EndPoint": "localhost:8987"
+        "Host": "127.0.0.1",
+        "Port": 8987
       }
     }
   }

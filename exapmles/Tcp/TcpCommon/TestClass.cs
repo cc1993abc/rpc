@@ -6,41 +6,39 @@ using Tars.Net.Metadata;
 
 namespace TcpCommon
 {
-    public class TestRequestDecoder : RequestDecoder
+    public class TestDecoder : IDecoder
     {
-        public override Request DecodeRequest(IByteBuffer input)
+        public Request DecodeRequest(IByteBuffer input)
         {
-            return JsonConvert.DeserializeObject<Request>(input.GetString(0, input.ReadableBytes, Encoding.UTF8));
+            var result = JsonConvert.DeserializeObject<Request>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
+            input.MarkReaderIndex();
+            return result;
         }
 
-        public override void DecodeRequestContent(Request req)
+        public void DecodeRequestContent(Request req)
+        {
+        }
+
+        public Response DecodeResponse(IByteBuffer input)
+        {
+            var result = JsonConvert.DeserializeObject<Response>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
+            input.MarkReaderIndex();
+            return result;
+        }
+
+        public void DecodeResponseContent(Response resp)
         {
         }
     }
 
-    public class TestRequestEncoder : RequestEncoder
+    public class TestEncoder : IEncoder
     {
-        public override IByteBuffer Encode(Request req)
+        public IByteBuffer EncodeRequest(Request req)
         {
             return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req)));
         }
-    }
 
-    public class TestResponseDecoder : ResponseDecoder
-    {
-        public override Response DecodeResponse(IByteBuffer input)
-        {
-            return JsonConvert.DeserializeObject<Response>(input.GetString(0, input.ReadableBytes, Encoding.UTF8));
-        }
-
-        public override void DecodeResponseContent(Response resp)
-        {
-        }
-    }
-
-    public class TestResponseEncoder : ResponseEncoder
-    {
-        public override IByteBuffer EncodeResponse(Response message)
+        public IByteBuffer EncodeResponse(Response message)
         {
             return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
         }

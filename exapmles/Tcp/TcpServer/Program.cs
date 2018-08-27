@@ -20,10 +20,8 @@ namespace TcpServer
                 .ConfigureServices(i =>
                 {
                     //todo: add Decoder and Encoder
-                    i.TryAddSingleton<RequestDecoder, TestRequestDecoder>();
-                    i.TryAddSingleton<RequestEncoder, TestRequestEncoder>();
-                    i.TryAddSingleton<ResponseDecoder, TestResponseDecoder>();
-                    i.TryAddSingleton<ResponseEncoder, TestResponseEncoder>();
+                    i.TryAddSingleton<IDecoder, TestDecoder>();
+                    i.TryAddSingleton<IEncoder, TestEncoder>();
                     i.AddLibuvTcpClient();
                     i.ReigsterRpcClients();
                     i.ReigsterRpcServices();

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
+using Tars.Net.Exceptions;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
@@ -14,15 +15,15 @@ namespace Tars.Net.Clients
     public class RpcClientFactory : IRpcClientFactory
     {
         private readonly Task<object> completedTask = Task.FromResult<object>(null);
-        private readonly RequestEncoder encoder;
-        private readonly ResponseDecoder decoder;
+        private readonly IEncoder encoder;
+        private readonly IDecoder decoder;
         private readonly RpcConfiguration configuration;
         private readonly Dictionary<RpcProtocol, IRpcClient> clients;
 
         private ConcurrentDictionary<int, TaskCompletionSource<Response>> callBacks = new ConcurrentDictionary<int, TaskCompletionSource<Response>>();
         private int requestId = 0;
 
-        public RpcClientFactory(IEnumerable<IRpcClient> rpcClients, RequestEncoder encoder, ResponseDecoder decoder, RpcConfiguration configuration)
+        public RpcClientFactory(IEnumerable<IRpcClient> rpcClients, IEncoder encoder, IDecoder decoder, RpcConfiguration configuration)
         {
             this.encoder = encoder;
             this.decoder = decoder;
@@ -54,11 +55,11 @@ namespace Tars.Net.Clients
                 var tokenSource = new CancellationTokenSource();
                 tokenSource.Token.Register(() =>
                 {
-                    source.TrySetCanceled(tokenSource.Token);
+                    source.TrySetException(new TarsException(RpcStatusCode.AsyncCallTimeout, $"Call {servantName}.{funcName} timeout."));
                     callBacks.TryRemove(id, out TaskCompletionSource<Response> tSource);
                 });
                 callBacks.AddOrUpdate(id, source, (x, y) => source);
-                tokenSource.CancelAfter(timeout);
+                tokenSource.CancelAfter(timeout * 1000);
                 return source.Task.ContinueWith(t =>
                 {
                     t.Result.Codec = codec;
@@ -94,7 +95,7 @@ namespace Tars.Net.Clients
             }
             if (clients.TryGetValue(config.Protocol, out IRpcClient client))
             {
-                await client.SendAsync(config.EndPoint, encoder.Encode(req));
+                await client.SendAsync(config.EndPoint, encoder.EncodeRequest(req));
             }
             else
             {
