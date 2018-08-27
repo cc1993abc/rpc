@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Tars.Net.Abstraction\Tars.Net.Abstraction.csproj" />
+    <ProjectReference Include="..\..\src\Tars.Net.Abstractions\Tars.Net.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Tars.Net.Core\Tars.Net.Core.csproj" />
     <ProjectReference Include="..\..\src\Tars.Net.Hosting.DotNetty\Tars.Net.Hosting.DotNetty.csproj" />
   </ItemGroup>

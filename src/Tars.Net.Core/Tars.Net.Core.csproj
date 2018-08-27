@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tars.Net.Abstraction\Tars.Net.Abstraction.csproj" />
+    <ProjectReference Include="..\Tars.Net.Abstractions\Tars.Net.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
