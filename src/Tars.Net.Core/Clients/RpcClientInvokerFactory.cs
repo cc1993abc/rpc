@@ -32,6 +32,7 @@ namespace Tars.Net.Clients
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
+                        Console.WriteLine("TestAspectActivator");
                         context.ReturnValue = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway,
                             attribute.Codec, attribute.Timeout, context.Parameters);
                     });

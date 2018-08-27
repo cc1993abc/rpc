@@ -1,6 +1,8 @@
 ﻿using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Reflection;
 using Tars.Net.Attributes;
 using Tars.Net.Codecs;
@@ -11,7 +13,7 @@ namespace Tars.Net.Hosting
     {
         public static IServiceCollection ReigsterRpcServices(this IServiceCollection services, params Assembly[] assemblies)
         {
-            services.ReigsterRpcDep();
+            services.ReigsterRpcDependency();
             var all = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>();
             var (rpcServices, rpcClients) = RpcExtensions.GetAllRpcServicesAndClients(all);
             foreach (var (service, implementation) in rpcServices)
@@ -20,6 +22,11 @@ namespace Tars.Net.Hosting
             }
             services.TryAddSingleton<IServerInvoker>(j => new ServerInvoker(rpcServices, j, j.GetRequiredService<RequestDecoder>()));
             return services;
+        }
+
+        public static IServerHostBuilder ConfigureLog(this IServerHostBuilder builder, Action<ILoggingBuilder> configure)
+        {
+            return builder.ConfigureServices(i => i.AddLogging(configure));
         }
     }
 }

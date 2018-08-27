@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DotNetty.Buffers;
+using Newtonsoft.Json;
 using System.Text;
-using DotNetty.Buffers;
 using Tars.Net.Codecs;
 using Tars.Net.Metadata;
 
@@ -11,12 +10,11 @@ namespace TcpCommon
     {
         public override Request DecodeRequest(IByteBuffer input)
         {
-            throw new NotImplementedException();
+            return JsonConvert.DeserializeObject<Request>(input.GetString(0, input.ReadableBytes, Encoding.UTF8));
         }
 
         public override void DecodeRequestContent(Request req)
         {
-            throw new NotImplementedException();
         }
     }
 
@@ -24,7 +22,7 @@ namespace TcpCommon
     {
         public override IByteBuffer Encode(Request req)
         {
-            throw new NotImplementedException();
+            return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req)));
         }
     }
 
@@ -32,12 +30,11 @@ namespace TcpCommon
     {
         public override Response DecodeResponse(IByteBuffer input)
         {
-            throw new NotImplementedException();
+            return JsonConvert.DeserializeObject<Response>(input.GetString(0, input.ReadableBytes, Encoding.UTF8));
         }
 
         public override void DecodeResponseContent(Response resp)
         {
-            throw new NotImplementedException();
         }
     }
 
@@ -45,7 +42,7 @@ namespace TcpCommon
     {
         public override IByteBuffer EncodeResponse(Response message)
         {
-            throw new NotImplementedException();
+            return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
         }
     }
 }

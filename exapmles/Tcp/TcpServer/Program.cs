@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
+using Tars.Net.Configurations;
 using Tars.Net.Hosting;
 using TcpCommon;
 
@@ -26,9 +27,9 @@ namespace TcpServer
                     i.AddLibuvTcpClient();
                     i.ReigsterRpcClients();
                     i.ReigsterRpcServices();
+                    i.AddConfiguration();
                 })
                 .ConfigureConfiguration(i => i.AddJsonFile("app.json"))
-                .AddConfiguration()
                 .ConfigureLog(i => i.AddConsole())
                 .UseLibuvTcpHost()
                 .Build();

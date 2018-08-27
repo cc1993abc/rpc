@@ -4,18 +4,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
-using Tars.Net.Codecs;
 using Tars.Net.Hosting;
 
 namespace Tars.Net
 {
     public static class RpcExtensions
     {
-        public static IServiceCollection ReigsterRpcDep(this IServiceCollection services)
+        public static IServiceCollection ReigsterRpcDependency(this IServiceCollection services)
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();

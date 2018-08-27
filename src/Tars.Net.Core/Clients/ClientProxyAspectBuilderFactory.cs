@@ -41,7 +41,8 @@ namespace Tars.Net.Clients.Proxy
         private IAspectBuilder Create(Tuple<MethodInfo, MethodInfo> tuple)
         {
             var aspectBuilder = new AspectBuilder(context => context.Complete(), null);
-            aspectBuilder.AddAspectDelegate(clientFactory.GetClientInvoker(tuple.Item1));
+            var func = clientFactory.GetClientInvoker(tuple.Item1);
+            aspectBuilder.AddAspectDelegate(func);
             foreach (var interceptor in interceptorCollector.Collect(tuple.Item1, tuple.Item2))
             {
                 aspectBuilder.AddAspectDelegate(interceptor.Invoke);

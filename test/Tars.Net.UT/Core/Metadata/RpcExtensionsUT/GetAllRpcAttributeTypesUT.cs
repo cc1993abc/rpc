@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Tars.Net.Attributes;
-using Tars.Net.Hosting;
 using Tars.Net.UT.Core.Hosting.RpcExtensionsUT;
 using Xunit;
 
