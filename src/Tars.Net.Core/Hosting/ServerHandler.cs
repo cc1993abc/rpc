@@ -5,7 +5,7 @@ using Tars.Net.Metadata;
 
 namespace Tars.Net.Hosting
 {
-    public class ServerHandler : ServerHandlerBase
+    public class ServerHandler : IServerHandler
     {
         private readonly IServerInvoker serverInvoker;
 
@@ -14,7 +14,7 @@ namespace Tars.Net.Hosting
             this.serverInvoker = serverInvoker;
         }
 
-        public override Response Process(Request msg)
+        public Response Process(Request msg)
         {
             var response = msg.CreateResponse();
             try

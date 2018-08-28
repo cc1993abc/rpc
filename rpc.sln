@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tars.Net.Abstractions", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tars.Net.DotNetty", "src\Tars.Net.DotNetty\Tars.Net.DotNetty.csproj", "{A502AC58-E5F6-40F8-B6CC-198BB1A15632}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "exapmles", "exapmles", "{6F29A37C-9052-4BEE-AFAC-5B16667D0633}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{6F29A37C-9052-4BEE-AFAC-5B16667D0633}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpServer", "exapmles\Tcp\TcpServer\TcpServer.csproj", "{EAE9F81C-EB21-4A0D-8995-E2BE15D9BA98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpServer", "examples\Tcp\TcpServer\TcpServer.csproj", "{EAE9F81C-EB21-4A0D-8995-E2BE15D9BA98}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tars.Net.Core", "src\Tars.Net.Core\Tars.Net.Core.csproj", "{7F527B31-3623-4818-ADA2-80EE0066EC19}"
 EndProject
@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tars.Net.UT", "test\Tars.Ne
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tcp", "Tcp", "{D1866B8A-07F0-4498-B251-34E0318FFEED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpCommon", "exapmles\Tcp\TcpCommon\TcpCommon.csproj", "{F84E8E38-59BC-46D7-8E96-6F17AE7843D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpCommon", "examples\Tcp\TcpCommon\TcpCommon.csproj", "{F84E8E38-59BC-46D7-8E96-6F17AE7843D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpClient", "exapmles\Tcp\TcpClient\TcpClient.csproj", "{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpClient", "examples\Tcp\TcpClient\TcpClient.csproj", "{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

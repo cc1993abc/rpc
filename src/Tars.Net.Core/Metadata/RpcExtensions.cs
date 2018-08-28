@@ -7,7 +7,6 @@ using System.Linq;
 using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
-using Tars.Net.Hosting;
 
 namespace Tars.Net
 {
@@ -18,7 +17,6 @@ namespace Tars.Net
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
             services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
-            services.TryAddSingleton<ServerHandlerBase, ServerHandler>();
             //todo: add Decoder and Encoder
             //services.TryAddSingleton<RequestDecoder, TestRequestDecoder>();
             //services.TryAddSingleton<RequestEncoder, TestRequestEncoder>();

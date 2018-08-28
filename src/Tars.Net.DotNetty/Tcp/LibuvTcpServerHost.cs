@@ -23,13 +23,13 @@ namespace Tars.Net.Hosting.Tcp
         private readonly ILogger<LibuvTcpServerHost> logger;
         private readonly IDecoder decoder;
         private readonly IEncoder encoder;
-        private readonly ServerHandlerBase handler;
+        private readonly DotNettyServerHandler handler;
         private DispatcherEventLoopGroup bossGroup;
         private WorkerEventLoopGroup workerGroup;
 
         public LibuvTcpServerHost(IServiceProvider provider, RpcConfiguration configuration,
             ILogger<LibuvTcpServerHost> logger, IDecoder decoder, IEncoder encoder,
-            ServerHandlerBase handler)
+            DotNettyServerHandler handler)
         {
             Provider = provider;
             this.configuration = configuration;
