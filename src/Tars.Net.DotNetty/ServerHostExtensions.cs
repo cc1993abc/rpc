@@ -9,6 +9,7 @@ namespace Tars.Net.Hosting
         {
             return builder.ConfigureServices(i =>
             {
+                i.TryAddSingleton<DotNettyServerHandler>();
                 i.TryAddSingleton<IServerHost, LibuvTcpServerHost>();
             });
         }
