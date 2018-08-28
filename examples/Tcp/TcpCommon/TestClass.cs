@@ -1,5 +1,6 @@
 ﻿using DotNetty.Buffers;
 using Newtonsoft.Json;
+using System;
 using System.Text;
 using Tars.Net.Codecs;
 using Tars.Net.Metadata;
@@ -17,6 +18,14 @@ namespace TcpCommon
 
         public void DecodeRequestContent(Request req)
         {
+            for (int i = 0; i < req.ParameterTypes.Length; i++)
+            {
+                if (req.Parameters[i] == null)
+                {
+                    continue;
+                }
+                req.Parameters[i] = Convert.ChangeType(req.Parameters[i], req.ParameterTypes[i].ParameterType);
+            }
         }
 
         public Response DecodeResponse(IByteBuffer input)

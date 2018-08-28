@@ -41,21 +41,24 @@ namespace Tars.Net.Hosting
         private IDictionary<string, Func<Request, (object, object[], Codec)>> CreateFuncs(Type service, Type implementation)
         {
             var dictionary = new Dictionary<string, Func<Request, (object, object[], Codec)>>(StringComparer.OrdinalIgnoreCase);
-            foreach (var method in implementation.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var method in service.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (dictionary.ContainsKey(method.Name))
                 {
                     continue;
                 }
+                var reflector = method.GetReflector();
                 var codec = service.GetReflector().GetCustomAttribute<RpcAttribute>().Codec;
-                var isOneway = method.GetReflector().IsDefined<OnewayAttribute>();
-                var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
+                var isOneway = reflector.IsDefined<OnewayAttribute>();
+                var parameters = method.GetParameters();
+                var outParameters = parameters.Where(i => i.IsOut).ToArray();
                 dictionary.Add(method.Name, (msg) =>
                 {
                     msg.Codec = codec;
+                    msg.ParameterTypes = parameters;
                     decoder.DecodeRequestContent(msg);
                     var serviceInstance = provider.GetService(service);
-                    var returnValue = method.GetReflector().Invoke(serviceInstance, msg.Parameters);
+                    var returnValue = reflector.Invoke(serviceInstance, msg.Parameters);
                     var returnParameters = new object[outParameters.Length];
                     var index = 0;
                     foreach (var item in outParameters)

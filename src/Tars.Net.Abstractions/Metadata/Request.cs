@@ -1,6 +1,7 @@
 ﻿using DotNetty.Buffers;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Tars.Net.Codecs;
 
 namespace Tars.Net.Metadata
@@ -36,6 +37,8 @@ namespace Tars.Net.Metadata
         public Codec Codec { get; set; }
 
         public bool IsOneway { get; set; }
+
+        public ParameterInfo[] ParameterTypes { get; set; }
 
         public Response CreateResponse()
         {
