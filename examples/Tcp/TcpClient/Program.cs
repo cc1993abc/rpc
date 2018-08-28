@@ -31,6 +31,8 @@ namespace TcpClient
                 var rpc = service.GetRequiredService<IHelloRpc>();
                 var result = rpc.Hello(3, "Vic");
                 Console.WriteLine(result);
+                result = rpc.Hello(3, "Victor");
+                Console.WriteLine(result);
             }
             catch (Exception ex)
             {

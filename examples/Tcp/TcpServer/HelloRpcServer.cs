@@ -20,7 +20,7 @@ namespace TcpServer
             }
 
             Console.WriteLine(result);
-            return result;
+            return result + " callback";
         }
 
         public void HelloHolder(int no, out string name)

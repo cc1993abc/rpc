@@ -10,6 +10,8 @@ namespace Tars.Net.Clients
     {
         RpcProtocol Protocol { get; }
 
+        void SetClientCallBack(IClientCallBack clientCallBack);
+
         Task SendAsync(EndPoint endPoint, IByteBuffer request);
 
         Task ShutdownGracefullyAsync(TimeSpan quietPeriod, TimeSpan shutdownTimeout);

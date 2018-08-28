@@ -29,6 +29,10 @@ namespace Tars.Net.Clients
             this.decoder = decoder;
             this.configuration = configuration;
             clients = rpcClients.ToDictionary(i => i.Protocol);
+            foreach (var client in clients.Values)
+            {
+                client.SetClientCallBack(this);
+            }
         }
 
         public async Task<object> SendAsync(string servantName, string funcName, ParameterInfo[] outParameters, ParameterInfo returnValueType, bool isOneway, Codec codec, object[] parameters)
@@ -55,7 +59,10 @@ namespace Tars.Net.Clients
                 tokenSource.Token.Register(() =>
                 {
                     callBacks.TryRemove(id, out TaskCompletionSource<Response> tSource);
-                    source.TrySetException(new TarsException(RpcStatusCode.AsyncCallTimeout, $"Call {servantName}.{funcName} timeout."));
+                    if (!source.Task.IsCompleted)
+                    {
+                        source.TrySetException(new TarsException(RpcStatusCode.AsyncCallTimeout, $"Call {servantName}.{funcName} timeout."));
+                    }
                 });
                 callBacks.AddOrUpdate(id, source, (x, y) => source);
                 tokenSource.CancelAfter(req.Timeout * 1000);
@@ -111,6 +118,14 @@ namespace Tars.Net.Clients
             if (callBacks.TryRemove(response.RequestId, out TaskCompletionSource<Response> source))
             {
                 source.SetResult(response);
+            }
+        }
+
+        public void CallBack(Response msg)
+        {
+            if (callBacks.TryRemove(msg.RequestId, out TaskCompletionSource<Response> source))
+            {
+                source.SetResult(msg);
             }
         }
     }
