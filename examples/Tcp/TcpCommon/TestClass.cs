@@ -37,6 +37,19 @@ namespace TcpCommon
 
         public void DecodeResponseContent(Response resp)
         {
+            for (int i = 0; i < resp.ReturnParameterTypes.Length; i++)
+            {
+                if (resp.ReturnParameterTypes[i] == null)
+                {
+                    continue;
+                }
+                resp.ReturnParameters[i] = Convert.ChangeType(resp.ReturnParameters[i], resp.ReturnParameterTypes[i].ParameterType);
+            }
+
+            if (resp.ReturnValue != null)
+            {
+                resp.ReturnValue = Convert.ChangeType(resp.ReturnValue, resp.ReturnValueType.ParameterType);
+            }
         }
     }
 

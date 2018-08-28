@@ -1,6 +1,7 @@
 ﻿using DotNetty.Buffers;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Tars.Net.Codecs;
 
 namespace Tars.Net.Metadata
@@ -41,5 +42,7 @@ namespace Tars.Net.Metadata
         public object[] ReturnParameters { get; set; }
 
         public Codec Codec { get; set; }
+        public ParameterInfo[] ReturnParameterTypes { get; set; }
+        public ParameterInfo ReturnValueType { get; set; }
     }
 }

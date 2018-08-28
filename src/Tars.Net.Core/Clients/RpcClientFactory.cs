@@ -31,14 +31,13 @@ namespace Tars.Net.Clients
             clients = rpcClients.ToDictionary(i => i.Protocol);
         }
 
-        public async Task<object> SendAsync(string servantName, string funcName, ParameterInfo[] outParameters, bool isOneway, Codec codec, int timeout, object[] parameters)
+        public async Task<object> SendAsync(string servantName, string funcName, ParameterInfo[] outParameters, ParameterInfo returnValueType, bool isOneway, Codec codec, object[] parameters)
         {
             var req = new Request()
             {
                 RequestId = NewRequestId(),
                 ServantName = servantName,
                 FuncName = funcName,
-                Timeout = timeout,
                 Parameters = parameters,
                 Codec = codec,
                 IsOneway = isOneway
@@ -55,35 +54,33 @@ namespace Tars.Net.Clients
                 var tokenSource = new CancellationTokenSource();
                 tokenSource.Token.Register(() =>
                 {
-                    source.TrySetException(new TarsException(RpcStatusCode.AsyncCallTimeout, $"Call {servantName}.{funcName} timeout."));
                     callBacks.TryRemove(id, out TaskCompletionSource<Response> tSource);
+                    source.TrySetException(new TarsException(RpcStatusCode.AsyncCallTimeout, $"Call {servantName}.{funcName} timeout."));
                 });
                 callBacks.AddOrUpdate(id, source, (x, y) => source);
-                tokenSource.CancelAfter(timeout * 1000);
-                return source.Task.ContinueWith(t =>
+                tokenSource.CancelAfter(req.Timeout * 1000);
+                var response = await source.Task;
+                response.Codec = codec;
+                response.ReturnValueType = returnValueType;
+                response.ReturnParameterTypes = outParameters;
+                decoder.DecodeResponseContent(response);
+                object[] returnParameters = response.ReturnParameters;
+                if (returnParameters == null)
                 {
-                    t.Result.Codec = codec;
-                    decoder.DecodeResponseContent(t.Result);
-                    object returnValue = t.Result.ReturnValue;
-                    object[] returnParameters = t.Result.ReturnParameters;
+                    return response.ReturnValue;
+                }
 
-                    if (returnParameters == null)
+                var index = 0;
+                foreach (var item in outParameters)
+                {
+                    if (index >= returnParameters.Length)
                     {
-                        return returnValue;
+                        break;
                     }
 
-                    var index = 0;
-                    foreach (var item in outParameters)
-                    {
-                        if (index >= returnParameters.Length)
-                        {
-                            break;
-                        }
-
-                        parameters[item.Position] = returnParameters[index++];
-                    }
-                    return returnValue;
-                });
+                    parameters[item.Position] = returnParameters[index++];
+                }
+                return response.ReturnValue;
             }
         }
 
@@ -95,6 +92,7 @@ namespace Tars.Net.Clients
             }
             if (clients.TryGetValue(config.Protocol, out IRpcClient client))
             {
+                req.Timeout = config.Timeout;
                 await client.SendAsync(config.EndPoint, encoder.EncodeRequest(req));
             }
             else

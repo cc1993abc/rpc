@@ -32,8 +32,8 @@ namespace Tars.Net.Clients
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
-                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, isOneway,
-                            attribute.Codec, attribute.Timeout, context.Parameters);
+                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, method.ReturnParameter, isOneway,
+                            attribute.Codec, context.Parameters);
                         context.ReturnValue = value;
                     });
                 }

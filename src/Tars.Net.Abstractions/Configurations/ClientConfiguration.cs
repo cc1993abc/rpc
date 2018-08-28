@@ -11,6 +11,8 @@ namespace Tars.Net.Configurations
 
         public int Port { get; set; }
 
+        public int Timeout { get; set; } = 60;
+
         private EndPoint endPoint;
 
         public EndPoint EndPoint

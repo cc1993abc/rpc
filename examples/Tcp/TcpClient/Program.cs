@@ -29,7 +29,7 @@ namespace TcpClient
                     .BuildAspectCoreServiceProvider();
 
                 var rpc = service.GetRequiredService<IHelloRpc>();
-                var result = await rpc.HelloTask(3, "Vic");
+                var result = rpc.Hello(3, "Vic");
                 Console.WriteLine(result);
             }
             catch (Exception ex)
