@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tars.Net.Attributes;
-using Tars.Net.Clients;
 using Tars.Net.Clients.Proxy;
 
 namespace Tars.Net

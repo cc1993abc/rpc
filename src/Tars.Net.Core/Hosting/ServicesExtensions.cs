@@ -3,10 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using Tars.Net.Attributes;
-using Tars.Net.Codecs;
 
 namespace Tars.Net.Hosting
 {

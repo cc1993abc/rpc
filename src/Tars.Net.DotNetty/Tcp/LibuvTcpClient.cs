@@ -13,16 +13,15 @@ using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients.Tcp
 {
-    public class LibuvTcpClient : IRpcClient, IClientCallBack
+    public class LibuvTcpClient : IRpcClient
     {
         private MultithreadEventLoopGroup group = new MultithreadEventLoopGroup();
         private readonly Bootstrap bootstrap = new Bootstrap();
         private readonly ConcurrentDictionary<EndPoint, IChannel> channels = new ConcurrentDictionary<EndPoint, IChannel>();
-        private IClientCallBack callBack;
         private readonly IEncoder<IByteBuffer> encoder;
         public RpcProtocol Protocol => RpcProtocol.Tcp;
 
-        public LibuvTcpClient(RpcConfiguration configuration, IDecoder<IByteBuffer> decoder, IEncoder<IByteBuffer> encoder)
+        public LibuvTcpClient(RpcConfiguration configuration, IDecoder<IByteBuffer> decoder, IEncoder<IByteBuffer> encoder, IClientCallBack callBack)
         {
             this.encoder = encoder;
             bootstrap
@@ -35,7 +34,7 @@ namespace Tars.Net.Clients.Tcp
                     channel.Pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
                          configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
                     channel.Pipeline.AddLast(new ResponseDecoder(decoder), new LengthFieldPrepender(lengthFieldLength),
-                        new DotNettyClientHandler(this));
+                        new DotNettyClientHandler(callBack));
                 }));
         }
 
@@ -56,16 +55,6 @@ namespace Tars.Net.Clients.Tcp
         public Task ShutdownGracefullyAsync(TimeSpan quietPeriod, TimeSpan shutdownTimeout)
         {
             return group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
-        }
-
-        public void SetClientCallBack(IClientCallBack clientCallBack)
-        {
-            callBack = clientCallBack;
-        }
-
-        public void CallBack(Response msg)
-        {
-            callBack.CallBack(msg);
         }
     }
 }
