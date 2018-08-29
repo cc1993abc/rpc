@@ -62,7 +62,7 @@ namespace Tars.Net.Hosting.Tcp
                    .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                    {
                        IChannelPipeline pipeline = channel.Pipeline;
-                       pipeline.AddLast(new TcpHandler());
+                       pipeline.AddLast(new TcpHandler(Provider.GetRequiredService<ILogger<TcpHandler>>()));
                        var lengthFieldLength = configuration.LengthFieldLength;
                        pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
                             configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));

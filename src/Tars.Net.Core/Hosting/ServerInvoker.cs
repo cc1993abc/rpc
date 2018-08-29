@@ -12,7 +12,7 @@ namespace Tars.Net.Hosting
 {
     public class ServerInvoker<T> : IServerInvoker
     {
-        private readonly IDictionary<string, IDictionary<string, Func<Request, (object, object[], Codec)>>> invokers;
+        private readonly IDictionary<string, IDictionary<string, Action<Request, Response>>> invokers;
         private readonly IServiceProvider provider;
         private readonly IDecoder<T> decoder;
 
@@ -23,9 +23,9 @@ namespace Tars.Net.Hosting
             this.decoder = decoder;
         }
 
-        private IDictionary<string, IDictionary<string, Func<Request, (object, object[], Codec)>>> CreateInvokersMap(IEnumerable<(Type service, Type implementation)> rpcServices)
+        private IDictionary<string, IDictionary<string, Action<Request, Response>>> CreateInvokersMap(IEnumerable<(Type service, Type implementation)> rpcServices)
         {
-            var dictionary = new Dictionary<string, IDictionary<string, Func<Request, (object, object[], Codec)>>>(StringComparer.OrdinalIgnoreCase);
+            var dictionary = new Dictionary<string, IDictionary<string, Action<Request, Response>>>(StringComparer.OrdinalIgnoreCase);
             foreach (var (service, implementation) in rpcServices)
             {
                 var attribute = service.GetReflector().GetCustomAttribute<RpcAttribute>();
@@ -38,9 +38,9 @@ namespace Tars.Net.Hosting
             return dictionary;
         }
 
-        private IDictionary<string, Func<Request, (object, object[], Codec)>> CreateFuncs(Type service, Type implementation)
+        private IDictionary<string, Action<Request, Response>> CreateFuncs(Type service, Type implementation)
         {
-            var dictionary = new Dictionary<string, Func<Request, (object, object[], Codec)>>(StringComparer.OrdinalIgnoreCase);
+            var dictionary = new Dictionary<string, Action<Request, Response>>(StringComparer.OrdinalIgnoreCase);
             foreach (var method in service.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (dictionary.ContainsKey(method.Name))
@@ -52,13 +52,13 @@ namespace Tars.Net.Hosting
                 var isOneway = reflector.IsDefined<OnewayAttribute>();
                 var parameters = method.GetParameters();
                 var outParameters = parameters.Where(i => i.IsOut).ToArray();
-                dictionary.Add(method.Name, (msg) =>
+                dictionary.Add(method.Name, (req, resp) =>
                 {
-                    msg.Codec = codec;
-                    msg.ParameterTypes = parameters;
-                    decoder.DecodeRequestContent(msg);
+                    req.Codec = codec;
+                    req.ParameterTypes = parameters;
+                    decoder.DecodeRequestContent(req);
                     var serviceInstance = provider.GetService(service);
-                    var returnValue = reflector.Invoke(serviceInstance, msg.Parameters);
+                    var returnValue = reflector.Invoke(serviceInstance, req.Parameters);
                     var returnParameters = new object[outParameters.Length];
                     var index = 0;
                     foreach (var item in outParameters)
@@ -68,27 +68,31 @@ namespace Tars.Net.Hosting
                             break;
                         }
 
-                        returnParameters[index++] = msg.Parameters[item.Position];
+                        returnParameters[index++] = req.Parameters[item.Position];
                     }
-                    return (returnValue, returnParameters, codec);
+                    resp.ReturnValueType = method.ReturnParameter;
+                    resp.ReturnParameterTypes = outParameters;
+                    resp.ReturnValue = returnValue;
+                    resp.ReturnParameters = returnParameters;
+                    resp.Codec = codec;
                 });
             }
             return dictionary;
         }
 
-        public (object returnValue, object[] returnParameters, Codec codec) Invoke(Request msg)
+        public void Invoke(Request req, Response resp)
         {
-            if (!invokers.TryGetValue(msg.ServantName, out IDictionary<string, Func<Request, (object, object[], Codec)>> funcs))
+            if (!invokers.TryGetValue(req.ServantName, out IDictionary<string, Action<Request, Response>> funcs))
             {
-                throw new TarsException(RpcStatusCode.ServerNoServantErr, $"no found servant, serviceName[{ msg.ServantName }]");
+                throw new TarsException(RpcStatusCode.ServerNoServantErr, $"no found servant, serviceName[{ req.ServantName }]");
             }
-            else if (!funcs.TryGetValue(msg.FuncName, out Func<Request, (object, object[], Codec)> func))
+            else if (!funcs.TryGetValue(req.FuncName, out Action<Request, Response> action))
             {
-                throw new TarsException(RpcStatusCode.ServerNoFuncErr, $"no found methodInfo, serviceName[{ msg.ServantName }], methodName[{msg.FuncName}]");
+                throw new TarsException(RpcStatusCode.ServerNoFuncErr, $"no found methodInfo, serviceName[{ req.ServantName }], methodName[{req.FuncName}]");
             }
             else
             {
-                return func(msg);
+                action(req, resp);
             }
         }
     }

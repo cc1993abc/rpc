@@ -20,10 +20,7 @@ namespace Tars.Net.Hosting
             {
                 if (!"tars_ping".Equals(msg.FuncName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var (returnValue, returnParameters, codec) = serverInvoker.Invoke(msg);
-                    response.ReturnValue = returnValue;
-                    response.ReturnParameters = returnParameters;
-                    response.Codec = codec;
+                    serverInvoker.Invoke(msg, response);
                 }
             }
             catch (TarsException ex)

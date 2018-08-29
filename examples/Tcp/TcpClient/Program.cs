@@ -30,9 +30,18 @@ namespace TcpClient
                     .BuildAspectCoreServiceProvider();
 
                 var rpc = service.GetRequiredService<IHelloRpc>();
-                var result = rpc.Hello(3, "Vic");
+                var result = string.Empty;
+                result = rpc.Hello(0, "Hello Victor");
                 Console.WriteLine(result);
-                result = rpc.Hello(3, "Victor");
+                result = "HelloHolder";
+                rpc.HelloHolder(1, out result);
+                Console.WriteLine(result);
+                result = await rpc.HelloTask(2, "HelloTask Vic");
+                Console.WriteLine(result);
+                result = "Oneway";
+                rpc.HelloOneway(3, "Oneway Vic");
+                Console.WriteLine(result);
+                result = await rpc.HelloValueTask(4, "HelloValueTask Vic");
                 Console.WriteLine(result);
             }
             catch (Exception ex)

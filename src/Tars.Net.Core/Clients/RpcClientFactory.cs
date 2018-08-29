@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
+using Tars.Net.Exceptions;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
@@ -46,6 +47,7 @@ namespace Tars.Net.Clients
             else
             {
                 var response = await callBack.NewCallBackTask(req.RequestId, req.Timeout, servantName, funcName);
+                CheckResponse(response);
                 response.Codec = codec;
                 response.ReturnValueType = returnValueType;
                 response.ReturnParameterTypes = outParameters;
@@ -67,6 +69,14 @@ namespace Tars.Net.Clients
                     parameters[item.Position] = returnParameters[index++];
                 }
                 return response.ReturnValue;
+            }
+        }
+
+        private void CheckResponse(Response response)
+        {
+            if (response.ResultStatusCode != RpcStatusCode.ServerSuccess)
+            {
+                throw new TarsException(response.ResultStatusCode, response.ResultDesc);
             }
         }
 
