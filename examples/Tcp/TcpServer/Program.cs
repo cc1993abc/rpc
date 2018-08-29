@@ -23,6 +23,7 @@ namespace TcpServer
                     //todo: add Decoder and Encoder
                     i.TryAddSingleton<IDecoder<IByteBuffer>, TestDecoder>();
                     i.TryAddSingleton<IEncoder<IByteBuffer>, TestEncoder>();
+                    i.TryAddSingleton<IContentDecoder, TestContentDecoder>();
                     i.AddLibuvTcpClient();
                     i.ReigsterRpcClients();
                     i.ReigsterRpcServices();
