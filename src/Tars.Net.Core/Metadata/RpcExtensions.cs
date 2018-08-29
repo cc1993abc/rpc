@@ -16,7 +16,6 @@ namespace Tars.Net
         {
             services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
-            services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             //todo: add Decoder and Encoder
             //services.TryAddSingleton<RequestDecoder, TestRequestDecoder>();
             //services.TryAddSingleton<RequestEncoder, TestRequestEncoder>();

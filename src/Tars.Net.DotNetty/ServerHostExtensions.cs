@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using DotNetty.Buffers;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tars.Net.Hosting.Tcp;
 
 namespace Tars.Net.Hosting
@@ -9,6 +10,7 @@ namespace Tars.Net.Hosting
         {
             return builder.ConfigureServices(i =>
             {
+                i.TryAddSingleton<IServerInvoker, ServerInvoker<IByteBuffer>>();
                 i.TryAddSingleton<DotNettyServerHandler>();
                 i.TryAddSingleton<IServerHost, LibuvTcpServerHost>();
             });

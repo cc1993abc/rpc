@@ -2,13 +2,13 @@
 
 namespace Tars.Net.Codecs
 {
-    public interface IDecoder
+    public interface IDecoder<T>
     {
-        Request DecodeRequest(dynamic input);
+        Request DecodeRequest(T input);
 
         void DecodeRequestContent(Request req);
 
-        Response DecodeResponse(dynamic input);
+        Response DecodeResponse(T input);
 
         void DecodeResponseContent(Response resp);
     }

@@ -10,13 +10,13 @@ using Tars.Net.Metadata;
 
 namespace Tars.Net.Hosting
 {
-    public class ServerInvoker : IServerInvoker
+    public class ServerInvoker<T> : IServerInvoker
     {
         private readonly IDictionary<string, IDictionary<string, Func<Request, (object, object[], Codec)>>> invokers;
         private readonly IServiceProvider provider;
-        private readonly IDecoder decoder;
+        private readonly IDecoder<T> decoder;
 
-        public ServerInvoker(IEnumerable<(Type service, Type implementation)> rpcServices, IServiceProvider provider, IDecoder decoder)
+        public ServerInvoker(IEnumerable<(Type service, Type implementation)> rpcServices, IServiceProvider provider, IDecoder<T> decoder)
         {
             invokers = CreateInvokersMap(rpcServices);
             this.provider = provider;

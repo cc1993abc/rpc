@@ -19,10 +19,10 @@ namespace Tars.Net.Clients.Tcp
         private readonly Bootstrap bootstrap = new Bootstrap();
         private readonly ConcurrentDictionary<EndPoint, IChannel> channels = new ConcurrentDictionary<EndPoint, IChannel>();
         private IClientCallBack callBack;
-        private readonly IEncoder encoder;
+        private readonly IEncoder<IByteBuffer> encoder;
         public RpcProtocol Protocol => RpcProtocol.Tcp;
 
-        public LibuvTcpClient(RpcConfiguration configuration, IDecoder decoder, IEncoder encoder)
+        public LibuvTcpClient(RpcConfiguration configuration, IDecoder<IByteBuffer> decoder, IEncoder<IByteBuffer> encoder)
         {
             this.encoder = encoder;
             bootstrap

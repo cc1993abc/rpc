@@ -18,12 +18,7 @@ namespace Tars.Net.Hosting
             var response = msg.CreateResponse();
             try
             {
-                if ("tars_ping".Equals(msg.FuncName, StringComparison.OrdinalIgnoreCase))
-                {
-                    //TODO: Define tars' own default value
-                    response.Buffer = "none";
-                }
-                else
+                if (!"tars_ping".Equals(msg.FuncName, StringComparison.OrdinalIgnoreCase))
                 {
                     var (returnValue, returnParameters, codec) = serverInvoker.Invoke(msg);
                     response.ReturnValue = returnValue;

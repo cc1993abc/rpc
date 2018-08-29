@@ -7,19 +7,14 @@ using Tars.Net.Metadata;
 
 namespace TcpCommon
 {
-    public class TestDecoder : IDecoder
+    public class TestDecoder : IDecoder<IByteBuffer>
     {
-        public Request DecodeRequest(dynamic input)
+        public Request DecodeRequest(IByteBuffer input)
         {
-            if (input is IByteBuffer byteBuffer)
-            {
-                var result =
-                    JsonConvert.DeserializeObject<Request>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
-                byteBuffer.MarkReaderIndex();
-                return result;
-            }
-
-            return null;
+            var result =
+                    JsonConvert.DeserializeObject<Request>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
+            input.MarkReaderIndex();
+            return result;
         }
 
         public void DecodeRequestContent(Request req)
@@ -34,15 +29,11 @@ namespace TcpCommon
             }
         }
 
-        public Response DecodeResponse(dynamic input)
+        public Response DecodeResponse(IByteBuffer input)
         {
-            if (input is IByteBuffer byteBuffer)
-            {
-                var result = JsonConvert.DeserializeObject<Response>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
-                byteBuffer.MarkReaderIndex();
-                return result;
-            }
-            return null;
+            var result = JsonConvert.DeserializeObject<Response>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
+            input.MarkReaderIndex();
+            return result;
         }
 
         public void DecodeResponseContent(Response resp)
@@ -63,14 +54,14 @@ namespace TcpCommon
         }
     }
 
-    public class TestEncoder : IEncoder
+    public class TestEncoder : IEncoder<IByteBuffer>
     {
-        public object EncodeRequest(Request req)
+        public IByteBuffer EncodeRequest(Request req)
         {
             return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req)));
         }
 
-        public object EncodeResponse(Response message)
+        public IByteBuffer EncodeResponse(Response message)
         {
             return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
         }

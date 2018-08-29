@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DotNetty.Buffers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -20,8 +21,8 @@ namespace TcpServer
                 .ConfigureServices(i =>
                 {
                     //todo: add Decoder and Encoder
-                    i.TryAddSingleton<IDecoder, TestDecoder>();
-                    i.TryAddSingleton<IEncoder, TestEncoder>();
+                    i.TryAddSingleton<IDecoder<IByteBuffer>, TestDecoder>();
+                    i.TryAddSingleton<IEncoder<IByteBuffer>, TestEncoder>();
                     i.AddLibuvTcpClient();
                     i.ReigsterRpcClients();
                     i.ReigsterRpcServices();

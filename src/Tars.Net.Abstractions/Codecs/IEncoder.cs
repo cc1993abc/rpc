@@ -2,10 +2,10 @@
 
 namespace Tars.Net.Codecs
 {
-    public interface IEncoder
+    public interface IEncoder<T>
     {
-        object EncodeRequest(Request req);
+        T EncodeRequest(Request req);
 
-        object EncodeResponse(Response message);
+        T EncodeResponse(Response message);
     }
 }

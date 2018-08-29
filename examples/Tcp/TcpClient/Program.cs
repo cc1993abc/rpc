@@ -1,4 +1,5 @@
 ﻿using AspectCore.Extensions.DependencyInjection;
+using DotNetty.Buffers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,8 +20,8 @@ namespace TcpClient
             {
                 var builder = new ConfigurationBuilder();
                 var service = new ServiceCollection()
-                    .AddSingleton<IDecoder, TestDecoder>()
-                    .AddSingleton<IEncoder, TestEncoder>()
+                    .AddSingleton<IDecoder<IByteBuffer>, TestDecoder>()
+                    .AddSingleton<IEncoder<IByteBuffer>, TestEncoder>()
                     .AddSingleton<IConfiguration>(i => builder.AddJsonFile("app.json").Build())
                     .AddLogging(j => j.AddConsole())
                     .AddConfiguration()

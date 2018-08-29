@@ -7,9 +7,9 @@ namespace Tars.Net.Codecs
 {
     public class RequestDecoder : ByteToMessageDecoder
     {
-        private readonly IDecoder decoder;
+        private readonly IDecoder<IByteBuffer> decoder;
 
-        public RequestDecoder(IDecoder decoder)
+        public RequestDecoder(IDecoder<IByteBuffer> decoder)
         {
             this.decoder = decoder;
         }
