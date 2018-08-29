@@ -21,6 +21,16 @@ namespace TcpCommon
             return result;
         }
 
+        public Response DecodeResponse(IByteBuffer input)
+        {
+            var result = JsonConvert.DeserializeObject<Response>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
+            input.MarkReaderIndex();
+            return result;
+        }
+    }
+
+    public class TestContentDecoder : IContentDecoder
+    {
         public void DecodeRequestContent(Request req)
         {
             for (int i = 0; i < req.ParameterTypes.Length; i++)
@@ -31,13 +41,6 @@ namespace TcpCommon
                 }
                 req.Parameters[i] = Convert.ChangeType(req.Parameters[i], req.ParameterTypes[i].ParameterType);
             }
-        }
-
-        public Response DecodeResponse(IByteBuffer input)
-        {
-            var result = JsonConvert.DeserializeObject<Response>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
-            input.MarkReaderIndex();
-            return result;
         }
         private static readonly MethodInfo FromResult = typeof(Task).GetTypeInfo().GetMethod(nameof(Task.FromResult));
         public void DecodeResponseContent(Response resp)
