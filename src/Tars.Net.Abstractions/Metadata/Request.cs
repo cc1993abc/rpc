@@ -1,5 +1,4 @@
-﻿using DotNetty.Buffers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Tars.Net.Codecs;
@@ -22,8 +21,7 @@ namespace Tars.Net.Metadata
 
         public string FuncName { get; set; }
 
-        public IByteBuffer Buffer { get; set; }
-
+        public object Buffer { get; set; }
         public int Timeout { get; set; }
 
         public IDictionary<string, string> Context { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

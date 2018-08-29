@@ -16,14 +16,15 @@ namespace Tars.Net.Clients.Tcp
     public class LibuvTcpClient : IRpcClient, IClientCallBack
     {
         private MultithreadEventLoopGroup group = new MultithreadEventLoopGroup();
-        private Bootstrap bootstrap = new Bootstrap();
+        private readonly Bootstrap bootstrap = new Bootstrap();
         private readonly ConcurrentDictionary<EndPoint, IChannel> channels = new ConcurrentDictionary<EndPoint, IChannel>();
         private IClientCallBack callBack;
-
+        private readonly IEncoder encoder;
         public RpcProtocol Protocol => RpcProtocol.Tcp;
 
-        public LibuvTcpClient(RpcConfiguration configuration, IDecoder decoder)
+        public LibuvTcpClient(RpcConfiguration configuration, IDecoder decoder, IEncoder encoder)
         {
+            this.encoder = encoder;
             bootstrap
                 .Group(group)
                 .Channel<TcpSocketChannel>()
@@ -38,10 +39,11 @@ namespace Tars.Net.Clients.Tcp
                 }));
         }
 
-        public async Task SendAsync(EndPoint endPoint, IByteBuffer request)
+        public async Task SendAsync(EndPoint endPoint, Request request)
         {
             var channel = await ConnectAsync(endPoint);
-            await channel.WriteAndFlushAsync(request);
+            var req = encoder.EncodeRequest(request);
+            await channel.WriteAndFlushAsync(req);
         }
 
         private async Task<IChannel> ConnectAsync(EndPoint endPoint)

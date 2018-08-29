@@ -1,5 +1,4 @@
-﻿using DotNetty.Buffers;
-using System;
+﻿using System;
 using Tars.Net.Exceptions;
 using Tars.Net.Metadata;
 
@@ -21,7 +20,8 @@ namespace Tars.Net.Hosting
             {
                 if ("tars_ping".Equals(msg.FuncName, StringComparison.OrdinalIgnoreCase))
                 {
-                    response.Buffer = Unpooled.Empty;
+                    //TODO: Define tars' own default value
+                    response.Buffer = "none";
                 }
                 else
                 {

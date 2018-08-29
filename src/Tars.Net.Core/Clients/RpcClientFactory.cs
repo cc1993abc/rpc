@@ -100,7 +100,7 @@ namespace Tars.Net.Clients
             if (clients.TryGetValue(config.Protocol, out IRpcClient client))
             {
                 req.Timeout = config.Timeout;
-                await client.SendAsync(config.EndPoint, encoder.EncodeRequest(req));
+                await client.SendAsync(config.EndPoint, req);
             }
             else
             {

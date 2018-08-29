@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Tars.Net.Abstractions\Tars.Net.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\src\Tars.Net.DotNetty\Tars.Net.DotNetty.csproj" />
   </ItemGroup>
 
 </Project>

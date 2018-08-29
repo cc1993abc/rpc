@@ -9,11 +9,17 @@ namespace TcpCommon
 {
     public class TestDecoder : IDecoder
     {
-        public Request DecodeRequest(IByteBuffer input)
+        public Request DecodeRequest(dynamic input)
         {
-            var result = JsonConvert.DeserializeObject<Request>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
-            input.MarkReaderIndex();
-            return result;
+            if (input is IByteBuffer byteBuffer)
+            {
+                var result =
+                    JsonConvert.DeserializeObject<Request>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
+                byteBuffer.MarkReaderIndex();
+                return result;
+            }
+
+            return null;
         }
 
         public void DecodeRequestContent(Request req)
@@ -28,11 +34,15 @@ namespace TcpCommon
             }
         }
 
-        public Response DecodeResponse(IByteBuffer input)
+        public Response DecodeResponse(dynamic input)
         {
-            var result = JsonConvert.DeserializeObject<Response>(input.ReadString(input.ReadableBytes, Encoding.UTF8));
-            input.MarkReaderIndex();
-            return result;
+            if (input is IByteBuffer byteBuffer)
+            {
+                var result = JsonConvert.DeserializeObject<Response>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
+                byteBuffer.MarkReaderIndex();
+                return result;
+            }
+            return null;
         }
 
         public void DecodeResponseContent(Response resp)
@@ -55,12 +65,12 @@ namespace TcpCommon
 
     public class TestEncoder : IEncoder
     {
-        public IByteBuffer EncodeRequest(Request req)
+        public object EncodeRequest(Request req)
         {
             return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req)));
         }
 
-        public IByteBuffer EncodeResponse(Response message)
+        public object EncodeResponse(Response message)
         {
             return Unpooled.WrappedBuffer(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
         }
