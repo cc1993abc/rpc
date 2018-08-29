@@ -20,8 +20,7 @@ namespace Tars.Net.Hosting
             {
                 if ("tars_ping".Equals(msg.FuncName, StringComparison.OrdinalIgnoreCase))
                 {
-                    //TODO: Define tars' own default value
-                    response.Buffer = "none";
+                    response.Buffer = null;
                 }
                 else
                 {

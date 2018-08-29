@@ -11,15 +11,10 @@ namespace TcpCommon
     {
         public Request DecodeRequest(dynamic input)
         {
-            if (input is IByteBuffer byteBuffer)
-            {
-                var result =
-                    JsonConvert.DeserializeObject<Request>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
-                byteBuffer.MarkReaderIndex();
-                return result;
-            }
-
-            return null;
+            var byteBuffer = (IByteBuffer)input;
+            var result = JsonConvert.DeserializeObject<Request>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
+            byteBuffer.MarkReaderIndex();
+            return result;
         }
 
         public void DecodeRequestContent(Request req)
@@ -36,13 +31,10 @@ namespace TcpCommon
 
         public Response DecodeResponse(dynamic input)
         {
-            if (input is IByteBuffer byteBuffer)
-            {
-                var result = JsonConvert.DeserializeObject<Response>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
-                byteBuffer.MarkReaderIndex();
-                return result;
-            }
-            return null;
+            var byteBuffer = (IByteBuffer)input;
+            var result = JsonConvert.DeserializeObject<Response>(byteBuffer.ReadString(byteBuffer.ReadableBytes, Encoding.UTF8));
+            byteBuffer.MarkReaderIndex();
+            return result;
         }
 
         public void DecodeResponseContent(Response resp)
