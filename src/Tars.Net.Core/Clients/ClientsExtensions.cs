@@ -23,6 +23,7 @@ namespace Tars.Net.Clients
                     return j.GetRequiredService<IClientProxyCreater>().Create(type);
                 });
             }
+            services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             services.TryAddSingleton<IClientCallBack, ClientCallBack>();
             services.TryAddSingleton<IRpcClientInvokerFactory>(j => new RpcClientInvokerFactory(rpcClients, j.GetRequiredService<IRpcClientFactory>()));
             services.AddDynamicProxy(c =>

@@ -9,7 +9,6 @@ namespace Tars.Net.Clients
     {
         public static IServiceCollection AddLibuvTcpClient(this IServiceCollection services)
         {
-            services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             return services.AddSingleton<IRpcClient, LibuvTcpClient>();
         }
     }

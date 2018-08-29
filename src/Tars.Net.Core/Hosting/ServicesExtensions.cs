@@ -19,6 +19,8 @@ namespace Tars.Net.Hosting
             {
                 services.TryAddSingleton(service.GetReflector().GetMemberInfo().AsType(), implementation.GetReflector().GetMemberInfo().AsType());
             }
+
+            services.TryAddSingleton<IServerInvoker, ServerInvoker>();
             services.TryAddSingleton<IServerHandler, ServerHandler>();
             services.TryAddSingleton(rpcServices);
             return services;
