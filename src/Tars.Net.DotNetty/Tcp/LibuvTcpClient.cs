@@ -47,9 +47,17 @@ namespace Tars.Net.Clients.Tcp
 
         private async Task<IChannel> ConnectAsync(EndPoint endPoint)
         {
-            var channel = await bootstrap.ConnectAsync(endPoint);
-            channels.AddOrUpdate(endPoint, channel, (x, y) => channel);
-            return channel;
+            if (channels.TryGetValue(endPoint, out IChannel channel)
+                && channel.Active)
+            {
+                return channel;
+            }
+            else
+            {
+                channel = await bootstrap.ConnectAsync(endPoint);
+                channels.AddOrUpdate(endPoint, channel, (x, y) => channel);
+                return channel;
+            }
         }
 
         public Task ShutdownGracefullyAsync(TimeSpan quietPeriod, TimeSpan shutdownTimeout)

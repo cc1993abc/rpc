@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Configurations

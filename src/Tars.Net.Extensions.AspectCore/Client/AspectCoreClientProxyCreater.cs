@@ -1,5 +1,5 @@
-﻿using System;
-using AspectCore.DynamicProxy;
+﻿using AspectCore.DynamicProxy;
+using System;
 using Tars.Net.Clients;
 
 namespace Tars.Net.Extensions.AspectCore
