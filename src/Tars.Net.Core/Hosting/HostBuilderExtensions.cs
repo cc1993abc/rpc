@@ -1,34 +1,38 @@
-﻿using AspectCore.Extensions.Reflection;
+﻿using System;
+using System.Reflection;
+using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Reflection;
-using Tars.Net.Attributes;
+using Tars.Net.Hosting;
 
-namespace Tars.Net.Hosting
+namespace Tars.Net
 {
-    public static class ServicesExtensions
+    public static class HostBuilderExtensions
     {
-        public static IServiceCollection ReigsterRpcServices(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServerHostBuilder ReigsterRpcServices(this IServerHostBuilder builder, params Assembly[] assemblies)
         {
-            services.ReigsterRpcDependency();
-            var all = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>();
-            var (rpcServices, rpcClients) = RpcExtensions.GetAllRpcServicesAndClients(all);
-            foreach (var (service, implementation) in rpcServices)
+            var services = builder.Services;
+            foreach (var (service, implementation) in builder.RpcServices)
             {
                 services.TryAddSingleton(service.GetReflector().GetMemberInfo().AsType(), implementation.GetReflector().GetMemberInfo().AsType());
             }
 
             services.TryAddSingleton<IServerInvoker, ServerInvoker>();
             services.TryAddSingleton<IServerHandler, ServerHandler>();
-            services.TryAddSingleton(rpcServices);
-            return services;
+            services.TryAddSingleton(builder.RpcServices);
+            return builder;
         }
 
         public static IServerHostBuilder ConfigureLog(this IServerHostBuilder builder, Action<ILoggingBuilder> configure)
         {
             return builder.ConfigureServices(i => i.AddLogging(configure));
+        }
+
+        public static IServerHostBuilder ReigsterRpcClients(this IServerHostBuilder builder, params Assembly[] assemblies)
+        {
+            builder.ReigsterRpcClients();
+            return builder;
         }
     }
 }

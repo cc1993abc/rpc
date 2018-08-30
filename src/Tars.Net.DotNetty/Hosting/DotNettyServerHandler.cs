@@ -1,7 +1,8 @@
 ﻿using DotNetty.Transport.Channels;
+using Tars.Net.Hosting;
 using Tars.Net.Metadata;
 
-namespace Tars.Net.Hosting
+namespace Tars.Net.DotNetty.Hosting
 {
     public class DotNettyServerHandler : SimpleChannelInboundHandler<Request>
     {

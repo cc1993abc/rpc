@@ -36,7 +36,7 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 
         public GetAllRpcAttributeTypesUT()
         {
-            result = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
+            result = RpcHelper.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
         }
 
         [Fact]
@@ -74,8 +74,8 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 
         public GetAllRpcServicesAndClientsUT()
         {
-            var all = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
-            var (rpcServices, rpcClients) = RpcExtensions.GetAllRpcServicesAndClients(all);
+            var all = RpcHelper.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
+            var (rpcServices, rpcClients) = RpcHelper.GetAllRpcServicesAndClients(all);
             clients = rpcClients.ToArray();
             services = rpcServices.ToArray();
         }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tars.Net.Attributes;
 using Tars.Net.Hosting;
 
-namespace Tars.Net
+namespace Tars.Net.Extensions.AspectCore
 {
-    public class ServerHostBuilder : IServerHostBuilder
+    public class AspectCoreServerHostBuilder : IServerHostBuilder
     {
         public IServiceCollection Services { get; }
 
@@ -17,22 +18,26 @@ namespace Tars.Net
 
         public IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
 
-        public ServerHostBuilder()
+        public AspectCoreServerHostBuilder()
         {
             Services = new ServiceCollection();
             ConfigurationBuilder = new ConfigurationBuilder();
-
             var all = RpcHelper.GetAllHasAttributeTypes<RpcAttribute>();
             var (rpcServices, rpcClients) = RpcHelper.GetAllRpcServicesAndClients(all);
             Clients = rpcClients;
             RpcServices = rpcServices;
         }
 
-        public virtual IServerHost Build()
+        public IServerHost Build()
         {
             return Services
+                .ReigsterRpcDependency()
+                .AddDynamicProxy(c =>
+                {
+                    c.ValidationHandlers.Add(new RpcAspectValidationHandler());
+                })
                 .AddSingleton<IConfiguration>(ConfigurationBuilder.Build())
-                .BuildServiceProvider()
+                .BuildAspectCoreServiceProvider()
                 .GetRequiredService<IServerHost>();
         }
     }

@@ -1,13 +1,14 @@
-﻿using AspectCore.DynamicProxy;
-using AspectCore.Extensions.Reflection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspectCore.DynamicProxy;
+using AspectCore.Extensions.Reflection;
 using Tars.Net.Attributes;
+using Tars.Net.Clients;
 
-namespace Tars.Net.Clients
+namespace Tars.Net.Extensions.AspectCore
 {
     public class RpcClientInvokerFactory : IRpcClientInvokerFactory
     {
@@ -32,8 +33,7 @@ namespace Tars.Net.Clients
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
-                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, method.ReturnParameter, isOneway,
-                            attribute.Codec, context.Parameters);
+                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, method.ReturnParameter, isOneway, attribute.Codec, context.Parameters);
                         context.ReturnValue = value;
                     });
                 }

@@ -1,15 +1,16 @@
 ﻿using DotNetty.Buffers;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Tars.Net.Clients;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tars.Net.Codecs;
-using Tars.Net.Configurations;
-using Tars.Net.Hosting;
+using Tars.Net.Extensions.AspectCore;
 using TcpCommon;
+using Tars.Net;
+using Tars.Net.Configurations;
+using Tars.Net.DotNetty;
 
 namespace TcpServer
 {
@@ -17,7 +18,7 @@ namespace TcpServer
     {
         private static async Task Main(string[] args)
         {
-            var host = new ServerHostBuilder()
+            var host = new AspectCoreServerHostBuilder()
                 .ConfigureServices(i =>
                 {
                     //todo: add Decoder and Encoder
@@ -25,10 +26,10 @@ namespace TcpServer
                     i.TryAddSingleton<IEncoder<IByteBuffer>, TestEncoder>();
                     i.TryAddSingleton<IContentDecoder, TestContentDecoder>();
                     i.AddLibuvTcpClient();
-                    i.ReigsterRpcClients();
-                    i.ReigsterRpcServices();
                     i.AddConfiguration();
                 })
+                .ReigsterRpcClients()
+                .ReigsterRpcServices()
                 .ConfigureConfiguration(i => i.AddJsonFile("app.json"))
                 .ConfigureLog(i => i.AddConsole())
                 .UseLibuvTcpHost()

@@ -1,24 +1,14 @@
 ﻿using AspectCore.Extensions.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tars.Net.Attributes;
-using Tars.Net.Clients.Proxy;
 
 namespace Tars.Net
 {
-    public static class RpcExtensions
+    public static class RpcHelper
     {
-        public static IServiceCollection ReigsterRpcDependency(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IClientProxyCreater, ClientProxyCreater>();
-            services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
-            return services;
-        }
-
-        public static IEnumerable<(Type Service, Type Implementation)> GetAllHasAttributeTypes<Attribute>()
+        public static IEnumerable<(Type Service, Type Implementation)> GetAllHasAttributeTypes<TAttribute>() where TAttribute : Attribute
         {
             return AppDomain.CurrentDomain
                 .GetAssemblies()

@@ -1,8 +1,8 @@
-﻿using AspectCore.DynamicProxy;
-using System;
+﻿using System;
 using System.Reflection;
+using AspectCore.DynamicProxy;
 
-namespace Tars.Net.Clients.Proxy
+namespace Tars.Net.Extensions.AspectCore
 {
     [NonAspect]
     public class ClientProxyAspectBuilderFactory : IAspectBuilderFactory

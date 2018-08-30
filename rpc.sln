@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpCommon", "examples\Tcp\T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpClient", "examples\Tcp\TcpClient\TcpClient.csproj", "{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tars.Net.Extensions.AspectCore", "src\Tars.Net.Extensions.AspectCore\Tars.Net.Extensions.AspectCore.csproj", "{DB564A2D-AC9E-4EFD-A4F8-50DCC034906C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB564A2D-AC9E-4EFD-A4F8-50DCC034906C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB564A2D-AC9E-4EFD-A4F8-50DCC034906C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB564A2D-AC9E-4EFD-A4F8-50DCC034906C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB564A2D-AC9E-4EFD-A4F8-50DCC034906C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +78,7 @@ Global
 		{D1866B8A-07F0-4498-B251-34E0318FFEED} = {6F29A37C-9052-4BEE-AFAC-5B16667D0633}
 		{F84E8E38-59BC-46D7-8E96-6F17AE7843D1} = {D1866B8A-07F0-4498-B251-34E0318FFEED}
 		{17F342B9-D6E9-4931-B1EC-C5CEF2EC3729} = {D1866B8A-07F0-4498-B251-34E0318FFEED}
+		{DB564A2D-AC9E-4EFD-A4F8-50DCC034906C} = {1DF558DF-E7DA-426F-8722-3A0BB461880D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F638D94E-96B9-4274-B101-F7980779B941}

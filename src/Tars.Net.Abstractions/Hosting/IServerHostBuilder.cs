@@ -1,17 +1,10 @@
-﻿using AspectCore.Configuration;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Tars.Net.Hosting
 {
-    public interface IServerHostBuilder
+    public interface IServerHostBuilder : ITarsBuilder
     {
-        IServerHostBuilder ConfigureConfiguration(Action<IConfigurationBuilder> configure);
-
-        IServerHostBuilder ConfigureServices(Action<IServiceCollection> configure);
-
-        IServerHostBuilder ConfigureAop(Action<IAspectConfiguration> configure);
+        IConfigurationBuilder ConfigurationBuilder { get; }
 
         IServerHost Build();
     }

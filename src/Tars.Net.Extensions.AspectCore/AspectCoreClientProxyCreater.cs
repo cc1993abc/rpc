@@ -1,15 +1,16 @@
-﻿using AspectCore.DynamicProxy;
-using System;
+﻿using System;
+using AspectCore.DynamicProxy;
+using Tars.Net.Clients;
 
-namespace Tars.Net.Clients.Proxy
+namespace Tars.Net.Extensions.AspectCore
 {
-    public class ClientProxyCreater : IClientProxyCreater
+    public class AspectCoreClientProxyCreater : IClientProxyCreater
     {
         private readonly IProxyTypeGenerator generator;
         private readonly IAspectContextFactory contextFactory;
         private readonly ClientProxyAspectBuilderFactory aspectBuilderFactory;
 
-        public ClientProxyCreater(IProxyTypeGenerator generator, IAspectContextFactory contextFactory, ClientProxyAspectBuilderFactory aspectBuilderFactory)
+        public AspectCoreClientProxyCreater(IProxyTypeGenerator generator, IAspectContextFactory contextFactory, ClientProxyAspectBuilderFactory aspectBuilderFactory)
         {
             this.generator = generator;
             this.contextFactory = contextFactory;

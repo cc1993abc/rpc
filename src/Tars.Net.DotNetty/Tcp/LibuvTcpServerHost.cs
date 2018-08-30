@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
+using Tars.Net.DotNetty.Hosting;
 
 namespace Tars.Net.Hosting.Tcp
 {
