@@ -25,10 +25,8 @@ namespace TcpServer
                     i.TryAddSingleton<IDecoder<IByteBuffer>, TestDecoder>();
                     i.TryAddSingleton<IEncoder<IByteBuffer>, TestEncoder>();
                     i.TryAddSingleton<IContentDecoder, TestContentDecoder>();
-                    i.AddLibuvTcpClient();
                     i.AddConfiguration();
                 })
-                .ReigsterRpcClients()
                 .ReigsterRpcServices()
                 .ConfigureConfiguration(i => i.AddJsonFile("app.json"))
                 .ConfigureLog(i => i.AddConsole())

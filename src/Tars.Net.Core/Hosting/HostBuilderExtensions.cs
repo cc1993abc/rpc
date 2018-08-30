@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using AspectCore.Extensions.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -29,9 +30,15 @@ namespace Tars.Net
             return builder.ConfigureServices(i => i.AddLogging(configure));
         }
 
-        public static IServerHostBuilder ReigsterRpcClients(this IServerHostBuilder builder, params Assembly[] assemblies)
+        public static IServerHostBuilder ConfigureConfiguration(this IServerHostBuilder builder, Action<IConfigurationBuilder> configure)
         {
-            builder.ReigsterRpcClients();
+            configure?.Invoke(builder.ConfigurationBuilder);
+            return builder;
+        }
+
+        public static IServerHostBuilder ConfigureServices(this IServerHostBuilder builder, Action<IServiceCollection> configure)
+        {
+            configure?.Invoke(builder.Services);
             return builder;
         }
     }

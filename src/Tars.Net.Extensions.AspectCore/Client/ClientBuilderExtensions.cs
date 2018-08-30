@@ -11,6 +11,7 @@ namespace Tars.Net.Extensions.AspectCore
         {
             var services = builder.Services;
             services.TryAddSingleton<IRpcClientInvokerFactory>(j => new RpcClientInvokerFactory(builder.Clients, j.GetRequiredService<IRpcClientFactory>()));
+            services.ReigsterRpcDependency();
             services.AddDynamicProxy(c =>
             {
                 c.ValidationHandlers.Add(new RpcAspectValidationHandler());

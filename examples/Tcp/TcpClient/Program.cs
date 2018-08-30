@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Tars.Net;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
@@ -31,11 +30,9 @@ namespace TcpClient
                     .AddTarsClient(opt =>
                     {
                         opt.UseAspectCore();
-                        opt.ReigsterRpcClients();
                     })
                     .AddConfiguration()
                     .AddLibuvTcpClient()
-                    .ReigsterRpcDependency()
                     .BuildAspectCoreServiceProvider();
 
                 var rpc = service.GetRequiredService<IHelloRpc>();
@@ -47,8 +44,8 @@ namespace TcpClient
                 Console.WriteLine(result);
                 result = await rpc.HelloTask(2, "HelloTask Vic");
                 Console.WriteLine(result);
-                result = "Oneway";
-                rpc.HelloOneway(3, "Oneway Vic");
+                //result = "Oneway";
+                //rpc.HelloOneway(3, "Oneway Vic");
                 Console.WriteLine(result);
                 result = await rpc.HelloValueTask(4, "HelloValueTask Vic");
                 Console.WriteLine(result);
@@ -57,7 +54,7 @@ namespace TcpClient
             {
                 Console.WriteLine(ex);
             }
-            //Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }

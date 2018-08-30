@@ -8,6 +8,8 @@ namespace Tars.Net.Clients
         public static IServiceCollection AddTarsClient(this IServiceCollection serivces, Action<ITarsBuilder> option)
         {
             var builder = new TarsBuilder(serivces);
+            builder.ReigsterRpcClients();
+
             option(builder);
 
             return builder.Services;

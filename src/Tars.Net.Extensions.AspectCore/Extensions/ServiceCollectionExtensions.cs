@@ -4,7 +4,7 @@ using Tars.Net.Clients;
 
 namespace Tars.Net.Extensions.AspectCore
 {
-    public static class RpcExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection ReigsterRpcDependency(this IServiceCollection services)
         {
