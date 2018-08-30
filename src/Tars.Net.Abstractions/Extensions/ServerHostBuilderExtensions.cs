@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using Tars.Net.Hosting;
 
 namespace Tars.Net

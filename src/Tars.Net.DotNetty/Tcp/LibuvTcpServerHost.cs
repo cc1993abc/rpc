@@ -43,7 +43,7 @@ namespace Tars.Net.Hosting.Tcp
         public async Task RunAsync(Func<Task> stopFunc)
         {
             bossGroup = new DispatcherEventLoopGroup();
-            workerGroup = new WorkerEventLoopGroup(bossGroup);
+            workerGroup = new WorkerEventLoopGroup(bossGroup, configuration.EventLoopCount);
 
             try
             {

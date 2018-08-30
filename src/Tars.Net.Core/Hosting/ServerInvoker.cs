@@ -16,9 +16,9 @@ namespace Tars.Net.Hosting
         private readonly IServiceProvider provider;
         private readonly IContentDecoder decoder;
 
-        public ServerInvoker(IEnumerable<(Type service, Type implementation)> rpcServices, IServiceProvider provider, IContentDecoder decoder)
+        public ServerInvoker(IRpcMetadata rpcMetadata, IServiceProvider provider, IContentDecoder decoder)
         {
-            invokers = CreateInvokersMap(rpcServices);
+            invokers = CreateInvokersMap(rpcMetadata.RpcServices);
             this.provider = provider;
             this.decoder = decoder;
         }

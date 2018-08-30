@@ -5,12 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Tars.Net;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
 using Tars.Net.DotNetty;
-using Tars.Net.Extensions.AspectCore;
 using TcpCommon;
 
 namespace TcpClient
@@ -28,14 +26,10 @@ namespace TcpClient
                     .AddSingleton<IContentDecoder, TestContentDecoder>()
                     .AddSingleton<IConfiguration>(i => builder.AddJsonFile("app.json").Build())
                     .AddLogging(j => j.AddConsole())
-                    .AddTarsClient(opt =>
-                    {
-                        opt.UseAspectCore();
-                        opt.ReigsterRpcClients();
-                    })
+                    .ReigsterRpcClients()
                     .AddConfiguration()
                     .AddLibuvTcpClient()
-                    .ReigsterRpcDependency()
+                    .AddAop()
                     .BuildAspectCoreServiceProvider();
 
                 var rpc = service.GetRequiredService<IHelloRpc>();

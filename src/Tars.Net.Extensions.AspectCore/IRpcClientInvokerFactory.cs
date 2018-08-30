@@ -1,7 +1,7 @@
-﻿using System;
+﻿using AspectCore.DynamicProxy;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using AspectCore.DynamicProxy;
 
 namespace Tars.Net.Extensions.AspectCore
 {

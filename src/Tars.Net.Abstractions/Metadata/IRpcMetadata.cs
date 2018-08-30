@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Tars.Net
+namespace Tars.Net.Metadata
 {
-    public interface ITarsBuilder
+    public interface IRpcMetadata
     {
-        IServiceCollection Services { get; }
-
         IEnumerable<Type> Clients { get; }
 
         IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
