@@ -28,9 +28,9 @@ namespace TcpServer
             name = no.ToString() + "Vic";
         }
 
-        public void HelloOneway(int no, string name)
+        public async Task HelloOneway(int no, string name)
         {
-            Thread.Sleep(3000);
+            await Task.Delay(3000);
             Console.WriteLine($"From oneway - {no}: Hi, {name}");
         }
 

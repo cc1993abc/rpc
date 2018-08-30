@@ -42,7 +42,7 @@ namespace TcpClient
                 result = await rpc.HelloTask(2, "HelloTask Vic");
                 Console.WriteLine(result);
                 result = "Oneway";
-                rpc.HelloOneway(3, "Oneway Vic");
+                await rpc.HelloOneway(3, "Oneway Vic");
                 Console.WriteLine(result);
                 result = await rpc.HelloValueTask(4, "HelloValueTask Vic");
                 Console.WriteLine(result);
