@@ -62,7 +62,7 @@ namespace Tars.Net.Clients.Tcp
 
         public Task ShutdownGracefullyAsync(TimeSpan quietPeriod, TimeSpan shutdownTimeout)
         {
-            return group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
+            return group.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
         }
     }
 }
