@@ -5,9 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Tars.Net.Hosting;
 
-namespace Tars.Net
+namespace Tars.Net.Hosting
 {
     public static class HostBuilderExtensions
     {

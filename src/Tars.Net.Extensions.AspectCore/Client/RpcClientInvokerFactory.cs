@@ -10,7 +10,7 @@ using Tars.Net.Clients;
 
 namespace Tars.Net.Extensions.AspectCore
 {
-    public class RpcClientInvokerFactory : IRpcClientInvokerFactory
+    public class RpcClientInvokerFactory
     {
         private readonly IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> invokers;
         private readonly IRpcClientFactory clientFactory;

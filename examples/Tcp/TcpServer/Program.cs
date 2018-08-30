@@ -11,6 +11,7 @@ using TcpCommon;
 using Tars.Net;
 using Tars.Net.Configurations;
 using Tars.Net.DotNetty;
+using Tars.Net.Hosting;
 
 namespace TcpServer
 {

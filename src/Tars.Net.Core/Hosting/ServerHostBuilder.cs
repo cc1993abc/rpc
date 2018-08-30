@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tars.Net.Attributes;
-using Tars.Net.Hosting;
 
-namespace Tars.Net
+namespace Tars.Net.Hosting
 {
     public class ServerHostBuilder : IServerHostBuilder
     {
         public IServiceCollection Services { get; }
 
         public IConfigurationBuilder ConfigurationBuilder { get; }
-
-        public IEnumerable<Type> Clients { get; }
 
         public IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
 
@@ -24,7 +21,7 @@ namespace Tars.Net
 
             var all = RpcHelper.GetAllHasAttributeTypes<RpcAttribute>();
             var (rpcServices, rpcClients) = RpcHelper.GetAllRpcServicesAndClients(all);
-            Clients = rpcClients;
+
             RpcServices = rpcServices;
         }
 

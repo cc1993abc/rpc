@@ -2,13 +2,12 @@
 using AspectCore.Extensions.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Tars.Net.Clients;
 
-namespace Tars.Net
+namespace Tars.Net.Clients
 {
     public static class TarsBuilderExtensions
     {
-        public static ITarsBuilder ReigsterRpcClients(this ITarsBuilder builder, params Assembly[] assemblies)
+        public static ITarsClientBuilder ReigsterRpcClients(this ITarsClientBuilder builder, params Assembly[] assemblies)
         {
             var services = builder.Services;
             foreach (var client in builder.Clients)

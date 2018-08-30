@@ -4,12 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Tars.Net
 {
-    public interface ITarsBuilder
+    public interface ITarsClientBuilder
     {
         IServiceCollection Services { get; }
 
         IEnumerable<Type> Clients { get; }
-
-        IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
     }
 }

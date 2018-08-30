@@ -7,10 +7,10 @@ namespace Tars.Net.Extensions.AspectCore
 {
     public static class ClientBuilderExtensions
     {
-        public static void UseAspectCore(this ITarsBuilder builder)
+        public static void UseAspectCore(this ITarsClientBuilder builder)
         {
             var services = builder.Services;
-            services.TryAddSingleton<IRpcClientInvokerFactory>(j => new RpcClientInvokerFactory(builder.Clients, j.GetRequiredService<IRpcClientFactory>()));
+            services.TryAddSingleton(j => new RpcClientInvokerFactory(builder.Clients, j.GetRequiredService<IRpcClientFactory>()));
             services.ReigsterRpcDependency();
             services.AddDynamicProxy(c =>
             {
