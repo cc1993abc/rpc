@@ -16,7 +16,7 @@ namespace Tars.Net.Clients
                 var type = client.GetReflector().GetMemberInfo().AsType();
                 services.TryAddSingleton(type, j =>
                 {
-                    return j.GetRequiredService<IClientProxyCreater>().Create(type);
+                    return j.GetRequiredService<IClientProxyCreator>().Create(type);
                 });
             }
             services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();

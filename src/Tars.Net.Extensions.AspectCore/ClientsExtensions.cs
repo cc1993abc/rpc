@@ -11,7 +11,7 @@ namespace Tars.Net.Clients
     {
         public static IServiceCollection AddAop(this IServiceCollection services, Action<IAspectConfiguration> configure = null)
         {
-            services.TryAddSingleton<IClientProxyCreater, AspectCoreClientProxyCreater>();
+            services.TryAddSingleton<IClientProxyCreator, AspectCoreClientProxyCreator>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
             services.TryAddSingleton<RpcClientInvokerFactory>();
             services.AddDynamicProxy(c =>

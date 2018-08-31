@@ -4,13 +4,13 @@ using Tars.Net.Clients;
 
 namespace Tars.Net.Extensions.AspectCore
 {
-    public class AspectCoreClientProxyCreater : IClientProxyCreater
+    public class AspectCoreClientProxyCreator : IClientProxyCreator
     {
         private readonly IProxyTypeGenerator generator;
         private readonly IAspectContextFactory contextFactory;
         private readonly ClientProxyAspectBuilderFactory aspectBuilderFactory;
 
-        public AspectCoreClientProxyCreater(IProxyTypeGenerator generator, IAspectContextFactory contextFactory, ClientProxyAspectBuilderFactory aspectBuilderFactory)
+        public AspectCoreClientProxyCreator(IProxyTypeGenerator generator, IAspectContextFactory contextFactory, ClientProxyAspectBuilderFactory aspectBuilderFactory)
         {
             this.generator = generator;
             this.contextFactory = contextFactory;

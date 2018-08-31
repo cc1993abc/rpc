@@ -2,7 +2,7 @@
 
 namespace Tars.Net.Clients
 {
-    public interface IClientProxyCreater
+    public interface IClientProxyCreator
     {
         object Create(Type type);
     }
