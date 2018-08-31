@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tars.Net.Clients.Proxy
+namespace Tars.Net.Clients
 {
     public interface IClientProxyCreater
     {

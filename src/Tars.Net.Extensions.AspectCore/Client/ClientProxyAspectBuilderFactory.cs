@@ -2,17 +2,17 @@
 using System;
 using System.Reflection;
 
-namespace Tars.Net.Clients.Proxy
+namespace Tars.Net.Extensions.AspectCore
 {
     [NonAspect]
     public class ClientProxyAspectBuilderFactory : IAspectBuilderFactory
     {
         private readonly IInterceptorCollector interceptorCollector;
-        private readonly IRpcClientInvokerFactory clientFactory;
+        private readonly RpcClientInvokerFactory clientFactory;
         private readonly IAspectCaching aspectCaching;
 
         public ClientProxyAspectBuilderFactory(IInterceptorCollector interceptorCollector,
-            IAspectCachingProvider aspectCachingProvider, IRpcClientInvokerFactory clientFactory)
+            IAspectCachingProvider aspectCachingProvider, RpcClientInvokerFactory clientFactory)
         {
             if (aspectCachingProvider == null)
             {

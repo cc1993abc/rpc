@@ -1,5 +1,4 @@
-﻿using Tars.Net.Codecs;
-using Tars.Net.Metadata;
+﻿using Tars.Net.Metadata;
 
 namespace Tars.Net.Hosting
 {

@@ -14,6 +14,7 @@ namespace Tars.Net.Configurations
                 j.GetRequiredService<IConfiguration>().Bind(key, config);
                 return config;
             });
+
             return services;
         }
     }

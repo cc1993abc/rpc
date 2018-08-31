@@ -15,6 +15,6 @@ namespace TcpCommon
         ValueTask<string> HelloValueTask(int no, string name);
 
         [Oneway]
-        void HelloOneway(int no, string name);
+        Task HelloOneway(int no, string name);
     }
 }

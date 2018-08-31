@@ -1,18 +1,17 @@
-﻿using DotNetty.Buffers;
+﻿using AspectCore.Extensions.Reflection;
+using DotNetty.Buffers;
 using Newtonsoft.Json;
 using System;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Tars.Net.Codecs;
 using Tars.Net.Metadata;
-using AspectCore.Extensions.Reflection;
-using System.Threading.Tasks;
 
 namespace TcpCommon
 {
     public class TestDecoder : IDecoder<IByteBuffer>
     {
-
         public Request DecodeRequest(IByteBuffer input)
         {
             var result =
@@ -42,7 +41,9 @@ namespace TcpCommon
                 req.Parameters[i] = Convert.ChangeType(req.Parameters[i], req.ParameterTypes[i].ParameterType);
             }
         }
+
         private static readonly MethodInfo FromResult = typeof(Task).GetTypeInfo().GetMethod(nameof(Task.FromResult));
+
         public void DecodeResponseContent(Response resp)
         {
             for (int i = 0; i < resp.ReturnParameterTypes.Length; i++)

@@ -1,7 +1,8 @@
 ﻿using DotNetty.Transport.Channels;
+using Tars.Net.Hosting;
 using Tars.Net.Metadata;
 
-namespace Tars.Net.Hosting
+namespace Tars.Net.DotNetty.Hosting
 {
     public class DotNettyServerHandler : SimpleChannelInboundHandler<Request>
     {
@@ -14,9 +15,9 @@ namespace Tars.Net.Hosting
             this.handler = handler;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, Request msg)
+        protected override async void ChannelRead0(IChannelHandlerContext ctx, Request msg)
         {
-            ctx.WriteAsync(handler.Process(msg));
+            await ctx.WriteAsync(handler.Process(msg));
         }
     }
 }

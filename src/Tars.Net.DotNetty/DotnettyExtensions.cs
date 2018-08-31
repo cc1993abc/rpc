@@ -1,11 +1,20 @@
-﻿using DotNetty.Buffers;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Tars.Net.Clients;
+using Tars.Net.Clients.Tcp;
+using Tars.Net.DotNetty.Hosting;
+using Tars.Net.Hosting;
 using Tars.Net.Hosting.Tcp;
 
-namespace Tars.Net.Hosting
+namespace Tars.Net.DotNetty
 {
-    public static class ServerHostExtensions
+    public static class DotnettyExtensions
     {
+        public static IServiceCollection AddLibuvTcpClient(this IServiceCollection services)
+        {
+            return services.AddSingleton<IRpcClient, LibuvTcpClient>();
+        }
+
         public static IServerHostBuilder UseLibuvTcpHost(this IServerHostBuilder builder)
         {
             return builder.ConfigureServices(i =>

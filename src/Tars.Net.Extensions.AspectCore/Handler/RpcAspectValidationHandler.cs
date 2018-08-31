@@ -2,7 +2,7 @@
 using AspectCore.Extensions.Reflection;
 using Tars.Net.Attributes;
 
-namespace Tars.Net.Clients
+namespace Tars.Net.Extensions.AspectCore
 {
     [NonAspect]
     public class RpcAspectValidationHandler : IAspectValidationHandler

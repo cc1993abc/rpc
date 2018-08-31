@@ -6,17 +6,19 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
+using Tars.Net.Clients;
+using Tars.Net.Metadata;
 
-namespace Tars.Net.Clients
+namespace Tars.Net.Extensions.AspectCore
 {
-    public class RpcClientInvokerFactory : IRpcClientInvokerFactory
+    public class RpcClientInvokerFactory
     {
         private readonly IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> invokers;
         private readonly IRpcClientFactory clientFactory;
 
-        public RpcClientInvokerFactory(IEnumerable<Type> rpcClients, IRpcClientFactory clientFactory)
+        public RpcClientInvokerFactory(IRpcMetadata rpcMetadata, IRpcClientFactory clientFactory)
         {
-            invokers = CreateRpcClientInvokers(rpcClients);
+            invokers = CreateRpcClientInvokers(rpcMetadata.Clients);
             this.clientFactory = clientFactory;
         }
 
@@ -32,8 +34,7 @@ namespace Tars.Net.Clients
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
-                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, method.ReturnParameter, isOneway,
-                            attribute.Codec, context.Parameters);
+                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, method.ReturnParameter, isOneway, attribute.Codec, context.Parameters);
                         context.ReturnValue = value;
                     });
                 }

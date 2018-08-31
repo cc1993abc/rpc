@@ -5,9 +5,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Tars.Net.Clients;
+using Tars.Net;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
+using Tars.Net.DotNetty;
 using Tars.Net.Hosting;
 using TcpCommon;
 
@@ -24,14 +25,13 @@ namespace TcpServer
                     i.TryAddSingleton<IDecoder<IByteBuffer>, TestDecoder>();
                     i.TryAddSingleton<IEncoder<IByteBuffer>, TestEncoder>();
                     i.TryAddSingleton<IContentDecoder, TestContentDecoder>();
-                    i.AddLibuvTcpClient();
-                    i.ReigsterRpcClients();
-                    i.ReigsterRpcServices();
                     i.AddConfiguration();
                 })
+                .ReigsterRpcServices()
                 .ConfigureConfiguration(i => i.AddJsonFile("app.json"))
                 .ConfigureLog(i => i.AddConsole())
                 .UseLibuvTcpHost()
+                .UseAop()
                 .Build();
 
             await host.RunAsync(() => Task.Run(() =>

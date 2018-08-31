@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Tars.Net.DotNetty\Tars.Net.DotNetty.csproj" />
+    <ProjectReference Include="..\..\..\src\Tars.Net.Extensions.AspectCore\Tars.Net.Extensions.AspectCore.csproj" />
     <ProjectReference Include="..\TcpCommon\TcpCommon.csproj" />
   </ItemGroup>
 

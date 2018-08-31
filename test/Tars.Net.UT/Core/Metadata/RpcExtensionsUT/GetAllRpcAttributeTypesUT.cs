@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Tars.Net.Attributes;
+using Tars.Net.Metadata;
 using Tars.Net.UT.Core.Hosting.RpcExtensionsUT;
 using Xunit;
 
@@ -36,7 +37,7 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 
         public GetAllRpcAttributeTypesUT()
         {
-            result = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
+            result = new RpcMetadata().GetAllHasAttributeTypes().ToArray();
         }
 
         [Fact]
@@ -74,10 +75,9 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 
         public GetAllRpcServicesAndClientsUT()
         {
-            var all = RpcExtensions.GetAllHasAttributeTypes<RpcAttribute>().ToArray();
-            var (rpcServices, rpcClients) = RpcExtensions.GetAllRpcServicesAndClients(all);
-            clients = rpcClients.ToArray();
-            services = rpcServices.ToArray();
+            var rpcMetadata = new RpcMetadata();
+            clients = rpcMetadata.Clients.ToArray();
+            services = rpcMetadata.RpcServices.ToArray();
         }
 
         [Fact]
