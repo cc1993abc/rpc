@@ -18,10 +18,10 @@ script:
 
 deploy:
  - provider: script
-    script: ./deploy-branch.sh
-    on:
-      branch: develop
-  - provider: script
-    script: ./deploy-tag.sh
-    on:
-      tags: true
+   script: ./deploy-branch.sh
+   on:
+    branch: develop
+ - provider: script
+   script: ./deploy-tag.sh
+   on:
+    tags: true
