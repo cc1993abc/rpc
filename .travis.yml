@@ -15,6 +15,7 @@ script:
  - dotnet minicover uninstrument --workdir ../../
  - dotnet minicover htmlreport --workdir ../../ --threshold 10
  - dotnet minicover report --workdir ../../ --threshold 10
+ 
  deploy:
   - provider: script
     script: ./deploy-branch.sh
