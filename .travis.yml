@@ -23,7 +23,6 @@ script:
   - cd ../../
 
 deploy:
-  skip_cleanup: true
   - provider: script
     script: chmod +x ./deploy-branch.sh && ./deploy-branch.sh
     on:

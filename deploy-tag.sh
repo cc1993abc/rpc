@@ -13,6 +13,7 @@ if [[ "${TRAVIS_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then
       exit 1
     fi
 
+    dotnet build -c Release
     dotnet pack -c Release
     dotnet nuget push ./src/Tars.Net.*/bin/Release/Tars.Net.*.nupkg -k $NUGET_KEY -s https://api.nuget.org/v3/index.json
 else
