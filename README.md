@@ -1,6 +1,6 @@
 # Tars.NET Rpc  
 
-[![Build Status](https://travis-ci.org/TarsNET/rpc.png)](https://travis-ci.org/TarsNET/rpc)
+[![Build Status](https://travis-ci.com/TarsNET/rpc.svg?branch=develop)](https://travis-ci.org/TarsNET/rpc)
 
 | Nuget | |
 | --- | --- |
