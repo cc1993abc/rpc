@@ -23,10 +23,10 @@ script:
 
 deploy:
  - provider: script
-   script: ./deploy-branch.sh
+   script: chmod +x ./deploy-branch && ./deploy-branch.sh
    on:
     branch: develop
  - provider: script
-   script: ./deploy-tag.sh
+   script: chmod +x ./deploy-tag.sh && ./deploy-tag.sh
    on:
     tags: true
