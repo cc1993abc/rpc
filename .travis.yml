@@ -23,7 +23,10 @@ script:
 
 deploy:
  - provider: script
-   script: chmod +x ./deploy-branch.sh && ./deploy-branch.sh
+   script: 
+    - export Version=$(cat version)-beta-$(date +%Y%m%d%H%M%S)
+    - dotnet pack -c Release --output $PWD/artifacts/ci
+    - dotnet nuget push artifacts/release/*.nupkg -k $NUGET_KEY -s https://api.nuget.org/v3/index.json
    on:
     branch: develop
  - provider: script
