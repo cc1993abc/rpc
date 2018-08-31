@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Tars.Net</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Tars.NET</Authors>
+    <Company>Tars.NET</Company>
+    <Description>Core implement for Tars.Net</Description>
+    <Copyright>@2018 Tars.NET</Copyright>
+    <PackageLicenseUrl>https://github.com/TarsNET/rpc/blob/develop/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/TarsNET</PackageProjectUrl>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/42412008?s=200&amp;v=4</PackageIconUrl>
+    <PackageReleaseNotes>Tars.Net.Core beta </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
