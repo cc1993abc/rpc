@@ -261,3 +261,7 @@ paket-files/
 /**/bin/
 /**/obj/
 _site
+
+coverage-html
+coverage.json
+coverage.hits

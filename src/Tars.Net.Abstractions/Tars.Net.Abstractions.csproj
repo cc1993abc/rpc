@@ -5,7 +5,6 @@
     <RootNamespace>Tars.Net</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.0.1</Version>
     <Authors>Tars.NET</Authors>
     <Company>Tars.NET</Company>
     <Description>Abstractions for Tars.Net</Description>
