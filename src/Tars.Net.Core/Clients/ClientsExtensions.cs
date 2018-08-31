@@ -21,6 +21,7 @@ namespace Tars.Net.Clients
             }
             services.TryAddSingleton<IRpcClientFactory, RpcClientFactory>();
             services.TryAddSingleton<IClientCallBack, ClientCallBack>();
+            services.TryAddSingleton<IClientProxyCreator, ClientProxyCreator>();
             return services;
         }
     }

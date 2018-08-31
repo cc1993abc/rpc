@@ -11,9 +11,10 @@ namespace Tars.Net.Clients
     {
         public static IServiceCollection AddAop(this IServiceCollection services, Action<IAspectConfiguration> configure = null)
         {
-            services.TryAddSingleton<IClientProxyCreator, AspectCoreClientProxyCreator>();
-            services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
-            services.TryAddSingleton<RpcClientInvokerFactory>();
+            //replace the inner implement
+            services.AddSingleton<IClientProxyCreator, AspectCoreClientProxyCreator>();
+            services.AddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
+            services.AddSingleton<RpcClientInvokerFactory>();
             services.AddDynamicProxy(c =>
             {
                 c.ValidationHandlers.Add(new RpcAspectValidationHandler());
