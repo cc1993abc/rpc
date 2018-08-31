@@ -13,8 +13,8 @@ if [[ "${TRAVIS_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then
       exit 1
     fi
 
-    dotnet pack -c Release --output $PWD/artifacts/release
-    dotnet nuget push artifacts/release/*.nupkg -k $NUGET_KEY -s https://api.nuget.org/v3/index.json
+    dotnet pack -c Release
+    dotnet nuget push ./src/Tars.Net.*/bin/Release/Tars.Net.*.nupkg -k $NUGET_KEY -s https://api.nuget.org/v3/index.json
 else
   echo "Skipping version deploy"
 fi
