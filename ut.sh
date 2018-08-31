@@ -16,9 +16,9 @@ cd test/Tars.Net.UT
 dotnet minicover uninstrument --workdir ../../
 
 # Create html reports inside folder coverage-html
-dotnet minicover htmlreport --workdir ../../ --threshold 80
+dotnet minicover htmlreport --workdir ../../ --threshold 10
 
 # Print console report
 # This command returns failure if the coverage is lower than the threshold
-dotnet minicover report --workdir ../../ --threshold 80
+dotnet minicover report --workdir ../../ --threshold 10
 
