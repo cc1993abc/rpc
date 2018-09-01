@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Tars.Net.Internal;
 using System;
+using ClientProxy = Tars.Net.Internal.ClientProxy;
 
 namespace Tars.Net.Clients
 {
@@ -15,12 +16,7 @@ namespace Tars.Net.Clients
 
         public object Create(Type type)
         {
-            MethodInfo mi = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create), new Type[] { });
-            mi = mi.MakeGenericMethod(type, typeof(ClientProxy));
-            var clientProxy = mi.Invoke(null, null);
-
-            ((ClientProxy)clientProxy).SetClientFactory(rpcClientFactory);
-            return clientProxy;
+            return ClientProxy.Create(type, rpcClientFactory);
         }
     }
 }
