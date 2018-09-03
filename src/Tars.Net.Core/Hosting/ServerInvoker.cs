@@ -58,7 +58,17 @@ namespace Tars.Net.Hosting
                     req.ParameterTypes = parameters;
                     decoder.DecodeRequestContent(req);
                     var serviceInstance = provider.GetService(service);
-                    var returnValue = reflector.Invoke(serviceInstance, req.Parameters);
+                    var context = new ServerContext();
+                    ServerContext.Current = context;
+                    try
+                    {
+                        resp.ReturnValue = reflector.Invoke(serviceInstance, req.Parameters);
+                    }
+                    finally
+                    {
+                        resp.Context = context.Context;
+                    }
+                    if (isOneway) return;
                     var returnParameters = new object[outParameters.Length];
                     var index = 0;
                     foreach (var item in outParameters)
@@ -72,7 +82,6 @@ namespace Tars.Net.Hosting
                     }
                     resp.ReturnValueType = method.ReturnParameter;
                     resp.ReturnParameterTypes = outParameters;
-                    resp.ReturnValue = returnValue;
                     resp.ReturnParameters = returnParameters;
                     resp.Codec = codec;
                 });

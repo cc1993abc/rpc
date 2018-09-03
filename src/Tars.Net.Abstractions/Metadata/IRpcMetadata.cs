@@ -8,5 +8,9 @@ namespace Tars.Net.Metadata
         IEnumerable<Type> Clients { get; }
 
         IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
+
+        bool IsRpcServiceType(Type type);
+
+        bool IsRpcClientType(Type type);
     }
 }

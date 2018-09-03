@@ -8,7 +8,10 @@ namespace Tars.Net.Metadata
 {
     public class RpcMetadata : IRpcMetadata
     {
-        public IEnumerable<Type> Clients { get; }
+        private readonly HashSet<Type> clients;
+        private readonly HashSet<Type> services;
+
+        public IEnumerable<Type> Clients { get { return clients; } }
 
         public IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
 
@@ -16,7 +19,8 @@ namespace Tars.Net.Metadata
         {
             var all = GetAllHasAttributeTypes();
             var (rpcServices, rpcClients) = GetAllRpcServicesAndClients(all);
-            Clients = rpcClients;
+            clients = new HashSet<Type>(rpcClients.Distinct());
+            services = new HashSet<Type>(rpcServices.Select(i=> i.Service).Distinct());
             RpcServices = rpcServices;
         }
 
@@ -70,6 +74,16 @@ namespace Tars.Net.Metadata
                         : services;
                 })
                 .Distinct();
+        }
+
+        public bool IsRpcServiceType(Type type)
+        {
+            return services.Contains(type);
+        }
+
+        public bool IsRpcClientType(Type type)
+        {
+            return clients.Contains(type);
         }
     }
 }

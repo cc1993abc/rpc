@@ -8,7 +8,7 @@ namespace Tars.Net.Clients
 {
     public class ClientCallBack : IClientCallBack
     {
-        private ConcurrentDictionary<int, TaskCompletionSource<Response>> callBacks = new ConcurrentDictionary<int, TaskCompletionSource<Response>>();
+        private readonly ConcurrentDictionary<int, TaskCompletionSource<Response>> callBacks = new ConcurrentDictionary<int, TaskCompletionSource<Response>>();
         private int callBackId = 0;
 
         public void CallBack(Response msg)

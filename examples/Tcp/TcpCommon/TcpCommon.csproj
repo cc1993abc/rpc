@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Tars.Net.Abstractions\Tars.Net.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\src\Tars.Net.DotNetty\Tars.Net.DotNetty.csproj" />
+    <ProjectReference Include="..\..\..\src\Tars.Net.Extensions.AspectCore\Tars.Net.Extensions.AspectCore.csproj" />
   </ItemGroup>
 
 </Project>

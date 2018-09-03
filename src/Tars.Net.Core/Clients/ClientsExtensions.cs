@@ -6,7 +6,7 @@ using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
 {
-    public static class ClientsExtensions
+    public static partial class ClientsExtensions
     {
         public static IServiceCollection ReigsterRpcClients(this IServiceCollection services, params Assembly[] assemblies)
         {

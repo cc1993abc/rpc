@@ -3,6 +3,7 @@ using Tars.Net.Attributes;
 
 namespace TcpCommon
 {
+    [BusinessExceptionInterceptor]
     [Rpc("TestApp.HelloServer.HelloObj")]
     public interface IHelloRpc
     {
@@ -16,5 +17,7 @@ namespace TcpCommon
 
         [Oneway]
         Task HelloOneway(int no, string name);
+
+        Task TestBusinessExceptionInterceptor();
     }
 }
