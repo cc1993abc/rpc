@@ -42,37 +42,9 @@ namespace Tars.Net.Clients
                             Codec = attribute.Codec,
                             IsOneway = isOneway
                         };
-                        foreach (var data in context.AdditionalData)
-                        {
-                            if (data.Key.StartsWith("#"))
-                            {
-                                continue;
-                            }
-                            else if (req.Context.ContainsKey(data.Key))
-                            {
-                                req.Context[data.Key] = data.Value.ToString();
-                            }
-                            else
-                            {
-                                req.Context.Add(data.Key, data.Value.ToString());
-                            }
-                        }
+                        req.Context.SetContext(context.AdditionalData);
                         var resp = await clientFactory.SendAsync(req, outParameters, method.ReturnParameter);
-                        foreach (var data in resp.Context)
-                        {
-                            if (data.Key.StartsWith("#"))
-                            {
-                                continue;
-                            }
-                            else if (context.AdditionalData.ContainsKey(data.Key))
-                            {
-                                context.AdditionalData[data.Key] = data.Value.ToString();
-                            }
-                            else
-                            {
-                                context.AdditionalData.Add(data.Key, data.Value.ToString());
-                            }
-                        }
+                        resp.Context.SetContext(context.AdditionalData);
                         context.ReturnValue = resp.ReturnValue;
                         await next(context);
                     });
