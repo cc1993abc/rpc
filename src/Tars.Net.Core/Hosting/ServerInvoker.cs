@@ -33,12 +33,12 @@ namespace Tars.Net.Hosting
                 {
                     continue;
                 }
-                dictionary.Add(attribute.ServantName, CreateFuncs(service, implementation));
+                dictionary.Add(attribute.ServantName, CreateFuncs(service));
             }
             return dictionary;
         }
 
-        private IDictionary<string, Action<Request, Response>> CreateFuncs(Type service, Type implementation)
+        private IDictionary<string, Action<Request, Response>> CreateFuncs(Type service)
         {
             var dictionary = new Dictionary<string, Action<Request, Response>>(StringComparer.OrdinalIgnoreCase);
             foreach (var method in service.GetMethods(BindingFlags.Public | BindingFlags.Instance))

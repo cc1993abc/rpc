@@ -43,7 +43,7 @@ namespace Tars.Net.Clients
             var aspectBuilder = new AspectBuilder(context => context.Complete(), null);
             aspectBuilder.AddAspectDelegate((conext, next) =>
             {
-                conext.AdditionalData.Add(ClientsExtensions.Context_IsRpcClient, true);
+                conext.AdditionalData.Add(AspectClientsExtensions.Context_IsRpcClient, true);
                 return next(conext);
             });
             foreach (var interceptor in interceptorCollector.Collect(tuple.Item1, tuple.Item2))

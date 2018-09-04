@@ -11,7 +11,7 @@ namespace TcpCommon
     {
         public string Code { get; set; }
 
-        public string Message { get; set; }
+        public new string Message { get; set; }
     }
 
     public class BusinessExceptionInterceptorAttribute : AbstractInterceptorAttribute

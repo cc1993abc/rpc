@@ -14,8 +14,12 @@ using TcpCommon;
 
 namespace TcpServer
 {
-    internal class Program
+    public class Program
     {
+        protected Program()
+        {
+        }
+
         private static async Task Main(string[] args)
         {
             var host = new ServerHostBuilder()

@@ -15,6 +15,10 @@ namespace TcpClient
 {
     internal class Program
     {
+        protected Program()
+        {
+        }
+
         private static async Task Main(string[] args)
         {
             try

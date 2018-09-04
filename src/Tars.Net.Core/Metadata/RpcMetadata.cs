@@ -13,39 +13,39 @@ namespace Tars.Net.Metadata
 
         public IEnumerable<Type> Clients { get { return clients; } }
 
-        public IEnumerable<(Type Service, Type Implementation)> RpcServices { get; }
+        public IEnumerable<(Type service, Type implementation)> RpcServices { get; }
 
         public RpcMetadata()
         {
             var all = GetAllHasAttributeTypes();
             var (rpcServices, rpcClients) = GetAllRpcServicesAndClients(all);
             clients = new HashSet<Type>(rpcClients.Distinct());
-            services = new HashSet<Type>(rpcServices.Select(i=> i.Service).Distinct());
+            services = new HashSet<Type>(rpcServices.Select(i=> i.service).Distinct());
             RpcServices = rpcServices;
         }
 
-        public (IEnumerable<(Type Service, Type Implementation)> RpcServices, IEnumerable<Type> RpcClients)
-            GetAllRpcServicesAndClients(IEnumerable<(Type Service, Type Implementation)> services)
+        public (IEnumerable<(Type service, Type implementation)> rpcServices, IEnumerable<Type> rpcClients)
+            GetAllRpcServicesAndClients(IEnumerable<(Type service, Type implementation)> services)
         {
-            var groups = services.GroupBy(i => i.Service)
+            var groups = services.GroupBy(i => i.service)
                 .ToArray();
-            var clients = new List<Type>();
+            var clientTypes = new List<Type>();
             var rpcServices = new List<(Type Service, Type Implementation)>();
             foreach (var group in groups)
             {
                 foreach (var kv in group)
                 {
-                    if (kv.Implementation == null)
+                    if (kv.implementation == null)
                     {
-                        clients.Add(kv.Service);
+                        clientTypes.Add(kv.service);
                     }
-                    else if (kv.Implementation.GetReflector().GetMemberInfo().IsClass)
+                    else if (kv.implementation.GetReflector().GetMemberInfo().IsClass)
                     {
                         rpcServices.Add(kv);
                     }
                 }
             }
-            return (RpcServices: rpcServices, RpcClients: clients.Where(i => rpcServices.All(j => i != j.Service)));
+            return (rpcServices: rpcServices, rpcClients: clientTypes.Where(i => rpcServices.All(j => i != j.Service)));
         }
 
         public IEnumerable<(Type Service, Type Implementation)> GetAllHasAttributeTypes()
@@ -66,12 +66,12 @@ namespace Tars.Net.Metadata
                 .SelectMany(i =>
                 {
                     var reflector = i.GetReflector();
-                    var services = i.GetInterfaces()
+                    var serviceTypes = i.GetInterfaces()
                     .Where(j => j.GetReflector().IsDefined<RpcAttribute>())
                     .Select(j => (Service: j, Implementation: i));
                     return i.IsInterface && reflector.IsDefined<RpcAttribute>()
-                        ? services.Union(new (Type Service, Type Implementation)[1] { (Service: i, Implementation: null) })
-                        : services;
+                        ? serviceTypes.Union(new (Type Service, Type Implementation)[1] { (Service: i, Implementation: null) })
+                        : serviceTypes;
                 })
                 .Distinct();
         }

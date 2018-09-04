@@ -13,14 +13,14 @@ namespace Tars.Net.Hosting
             this.serverInvoker = serverInvoker;
         }
 
-        public Response Process(Request msg)
+        public Response Process(Request req)
         {
-            var response = msg.CreateResponse();
+            var response = req.CreateResponse();
             try
             {
-                if (!"tars_ping".Equals(msg.FuncName, StringComparison.OrdinalIgnoreCase))
+                if (!"tars_ping".Equals(req.FuncName, StringComparison.OrdinalIgnoreCase))
                 {
-                    serverInvoker.Invoke(msg, response);
+                    serverInvoker.Invoke(req, response);
                 }
             }
             catch (TarsException ex)

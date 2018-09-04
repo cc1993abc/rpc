@@ -10,7 +10,7 @@ using Tars.Net.Extensions.AspectCore;
 
 namespace Tars.Net.Clients
 {
-    public static partial class ClientsExtensions
+    public static partial class AspectClientsExtensions
     {
         public const string Context_IsRpcClient = "#IsRpcClient";
         public const string Context_IngorePrefix = "#";

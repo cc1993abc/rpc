@@ -1,8 +1,5 @@
 ﻿using AspectCore.Extensions.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Reflection;
 using Tars.Net.Metadata;
 
@@ -21,11 +18,6 @@ namespace Tars.Net.Hosting
             builder.Services.TryAddSingleton<IServerInvoker, ServerInvoker>();
             builder.Services.TryAddSingleton<IServerHandler, ServerHandler>();
             return builder;
-        }
-
-        public static IServerHostBuilder ConfigureLog(this IServerHostBuilder builder, Action<ILoggingBuilder> configure)
-        {
-            return builder.ConfigureServices(i => i.AddLogging(configure));
         }
     }
 }
