@@ -21,19 +21,12 @@ namespace TcpServer
         private static async Task Main(string[] args)
         {
             var host = new HostBuilder()
-                .ConfigureServices((hostContext, services) =>
-                {
-                    //todo: add Decoder and Encoder
-                    services.TryAddSingleton<IDecoder<IByteBuffer>, TestDecoder>();
-                    services.TryAddSingleton<IEncoder<IByteBuffer>, TestEncoder>();
-                    services.TryAddSingleton<IContentDecoder, TestContentDecoder>();
-                    services.AddConfiguration();
-                })
                 .ConfigureHostConfiguration(i => i.AddJsonFile("app.json"))
                 .ConfigureLogging((hostContext, configLogging) =>
                  {
                      configLogging.AddConsole();
                  })
+                .UseStartup<Startup>()
                 .UseLibuvTcpHost()
                 .UseAop()
                 .UseConsoleLifetime()
