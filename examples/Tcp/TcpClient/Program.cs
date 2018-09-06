@@ -54,7 +54,7 @@ namespace TcpClient
             }
             catch (AspectCore.DynamicProxy.AspectInvocationException e)
             {
-                var ee =(BusinessException)e.InnerException;
+                var ee = (BusinessException)e.InnerException;
                 Console.WriteLine($"Code:{ee.Code} Message:{ee.Message}");
             }
             catch (Exception ex)

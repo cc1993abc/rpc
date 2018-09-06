@@ -4,8 +4,8 @@ using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Tars.Net.Extensions.AspectCore;
 
 namespace Tars.Net.Clients
@@ -35,7 +35,7 @@ namespace Tars.Net.Clients
 
         public static void SetContext(this IDictionary<string, string> context, IDictionary<string, object> additionalData)
         {
-            foreach (var data in additionalData.Where(i=> !i.Key.StartsWith(Context_IngorePrefix)))
+            foreach (var data in additionalData.Where(i => !i.Key.StartsWith(Context_IngorePrefix)))
             {
                 if (context.ContainsKey(data.Key))
                 {

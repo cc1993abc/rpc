@@ -1,6 +1,5 @@
 ﻿using AspectCore.DynamicProxy;
 using System;
-using Tars.Net.Clients;
 
 namespace Tars.Net.Clients
 {

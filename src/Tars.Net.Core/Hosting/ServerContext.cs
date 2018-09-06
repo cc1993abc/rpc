@@ -8,14 +8,8 @@ namespace Tars.Net.Hosting
     {
         public static ServerContext Current
         {
-            get
-            {
-                return current.Value;
-            }
-            set
-            {
-                current.Value = value;
-            }
+            get => current.Value;
+            set => current.Value = value;
         }
 
         private static readonly AsyncLocal<ServerContext> current = new AsyncLocal<ServerContext>();

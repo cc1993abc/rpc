@@ -11,7 +11,7 @@ namespace Tars.Net.Metadata
         private readonly HashSet<Type> clients;
         private readonly HashSet<Type> services;
 
-        public IEnumerable<Type> Clients { get { return clients; } }
+        public IEnumerable<Type> Clients => clients;
 
         public IEnumerable<(Type service, Type implementation)> RpcServices { get; }
 
@@ -20,7 +20,7 @@ namespace Tars.Net.Metadata
             var all = GetAllHasAttributeTypes();
             var (rpcServices, rpcClients) = GetAllRpcServicesAndClients(all);
             clients = new HashSet<Type>(rpcClients.Distinct());
-            services = new HashSet<Type>(rpcServices.Select(i=> i.service).Distinct());
+            services = new HashSet<Type>(rpcServices.Select(i => i.service).Distinct());
             RpcServices = rpcServices;
         }
 

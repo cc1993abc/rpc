@@ -4,10 +4,12 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Libuv;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
@@ -16,7 +18,7 @@ using Tars.Net.DotNetty.Hosting;
 
 namespace Tars.Net.Hosting.Tcp
 {
-    public class LibuvTcpServerHost : IServerHost
+    public class LibuvTcpServerHost : IHostedService
     {
         public IServiceProvider Provider { get; }
 
@@ -27,6 +29,7 @@ namespace Tars.Net.Hosting.Tcp
         private readonly DotNettyServerHandler handler;
         private DispatcherEventLoopGroup bossGroup;
         private WorkerEventLoopGroup workerGroup;
+        private IChannel bootstrapChannel;
 
         public LibuvTcpServerHost(IServiceProvider provider, RpcConfiguration configuration,
             ILogger<LibuvTcpServerHost> logger, IDecoder<IByteBuffer> decoder, IEncoder<IByteBuffer> encoder,
@@ -40,54 +43,47 @@ namespace Tars.Net.Hosting.Tcp
             this.handler = handler;
         }
 
-        public async Task RunAsync(Func<Task> stopFunc)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             bossGroup = new DispatcherEventLoopGroup();
             workerGroup = new WorkerEventLoopGroup(bossGroup, configuration.EventLoopCount);
-
-            try
+            ServerBootstrap bootstrap = new ServerBootstrap();
+            bootstrap.Group(bossGroup, workerGroup);
+            bootstrap.Channel<TcpServerChannel>();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                ServerBootstrap bootstrap = new ServerBootstrap();
-                bootstrap.Group(bossGroup, workerGroup);
-                bootstrap.Channel<TcpServerChannel>();
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                    || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    bootstrap
-                        .Option(ChannelOption.SoReuseport, true)
-                        .ChildOption(ChannelOption.SoReuseaddr, true);
-                }
-
                 bootstrap
-                   .Option(ChannelOption.SoBacklog, configuration.SoBacklog)
-                   .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
-                   {
-                       IChannelPipeline pipeline = channel.Pipeline;
-                       pipeline.AddLast(new TcpHandler(Provider.GetRequiredService<ILogger<TcpHandler>>()));
-                       var lengthFieldLength = configuration.LengthFieldLength;
-                       pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
-                            configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
-                       pipeline.AddLast(new RequestDecoder(decoder), new LengthFieldPrepender(lengthFieldLength), new ResponseEncoder(encoder), handler);
-                   }));
-                IChannel bootstrapChannel = await bootstrap.BindAsync(configuration.Port);
-                logger.LogInformation($"Server start at {IPAddress.Any}:{configuration.Port}.");
-                await stopFunc();
-                await bootstrapChannel.CloseAsync();
+                    .Option(ChannelOption.SoReuseport, true)
+                    .ChildOption(ChannelOption.SoReuseaddr, true);
             }
-            catch (Exception ex)
+
+            bootstrap
+               .Option(ChannelOption.SoBacklog, configuration.SoBacklog)
+               .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
+               {
+                   IChannelPipeline pipeline = channel.Pipeline;
+                   pipeline.AddLast(new TcpHandler(Provider.GetRequiredService<ILogger<TcpHandler>>()));
+                   var lengthFieldLength = configuration.LengthFieldLength;
+                   pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
+                        configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
+                   pipeline.AddLast(new RequestDecoder(decoder), new LengthFieldPrepender(lengthFieldLength), new ResponseEncoder(encoder), handler);
+               }));
+            logger.LogInformation($"Server start at {IPAddress.Any}:{configuration.Port}.");
+            return bootstrap.BindAsync(configuration.Port)
+                .ContinueWith(i => bootstrapChannel = i.Result);
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await bootstrapChannel.CloseAsync();
+            var quietPeriod = configuration.QuietPeriodTimeSpan;
+            var shutdownTimeout = configuration.ShutdownTimeoutTimeSpan;
+            await workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
+            await bossGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
+            foreach (var item in Provider.GetServices<IRpcClient>())
             {
-                logger.LogError(ex.Message, ex);
-            }
-            finally
-            {
-                var quietPeriod = configuration.QuietPeriodTimeSpan;
-                var shutdownTimeout = configuration.ShutdownTimeoutTimeSpan;
-                await workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
-                await bossGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
-                foreach (var item in Provider.GetServices<IRpcClient>())
-                {
-                    await item.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
-                }
+                await item.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
             }
         }
     }
