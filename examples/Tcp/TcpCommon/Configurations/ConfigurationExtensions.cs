@@ -8,6 +8,7 @@ namespace Tars.Net.Configurations
     {
         public static IServiceCollection AddConfiguration(this IServiceCollection services, string key = "Host")
         {
+
             services.TryAddSingleton(j =>
             {
                 var config = new RpcConfiguration();

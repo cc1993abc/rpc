@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using TcpCommon;
 
@@ -42,6 +41,15 @@ namespace TcpServer
         public ValueTask<string> HelloValueTask(int no, string name)
         {
             return new ValueTask<string>(Hello(no, name));
+        }
+
+        public Task TestBusinessExceptionInterceptor()
+        {
+            throw new BusinessException()
+            {
+                Code = "1",
+                Message = "test"
+            };
         }
     }
 }

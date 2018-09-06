@@ -12,7 +12,6 @@ namespace Tars.Net.Clients
 {
     public class RpcClientFactory : IRpcClientFactory
     {
-        private readonly Task<object> completedTask = Task.FromResult<object>(null);
         private readonly IContentDecoder decoder;
         private readonly RpcConfiguration configuration;
         private readonly IClientCallBack callBack;
@@ -26,34 +25,26 @@ namespace Tars.Net.Clients
             clients = rpcClients.ToDictionary(i => i.Protocol);
         }
 
-        public async Task<object> SendAsync(string servantName, string funcName, ParameterInfo[] outParameters, ParameterInfo returnValueType, bool isOneway, Codec codec, object[] parameters)
+        public async Task<Response> SendAsync(Request req, ParameterInfo[] outParameters, ParameterInfo returnValueType)
         {
-            var req = new Request()
-            {
-                RequestId = callBack.NewCallBackId(),
-                ServantName = servantName,
-                FuncName = funcName,
-                Parameters = parameters,
-                Codec = codec,
-                IsOneway = isOneway
-            };
+            req.RequestId = callBack.NewCallBackId();
             await SendAsync(req);
-            if (isOneway)
+            if (req.IsOneway)
             {
-                return completedTask;
+                return new Response();
             }
             else
             {
-                var response = await callBack.NewCallBackTask(req.RequestId, req.Timeout, servantName, funcName);
+                var response = await callBack.NewCallBackTask(req.RequestId, req.Timeout, req.ServantName, req.FuncName);
                 CheckResponse(response);
-                response.Codec = codec;
+                response.Codec = req.Codec;
                 response.ReturnValueType = returnValueType;
                 response.ReturnParameterTypes = outParameters;
                 decoder.DecodeResponseContent(response);
                 object[] returnParameters = response.ReturnParameters;
                 if (returnParameters == null)
                 {
-                    return response.ReturnValue;
+                    return response;
                 }
 
                 var index = 0;
@@ -64,9 +55,9 @@ namespace Tars.Net.Clients
                         break;
                     }
 
-                    parameters[item.Position] = returnParameters[index++];
+                    req.Parameters[item.Position] = returnParameters[index++];
                 }
-                return response.ReturnValue;
+                return response;
             }
         }
 

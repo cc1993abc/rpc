@@ -15,7 +15,7 @@ namespace Tars.Net.Clients.Tcp
 {
     public class LibuvTcpClient : IRpcClient
     {
-        private MultithreadEventLoopGroup group = new MultithreadEventLoopGroup();
+        private readonly MultithreadEventLoopGroup group = new MultithreadEventLoopGroup();
         private readonly Bootstrap bootstrap = new Bootstrap();
         private readonly ConcurrentDictionary<EndPoint, IChannel> channels = new ConcurrentDictionary<EndPoint, IChannel>();
         private readonly IEncoder<IByteBuffer> encoder;

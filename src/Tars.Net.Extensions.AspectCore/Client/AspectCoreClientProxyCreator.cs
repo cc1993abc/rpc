@@ -2,7 +2,7 @@
 using System;
 using Tars.Net.Clients;
 
-namespace Tars.Net.Extensions.AspectCore
+namespace Tars.Net.Clients
 {
     public class AspectCoreClientProxyCreator : IClientProxyCreator
     {

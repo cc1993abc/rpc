@@ -9,7 +9,7 @@ using Tars.Net.Attributes;
 using Tars.Net.Clients;
 using Tars.Net.Metadata;
 
-namespace Tars.Net.Extensions.AspectCore
+namespace Tars.Net.Clients
 {
     public class RpcClientInvokerFactory
     {
@@ -34,8 +34,19 @@ namespace Tars.Net.Extensions.AspectCore
                     var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
-                        var value = await clientFactory.SendAsync(attribute.ServantName, method.Name, outParameters, method.ReturnParameter, isOneway, attribute.Codec, context.Parameters);
-                        context.ReturnValue = value;
+                        var req = new Request()
+                        {
+                            ServantName = attribute.ServantName,
+                            FuncName = method.Name,
+                            Parameters = context.Parameters,
+                            Codec = attribute.Codec,
+                            IsOneway = isOneway
+                        };
+                        req.Context.SetContext(context.AdditionalData);
+                        var resp = await clientFactory.SendAsync(req, outParameters, method.ReturnParameter);
+                        resp.Context.SetContext(context.AdditionalData);
+                        context.ReturnValue = resp.ReturnValue;
+                        await next(context);
                     });
                 }
             }

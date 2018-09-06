@@ -15,6 +15,10 @@ namespace TcpClient
 {
     internal class Program
     {
+        protected Program()
+        {
+        }
+
         private static async Task Main(string[] args)
         {
             try
@@ -34,18 +38,24 @@ namespace TcpClient
 
                 var rpc = service.GetRequiredService<IHelloRpc>();
                 var result = string.Empty;
-                result = rpc.Hello(0, "Hello Victor");
-                Console.WriteLine(result);
-                result = "HelloHolder";
-                rpc.HelloHolder(1, out result);
-                Console.WriteLine(result);
-                result = await rpc.HelloTask(2, "HelloTask Vic");
-                Console.WriteLine(result);
-                result = "Oneway";
-                await rpc.HelloOneway(3, "Oneway Vic");
-                Console.WriteLine(result);
-                result = await rpc.HelloValueTask(4, "HelloValueTask Vic");
-                Console.WriteLine(result);
+                await rpc.TestBusinessExceptionInterceptor();
+                //result = rpc.Hello(0, "Hello Victor");
+                //Console.WriteLine(result);
+                //result = "HelloHolder";
+                //rpc.HelloHolder(1, out result);
+                //Console.WriteLine(result);
+                //result = await rpc.HelloTask(2, "HelloTask Vic");
+                //Console.WriteLine(result);
+                //result = "Oneway";
+                //await rpc.HelloOneway(3, "Oneway Vic");
+                //Console.WriteLine(result);
+                //result = await rpc.HelloValueTask(4, "HelloValueTask Vic");
+                //Console.WriteLine(result);
+            }
+            catch (AspectCore.DynamicProxy.AspectInvocationException e)
+            {
+                var ee =(BusinessException)e.InnerException;
+                Console.WriteLine($"Code:{ee.Code} Message:{ee.Message}");
             }
             catch (Exception ex)
             {
