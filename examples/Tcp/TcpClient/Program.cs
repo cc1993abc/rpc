@@ -52,10 +52,9 @@ namespace TcpClient
                 //result = await rpc.HelloValueTask(4, "HelloValueTask Vic");
                 //Console.WriteLine(result);
             }
-            catch (AspectCore.DynamicProxy.AspectInvocationException e)
+            catch (BusinessException e)
             {
-                var ee = (BusinessException)e.InnerException;
-                Console.WriteLine($"Code:{ee.Code} Message:{ee.Message}");
+                Console.WriteLine($"Code:{e.Code} Message:{e.Message}");
             }
             catch (Exception ex)
             {
