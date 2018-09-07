@@ -26,4 +26,8 @@
     <ProjectReference Include="..\..\src\Tars.Net.DotNetty\Tars.Net.DotNetty.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Core\Clients\" />
+  </ItemGroup>
+
 </Project>

@@ -47,7 +47,15 @@ namespace Tars.Net.Metadata
                 RequestId = RequestId,
                 ServantName = ServantName,
                 FuncName = FuncName,
-                Timeout = Timeout
+                Timeout = Timeout,
+                Buffer = null,
+                ResultDesc = null,
+                ResultStatusCode = RpcStatusCode.ServerSuccess,
+                ReturnValue = null,
+                ReturnParameters = null,
+                Codec = Codec.Tars,
+                ReturnParameterTypes = null,
+                ReturnValueType = null
             };
         }
     }
