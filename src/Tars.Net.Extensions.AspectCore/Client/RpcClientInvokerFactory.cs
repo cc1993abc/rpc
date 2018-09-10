@@ -48,25 +48,30 @@ namespace Tars.Net.Clients
                         var resp = await clientFactory.SendAsync(req);
                         context.AdditionalData.SetContext(resp.Context);
                         context.ReturnValue = resp.ReturnValue;
-                        resp.ReturnValueType = method.ReturnParameter;
-                        resp.ReturnParameterTypes = outParameters;
-                        decoder.DecodeResponseContent(resp);
-                        object[] returnParameters = resp.ReturnParameters;
-                        if (returnParameters != null && returnParameters.Length > 0)
+                        if (isOneway)
                         {
-                            var index = 0;
-                            foreach (var outP in outParameters)
+                            await context.Complete();
+                        }
+                        else
+                        {
+                            resp.ReturnValueType = method.ReturnParameter;
+                            resp.ReturnParameterTypes = outParameters;
+                            decoder.DecodeResponseContent(resp);
+                            object[] returnParameters = resp.ReturnParameters;
+                            if (returnParameters != null && returnParameters.Length > 0)
                             {
-                                if (index >= returnParameters.Length)
+                                var index = 0;
+                                foreach (var outP in outParameters)
                                 {
-                                    break;
-                                }
+                                    if (index >= returnParameters.Length)
+                                    {
+                                        break;
+                                    }
 
-                                req.Parameters[outP.Position] = returnParameters[index++];
+                                    req.Parameters[outP.Position] = returnParameters[index++];
+                                }
                             }
                         }
-                        
-                        await next(context);
                     });
                 }
             }

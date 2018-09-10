@@ -21,10 +21,6 @@ namespace Tars.Net.Clients
 
         public IAspectBuilder Create(AspectContext context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
             return (IAspectBuilder)aspectCaching.GetOrAdd(GetKey(context.ServiceMethod, context.ImplementationMethod), key => Create((Tuple<MethodInfo, MethodInfo>)key));
         }
 

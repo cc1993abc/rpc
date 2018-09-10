@@ -4,6 +4,7 @@ using Tars.Net.Clients;
 
 namespace Tars.Net.Hosting
 {
+    [NonAspect]
     public class ServerContextInterceptor : AbstractInterceptor
     {
         public override int Order { get; set; } = 0;
