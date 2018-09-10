@@ -34,7 +34,7 @@ namespace TcpClient
                     .AddConfiguration()
                     .AddLibuvTcpClient()
                     .AddAop()
-                    .BuildAspectCoreServiceProvider();
+                    .BuildDynamicProxyServiceProvider();
 
                 var rpc = service.GetRequiredService<IHelloRpc>();
                 var result = string.Empty;

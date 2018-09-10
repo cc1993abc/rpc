@@ -20,7 +20,7 @@ namespace Tars.Net.Clients
             services.TryAddSingleton<IClientProxyCreator, AspectCoreClientProxyCreator>();
             services.TryAddSingleton<ClientProxyAspectBuilderFactory, ClientProxyAspectBuilderFactory>();
             services.TryAddSingleton<RpcClientInvokerFactory>();
-            services.AddDynamicProxy(c =>
+            services.ConfigureDynamicProxy(c =>
             {
                 c.ValidationHandlers.Add(new RpcAspectValidationHandler());
                 configure?.Invoke(c);

@@ -24,7 +24,7 @@ namespace Tars.Net.Hosting
         {
             var rpcMetadata = containerBuilder.GetRpcMetadata();
             return containerBuilder
-                .AddDynamicProxy(config =>
+                .ConfigureDynamicProxy(config =>
                 {
                     config.Interceptors.AddTyped<ServerContextInterceptor>(method =>
                     {
@@ -32,7 +32,7 @@ namespace Tars.Net.Hosting
                     });
                     configure?.Invoke(config);
                 })
-                .BuildAspectCoreServiceProvider();
+                .BuildDynamicProxyServiceProvider();
         }
     }
 }
