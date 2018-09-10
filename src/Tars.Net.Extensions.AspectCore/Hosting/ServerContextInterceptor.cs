@@ -10,15 +10,15 @@ namespace Tars.Net.Hosting
 
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var serverContext = ServerContext.Current.Context;
-            serverContext.SetContext(context.AdditionalData);
+            var serverContext = ServerContext.Current?.Context;
+            serverContext?.SetContext(context.AdditionalData);
             try
             {
                 await next(context);
             }
             finally
             {
-                serverContext.SetContext(context.AdditionalData);
+                serverContext?.SetContext(context.AdditionalData);
             }
         }
     }
