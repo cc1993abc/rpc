@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using System.Reflection;
 using Tars.Net.Clients;
 using Tars.Net.Clients.Tcp;
 using Tars.Net.DotNetty.Hosting;
@@ -15,13 +17,14 @@ namespace Tars.Net.DotNetty
             return services.AddSingleton<IRpcClient, LibuvTcpClient>();
         }
 
-        public static IServerHostBuilder UseLibuvTcpHost(this IServerHostBuilder builder)
+        public static IHostBuilder UseLibuvTcpHost(this IHostBuilder builder, params Assembly[] assemblies)
         {
-            return builder.ConfigureServices(i =>
-            {
-                i.TryAddSingleton<DotNettyServerHandler>();
-                i.TryAddSingleton<IServerHost, LibuvTcpServerHost>();
-            });
+            return builder.ConfigureServices((hostContext, services) =>
+                 {
+                     services.ReigsterRpcServices(assemblies);
+                     services.TryAddSingleton<DotNettyServerHandler>();
+                     services.AddHostedService<LibuvTcpServerHost>();
+                 });
         }
     }
 }

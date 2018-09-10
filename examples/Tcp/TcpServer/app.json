@@ -1,4 +1,5 @@
 {
+  "Environment": "Development",
   "Host": {
     "Port": 8987,
     "QuietPeriodSeconds": 2,

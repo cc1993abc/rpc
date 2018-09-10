@@ -70,12 +70,13 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 
     public class GetAllRpcServicesAndClientsUT
     {
+        private readonly RpcMetadata rpcMetadata;
         private Type[] clients;
         private (Type Service, Type Implementation)[] services;
 
         public GetAllRpcServicesAndClientsUT()
         {
-            var rpcMetadata = new RpcMetadata();
+            rpcMetadata = new RpcMetadata();
             clients = rpcMetadata.Clients.ToArray();
             services = rpcMetadata.RpcServices.ToArray();
         }
@@ -92,6 +93,20 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
         {
             Assert.Equal(2, services.Length);
             Assert.Equal(2, services.Where(i => i.Implementation.Name == "TestPartialClass_AttributeTypeScan").Count());
+        }
+
+        [Fact]
+        public void ITestRpcInterfaceShouldBeClientType()
+        {
+            Assert.True(rpcMetadata.IsRpcClientType(typeof(ITestRpcInterface)));
+            Assert.False(rpcMetadata.IsRpcServiceType(typeof(ITestRpcInterface)));
+        }
+
+        [Fact]
+        public void ITestAttributeTypeScanShouldBeServiceType()
+        {
+            Assert.False(rpcMetadata.IsRpcClientType(typeof(ITestAttributeTypeScan)));
+            Assert.True(rpcMetadata.IsRpcServiceType(typeof(ITestAttributeTypeScan)));
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AspectCore.DynamicProxy;
+using System;
 using System.Threading.Tasks;
-using AspectCore.DynamicProxy;
 using Tars.Net.Clients;
 
 namespace TcpCommon
 {
-    public class BusinessException: Exception
+    public class BusinessException : Exception
     {
         public string Code { get; set; }
 
@@ -16,7 +14,6 @@ namespace TcpCommon
 
     public class BusinessExceptionInterceptorAttribute : AbstractInterceptorAttribute
     {
-
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
             if (context.IsRpcClient())

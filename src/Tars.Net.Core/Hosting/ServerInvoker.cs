@@ -68,7 +68,11 @@ namespace Tars.Net.Hosting
                     {
                         resp.Context = context.Context;
                     }
-                    if (isOneway) return;
+                    if (isOneway)
+                    {
+                        return;
+                    }
+
                     var returnParameters = new object[outParameters.Length];
                     var index = 0;
                     foreach (var item in outParameters)

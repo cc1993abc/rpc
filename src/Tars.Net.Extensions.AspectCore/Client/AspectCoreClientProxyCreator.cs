@@ -1,6 +1,6 @@
 ﻿using AspectCore.DynamicProxy;
 using System;
-using Tars.Net.Clients;
+using Tars.Net.Extensions.AspectCore.DynamicProxy;
 
 namespace Tars.Net.Clients
 {
@@ -20,7 +20,7 @@ namespace Tars.Net.Clients
         public object Create(Type type)
         {
             var proxyType = generator.CreateInterfaceProxyType(type);
-            return Activator.CreateInstance(proxyType, new AspectActivatorFactory(contextFactory, aspectBuilderFactory));
+            return Activator.CreateInstance(proxyType, new OriginExceptionAspectActivatorFactory(contextFactory, aspectBuilderFactory));
         }
     }
 }

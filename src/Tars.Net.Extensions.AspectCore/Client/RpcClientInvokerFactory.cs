@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
-using Tars.Net.Clients;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
@@ -44,7 +43,7 @@ namespace Tars.Net.Clients
                         };
                         req.Context.SetContext(context.AdditionalData);
                         var resp = await clientFactory.SendAsync(req, outParameters, method.ReturnParameter);
-                        resp.Context.SetContext(context.AdditionalData);
+                        context.AdditionalData.SetContext(resp.Context);
                         context.ReturnValue = resp.ReturnValue;
                         await next(context);
                     });

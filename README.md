@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.com/TarsNET/rpc.svg?branch=develop)](https://travis-ci.org/TarsNET/rpc)
 
+[![Coverage Status](https://coveralls.io/repos/github/TarsNET/rpc/badge.svg?branch=develop)](https://coveralls.io/github/TarsNET/rpc?branch=develop)
+
 [![Build history](https://buildstats.info/travisci/chart/TarsNET/rpc)](https://travis-ci.com/TarsNET/rpc/builds)
 
 | Nuget | |

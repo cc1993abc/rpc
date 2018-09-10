@@ -5,7 +5,7 @@ namespace Tars.Net.Configurations
 {
     public class ClientConfiguration
     {
-        public RpcProtocol Protocol { get; set; }
+        public RpcProtocol Protocol { get; set; } = RpcProtocol.Tcp;
 
         public string Host { get; set; }
 
