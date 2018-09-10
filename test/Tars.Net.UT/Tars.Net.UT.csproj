@@ -28,4 +28,8 @@
     <ProjectReference Include="..\..\src\Tars.Net.Extensions.AspectCore\Tars.Net.Extensions.AspectCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AspectCore\Client\" />
+  </ItemGroup>
+
 </Project>

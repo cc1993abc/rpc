@@ -14,12 +14,7 @@ namespace Tars.Net.Clients
         public ClientProxyAspectBuilderFactory(IInterceptorCollector interceptorCollector,
             IAspectCachingProvider aspectCachingProvider, RpcClientInvokerFactory clientFactory)
         {
-            if (aspectCachingProvider == null)
-            {
-                throw new ArgumentNullException(nameof(aspectCachingProvider));
-            }
-            this.interceptorCollector =
-                interceptorCollector ?? throw new ArgumentNullException(nameof(interceptorCollector));
+            this.interceptorCollector = interceptorCollector;
             this.clientFactory = clientFactory;
             aspectCaching = aspectCachingProvider.GetAspectCaching(nameof(ClientProxyAspectBuilderFactory));
         }

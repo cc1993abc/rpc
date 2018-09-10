@@ -52,7 +52,7 @@ namespace Tars.Net.Clients
                         resp.ReturnParameterTypes = outParameters;
                         decoder.DecodeResponseContent(resp);
                         object[] returnParameters = resp.ReturnParameters;
-                        if (returnParameters == null || returnParameters.Length == 0)
+                        if (returnParameters != null && returnParameters.Length > 0)
                         {
                             var index = 0;
                             foreach (var outP in outParameters)

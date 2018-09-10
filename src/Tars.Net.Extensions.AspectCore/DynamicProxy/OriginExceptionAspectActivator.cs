@@ -8,47 +8,46 @@ namespace Tars.Net.Extensions.AspectCore.DynamicProxy
     [NonAspect]
     public sealed class OriginExceptionAspectActivator : IAspectActivator
     {
-        private readonly IAspectContextFactory _aspectContextFactory;
-        private readonly IAspectBuilderFactory _aspectBuilderFactory;
+        private readonly IAspectContextFactory aspectContextFactory;
+        private readonly IAspectBuilderFactory aspectBuilderFactory;
 
         public OriginExceptionAspectActivator(IAspectContextFactory aspectContextFactory, IAspectBuilderFactory aspectBuilderFactory)
         {
-            _aspectContextFactory = aspectContextFactory;
-            _aspectBuilderFactory = aspectBuilderFactory;
+            this.aspectContextFactory = aspectContextFactory;
+            this.aspectBuilderFactory = aspectBuilderFactory;
         }
 
         public TResult Invoke<TResult>(AspectActivatorContext activatorContext)
         {
-            var context = _aspectContextFactory.CreateContext(activatorContext);
+            var context = aspectContextFactory.CreateContext(activatorContext);
             try
             {
-                var aspectBuilder = _aspectBuilderFactory.Create(context);
+                var aspectBuilder = aspectBuilderFactory.Create(context);
                 var task = aspectBuilder.Build()(context);
                 if (task.IsFaulted)
                 {
-                    throw context.InvocationException(task.Exception.InnerException);
+                    throw task.Exception.InnerException;
                 }
 
                 if (!task.IsCompleted)
                 {
                     // try to avoid potential deadlocks.
                     NoSyncContextScope.Run(task);
-                    // task.GetAwaiter().GetResult();
                 }
                 return (TResult)context.ReturnValue;
             }
             finally
             {
-                _aspectContextFactory.ReleaseContext(context);
+                aspectContextFactory.ReleaseContext(context);
             }
         }
 
         public async Task<TResult> InvokeTask<TResult>(AspectActivatorContext activatorContext)
         {
-            var context = _aspectContextFactory.CreateContext(activatorContext);
+            var context = aspectContextFactory.CreateContext(activatorContext);
             try
             {
-                var aspectBuilder = _aspectBuilderFactory.Create(context);
+                var aspectBuilder = aspectBuilderFactory.Create(context);
                 await aspectBuilder.Build()(context);
                 var result = context.ReturnValue;
                 if (result is Task<TResult> taskWithResult)
@@ -68,22 +67,22 @@ namespace Tars.Net.Extensions.AspectCore.DynamicProxy
             }
             finally
             {
-                _aspectContextFactory.ReleaseContext(context);
+                aspectContextFactory.ReleaseContext(context);
             }
         }
 
         public async ValueTask<TResult> InvokeValueTask<TResult>(AspectActivatorContext activatorContext)
         {
-            var context = _aspectContextFactory.CreateContext(activatorContext);
+            var context = aspectContextFactory.CreateContext(activatorContext);
             try
             {
-                var aspectBuilder = _aspectBuilderFactory.Create(context);
+                var aspectBuilder = aspectBuilderFactory.Create(context);
                 await aspectBuilder.Build()(context);
                 return await (ValueTask<TResult>)context.ReturnValue;
             }
             finally
             {
-                _aspectContextFactory.ReleaseContext(context);
+                aspectContextFactory.ReleaseContext(context);
             }
         }
     }
