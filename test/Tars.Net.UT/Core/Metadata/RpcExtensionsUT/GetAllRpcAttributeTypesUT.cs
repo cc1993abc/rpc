@@ -91,7 +91,7 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
         [Fact]
         public void ClientsShouldBe2()
         {
-            Assert.Equal(2, services.Length);
+            Assert.Equal(4, services.Length);
             Assert.Equal(2, services.Where(i => i.Implementation.Name == "TestPartialClass_AttributeTypeScan").Count());
         }
 
