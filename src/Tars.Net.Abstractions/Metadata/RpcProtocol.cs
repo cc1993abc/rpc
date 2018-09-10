@@ -2,6 +2,7 @@
 {
     public enum RpcProtocol
     {
-        Tcp
+        Tcp,
+        Udp
     }
 }

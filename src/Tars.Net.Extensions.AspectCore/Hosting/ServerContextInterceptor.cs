@@ -4,21 +4,22 @@ using Tars.Net.Clients;
 
 namespace Tars.Net.Hosting
 {
+    [NonAspect]
     public class ServerContextInterceptor : AbstractInterceptor
     {
         public override int Order { get; set; } = 0;
 
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var serverContext = ServerContext.Current.Context;
-            serverContext.SetContext(context.AdditionalData);
+            var serverContext = ServerContext.Current?.Context;
+            serverContext?.SetContext(context.AdditionalData);
             try
             {
                 await next(context);
             }
             finally
             {
-                serverContext.SetContext(context.AdditionalData);
+                serverContext?.SetContext(context.AdditionalData);
             }
         }
     }

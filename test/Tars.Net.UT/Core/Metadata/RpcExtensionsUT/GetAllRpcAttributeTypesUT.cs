@@ -1,5 +1,7 @@
-﻿using System;
+﻿using AspectCore.DynamicProxy;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Tars.Net.Attributes;
 using Tars.Net.Metadata;
 using Tars.Net.UT.Core.Hosting.RpcExtensionsUT;
@@ -25,6 +27,23 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
     [Rpc("")]
     public interface ITestRpcInterface : ITestAttributeTypeScan
     {
+        [TestInterceptor]
+        int Call(int p);
+
+        [TestInterceptor]
+        int CallOut(out int p);
+
+        [Oneway]
+        [TestInterceptor]
+        int CallOneway(out int p);
+    }
+
+    public class TestInterceptorAttribute : AbstractInterceptorAttribute
+    {
+        public override Task Invoke(AspectContext context, AspectDelegate next)
+        {
+           return next(context);
+        }
     }
 
     public partial class TestPartialClass_AttributeTypeScan : ITestAttributeTypeScan
@@ -91,7 +110,7 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
         [Fact]
         public void ClientsShouldBe2()
         {
-            Assert.Equal(2, services.Length);
+            Assert.Equal(4, services.Length);
             Assert.Equal(2, services.Where(i => i.Implementation.Name == "TestPartialClass_AttributeTypeScan").Count());
         }
 

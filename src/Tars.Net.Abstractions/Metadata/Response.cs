@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Tars.Net.Codecs;
+using Tars.Net.Exceptions;
 
 namespace Tars.Net.Metadata
 {
@@ -41,7 +42,17 @@ namespace Tars.Net.Metadata
         public object[] ReturnParameters { get; set; }
 
         public Codec Codec { get; set; }
+
         public ParameterInfo[] ReturnParameterTypes { get; set; }
+
         public ParameterInfo ReturnValueType { get; set; }
+
+        public void CheckResultStatus()
+        {
+            if (ResultStatusCode != RpcStatusCode.ServerSuccess)
+            {
+                throw new TarsException(ResultStatusCode, ResultDesc);
+            }
+        }
     }
 }

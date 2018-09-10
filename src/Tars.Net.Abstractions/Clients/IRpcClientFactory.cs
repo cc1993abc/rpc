@@ -6,6 +6,6 @@ namespace Tars.Net.Clients
 {
     public interface IRpcClientFactory
     {
-        Task<Response> SendAsync(Request req, ParameterInfo[] outParameters, ParameterInfo returnValueType);
+        Task<Response> SendAsync(Request req);
     }
 }

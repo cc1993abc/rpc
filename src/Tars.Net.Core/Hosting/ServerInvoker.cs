@@ -97,11 +97,11 @@ namespace Tars.Net.Hosting
         {
             if (!invokers.TryGetValue(req.ServantName, out IDictionary<string, Action<Request, Response>> funcs))
             {
-                throw new TarsException(RpcStatusCode.ServerNoServantErr, $"no found servant, serviceName[{ req.ServantName }]");
+                throw new TarsException(RpcStatusCode.ServerNoServantErr, $"No found servant, serviceName[{ req.ServantName }]");
             }
             else if (!funcs.TryGetValue(req.FuncName, out Action<Request, Response> action))
             {
-                throw new TarsException(RpcStatusCode.ServerNoFuncErr, $"no found methodInfo, serviceName[{ req.ServantName }], methodName[{req.FuncName}]");
+                throw new TarsException(RpcStatusCode.ServerNoFuncErr, $"No found methodInfo, serviceName[{ req.ServantName }], methodName[{req.FuncName}]");
             }
             else
             {

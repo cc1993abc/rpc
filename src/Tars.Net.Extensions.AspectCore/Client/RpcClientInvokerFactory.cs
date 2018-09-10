@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
+using Tars.Net.Codecs;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
@@ -14,11 +15,13 @@ namespace Tars.Net.Clients
     {
         private readonly IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> invokers;
         private readonly IRpcClientFactory clientFactory;
+        private readonly IContentDecoder decoder;
 
-        public RpcClientInvokerFactory(IRpcMetadata rpcMetadata, IRpcClientFactory clientFactory)
+        public RpcClientInvokerFactory(IRpcMetadata rpcMetadata, IRpcClientFactory clientFactory, IContentDecoder decoder)
         {
             invokers = CreateRpcClientInvokers(rpcMetadata.Clients);
             this.clientFactory = clientFactory;
+            this.decoder = decoder;
         }
 
         public IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> CreateRpcClientInvokers(IEnumerable<Type> rpcClients)
@@ -42,10 +45,33 @@ namespace Tars.Net.Clients
                             IsOneway = isOneway
                         };
                         req.Context.SetContext(context.AdditionalData);
-                        var resp = await clientFactory.SendAsync(req, outParameters, method.ReturnParameter);
+                        var resp = await clientFactory.SendAsync(req);
                         context.AdditionalData.SetContext(resp.Context);
                         context.ReturnValue = resp.ReturnValue;
-                        await next(context);
+                        if (isOneway)
+                        {
+                            await context.Complete();
+                        }
+                        else
+                        {
+                            resp.ReturnValueType = method.ReturnParameter;
+                            resp.ReturnParameterTypes = outParameters;
+                            decoder.DecodeResponseContent(resp);
+                            object[] returnParameters = resp.ReturnParameters;
+                            if (returnParameters != null && returnParameters.Length > 0)
+                            {
+                                var index = 0;
+                                foreach (var outP in outParameters)
+                                {
+                                    if (index >= returnParameters.Length)
+                                    {
+                                        break;
+                                    }
+
+                                    req.Parameters[outP.Position] = returnParameters[index++];
+                                }
+                            }
+                        }
                     });
                 }
             }
