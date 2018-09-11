@@ -17,11 +17,6 @@ namespace Tars.Net.Codecs
 
         protected override void Encode(IChannelHandlerContext context, Response message, List<object> output)
         {
-            if (message == null)
-            {
-                return;
-            }
-
             output.Add(encoder.EncodeResponse(message));
         }
     }

@@ -33,7 +33,8 @@ namespace Tars.Net.Clients
                 foreach (var method in item.GetMethods(BindingFlags.Public | BindingFlags.Instance))
                 {
                     var isOneway = method.GetReflector().IsDefined<OnewayAttribute>();
-                    var outParameters = method.GetParameters().Where(i => i.IsOut).ToArray();
+                    var parameters = method.GetParameters();
+                    var outParameters = parameters.Where(i => i.IsOut).ToArray();
                     dictionary.Add(method, async (context, next) =>
                     {
                         var req = new Request()
@@ -42,7 +43,9 @@ namespace Tars.Net.Clients
                             FuncName = method.Name,
                             Parameters = context.Parameters,
                             Codec = attribute.Codec,
-                            IsOneway = isOneway
+                            IsOneway = isOneway,
+                            ParameterTypes = parameters,
+                            Version = attribute.Version
                         };
                         req.Context.SetContext(context.AdditionalData);
                         var resp = await clientFactory.SendAsync(req);
