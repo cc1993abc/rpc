@@ -15,5 +15,6 @@ namespace Tars.Net.Attributes
         public string ServantName { get; }
 
         public Codec Codec { get; }
+        public short Version { get; set; }
     }
 }
