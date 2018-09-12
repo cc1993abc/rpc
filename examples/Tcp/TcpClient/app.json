@@ -1,0 +1,15 @@
+{
+  "Host": {
+    "Port": 8987,
+    "QuietPeriodSeconds": 2,
+    "ShutdownTimeoutSeconds": 2,
+    "ClientConfig": {
+      "TestApp.HelloServer.HelloObj": {
+        "Protocol": "Tcp",
+        "Host": "127.0.0.1",
+        "Port": 8987,
+        "Timeout": 2
+      }
+    }
+  }
+}

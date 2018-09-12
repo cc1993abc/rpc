@@ -1,0 +1,33 @@
+language: csharp
+dotnet: 2.1.401
+os: linux
+mono: none
+dist: trusty
+env:
+  global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    - DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+script:
+  - dotnet restore
+  - dotnet build
+  - cd test/Tars.Net.UT
+  - dotnet minicover instrument --workdir ../../ --assemblies test/**/bin/**/*.dll --sources src/**/*.cs 
+  - dotnet minicover reset
+  - cd ../../
+  - for project in test/**/*.csproj; do dotnet test --no-build $project; done
+  - cd test/Tars.Net.UT
+  - dotnet minicover uninstrument --workdir ../../
+  - dotnet minicover report --workdir ../../ --threshold 80
+  - dotnet minicover coverallsreport --workdir ../../ --output "coveralls.json" --branch "$TRAVIS_BRANCH" --service-name "$COVERALLS_SERVICE" --service-job-id "$TRAVIS_JOB_ID" --repo-token "$COVERALLS_TOKEN"
+  - cd ../../
+
+deploy:
+  - provider: script
+    script: chmod +x ./deploy-branch.sh && ./deploy-branch.sh
+    on:
+     branch: master
+  - provider: script
+    script: chmod +x ./deploy-tag.sh && ./deploy-tag.sh
+    on:
+     tags: true

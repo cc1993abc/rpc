@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Tars.Net</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Tars.NET</Authors>
+    <Company>Tars.NET</Company>
+    <Description>Abstractions for Tars.Net</Description>
+    <Copyright>@2018 Tars.NET</Copyright>
+    <PackageLicenseUrl>https://github.com/TarsNET/rpc/blob/develop/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/TarsNET</PackageProjectUrl>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/42412008?s=200&amp;v=4</PackageIconUrl>
+    <PackageReleaseNotes>beta for develop tars codecs</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+</Project>

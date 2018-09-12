@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Tars.Net.DotNetty</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Tars.NET</Authors>
+    <Company>Tars.NET</Company>
+    <Description>DotNetty implement for Tars.Net.Core</Description>
+    <Copyright>@2018 Tars.NET</Copyright>
+    <PackageLicenseUrl>https://github.com/TarsNET/rpc/blob/develop/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/TarsNET</PackageProjectUrl>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/42412008?s=200&amp;v=4</PackageIconUrl>
+    <PackageReleaseNotes>Tars.Net.DotNetty beta </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetty.Codecs" Version="0.5.0" />
+    <PackageReference Include="DotNetty.Transport.Libuv" Version="0.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tars.Net.Core\Tars.Net.Core.csproj" />
+  </ItemGroup>
+  
+</Project>
