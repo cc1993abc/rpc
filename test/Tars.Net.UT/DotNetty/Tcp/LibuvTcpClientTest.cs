@@ -5,8 +5,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;

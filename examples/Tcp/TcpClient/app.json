@@ -1,6 +1,7 @@
 {
   "Host": {
     "Port": 8987,
+    "UdpCilentPort": 8787,
     "QuietPeriodSeconds": 2,
     "ShutdownTimeoutSeconds": 2,
     "ClientConfig": {
@@ -8,7 +9,7 @@
         "Protocol": "Tcp",
         "Host": "127.0.0.1",
         "Port": 8987,
-        "Timeout": 2
+        "Timeout": 10
       }
     }
   }

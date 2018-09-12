@@ -33,6 +33,7 @@ namespace TcpClient
                     .ReigsterRpcClients()
                     .AddConfiguration()
                     .AddLibuvTcpClient()
+                    //.AddUdpClient()
                     .AddAop()
                     .BuildDynamicProxyServiceProvider();
 
@@ -60,7 +61,7 @@ namespace TcpClient
             {
                 Console.WriteLine(ex);
             }
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }

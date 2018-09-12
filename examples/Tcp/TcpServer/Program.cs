@@ -23,6 +23,7 @@ namespace TcpServer
                  })
                 .UseStartup<Startup>()
                 .UseLibuvTcpHost()
+                //.UseUdpHost()
                 .UseAop()
                 .UseConsoleLifetime()
                 .Build();
