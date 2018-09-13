@@ -42,7 +42,7 @@ namespace Tars.Net.Hosting.Udp
             this.handler = handler;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             workerGroup = new MultithreadEventLoopGroup(configuration.EventLoopCount);
             var bootstrap = new Bootstrap();
@@ -59,13 +59,13 @@ namespace Tars.Net.Hosting.Udp
                    pipeline.AddLast(new RequestDecoder(decoder), new UdpLengthFieldPrepender(lengthFieldLength), new ResponseEncoder(encoder), handler);
                }));
             logger.LogInformation($"Server start at {IPAddress.Any}:{configuration.Port}.");
-            return bootstrap.BindAsync(configuration.Port)
-                .ContinueWith(i => bootstrapChannel = i.Result);
+            bootstrapChannel = await bootstrap.BindAsync(configuration.Port);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await bootstrapChannel.CloseAsync();
+            if(bootstrapChannel != null)
+                await bootstrapChannel.CloseAsync();
             var quietPeriod = configuration.QuietPeriodTimeSpan;
             var shutdownTimeout = configuration.ShutdownTimeoutTimeSpan;
             await workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);

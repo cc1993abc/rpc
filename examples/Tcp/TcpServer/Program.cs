@@ -22,8 +22,8 @@ namespace TcpServer
                      configLogging.AddConsole();
                  })
                 .UseStartup<Startup>()
-                .UseLibuvTcpHost()
-                //.UseUdpHost()
+                //.UseLibuvTcpHost()
+                .UseUdpHost()
                 .UseAop()
                 .UseConsoleLifetime()
                 .Build();

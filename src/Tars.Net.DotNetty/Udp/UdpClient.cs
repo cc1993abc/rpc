@@ -3,6 +3,8 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -22,7 +24,8 @@ namespace Tars.Net.Clients.Udp
         private readonly IEncoder<IByteBuffer> encoder;
         public RpcProtocol Protocol => RpcProtocol.Udp;
 
-        public UdpClient(RpcConfiguration configuration, IDecoder<IByteBuffer> decoder, IEncoder<IByteBuffer> encoder, IClientCallBack callBack)
+        public UdpClient(IServiceProvider provider, RpcConfiguration configuration, IDecoder<IByteBuffer> decoder,
+            IEncoder<IByteBuffer> encoder, IClientCallBack callBack)
         {
             this.encoder = encoder;
             bootstrap
@@ -33,7 +36,7 @@ namespace Tars.Net.Clients.Udp
                 .Handler(new ActionChannelInitializer<IChannel>(channel =>
                 {
                     var lengthFieldLength = configuration.LengthFieldLength;
-                    channel.Pipeline.AddLast(new UdpClientHandler());
+                    channel.Pipeline.AddLast(new UdpClientHandler(provider.GetRequiredService<ILogger<UdpClientHandler>>()));
                     channel.Pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
                          configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
                     channel.Pipeline.AddLast(new ResponseDecoder(decoder), new DatagramPacketEncoder<IByteBuffer>(new UdpLengthFieldPrepender(lengthFieldLength)),
