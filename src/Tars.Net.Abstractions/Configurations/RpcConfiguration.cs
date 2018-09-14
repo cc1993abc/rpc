@@ -24,5 +24,7 @@ namespace Tars.Net.Configurations
         public IDictionary<string, ClientConfiguration> ClientConfig { get; set; } = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase);
 
         public int EventLoopCount { get; set; } = Environment.ProcessorCount;
+
+        public int UdpLocalPort { get; set; } = 8787;
     }
 }

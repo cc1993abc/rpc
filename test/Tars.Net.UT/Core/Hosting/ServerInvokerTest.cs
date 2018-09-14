@@ -37,7 +37,7 @@ namespace Tars.Net.UT.Core.Hosting
         public Task<object> GetOneway(out int p)
         {
             p = 3;
-            return Task.FromResult<object>(3);
+            return Task.FromResult<object>(4);
         }
 
         public void GetVNoP(out int p)
@@ -62,7 +62,7 @@ namespace Tars.Net.UT.Core.Hosting
         public Task<object> GetOneway(out int p)
         {
             p = 3;
-            return Task.FromResult<object>(3);
+            return Task.FromResult<object>(4);
         }
 
         public void GetVNoP(out int p)
@@ -147,7 +147,7 @@ namespace Tars.Net.UT.Core.Hosting
             var resp = req.CreateResponse();
             sut.Invoke(req, resp);
             Assert.Equal(3, req.Parameters[0]);
-            Assert.Equal(3, ((Task<object>)resp.ReturnValue).Result);
+            Assert.Equal(4, ((Task<object>)resp.ReturnValue).Result);
             Assert.Null(resp.ReturnParameters);
         }
     }

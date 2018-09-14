@@ -12,12 +12,12 @@ using Tars.Net.Configurations;
 using Tars.Net.DotNetty;
 using Xunit;
 
-namespace Tars.Net.UT.DotNetty.Tcp
+namespace Tars.Net.UT.DotNetty.Udp
 {
-    public class LibuvTcpClientTest
+    public class UdpClientTest
     {
         [Fact]
-        public async Task LibuvTcpClientRunShouldBeNoError()
+        public async Task UdpClientRunShouldBeNoError()
         {
             var services = new ServiceCollection();
             services.AddSingleton(new Mock<IDecoder<IByteBuffer>>().Object);
@@ -27,13 +27,13 @@ namespace Tars.Net.UT.DotNetty.Tcp
             {
                 ClientConfig = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase)
                  {
-                     { "Tcp",  new ClientConfiguration()}
+                     { "Udp",  new ClientConfiguration()}
                  }
             });
-            services.AddLibuvTcpClient();
+            services.AddUdpClient();
             var client = services.BuildServiceProvider().GetRequiredService<IRpcClient>();
-            await Assert.ThrowsAsync<ConnectException>(() => client.SendAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 333), new Metadata.Request()));
-            await Assert.ThrowsAsync<ConnectException>(() => client.SendAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 333), new Metadata.Request()));
+            await Assert.ThrowsAsync<ClosedChannelException>(() => client.SendAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 333), new Metadata.Request()));
+            await Assert.ThrowsAsync<ClosedChannelException>(() => client.SendAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 333), new Metadata.Request()));
             await client.ShutdownGracefullyAsync(TimeSpan.Zero, TimeSpan.Zero);
         }
     }

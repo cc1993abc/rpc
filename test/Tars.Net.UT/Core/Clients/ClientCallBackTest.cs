@@ -8,7 +8,7 @@ namespace Tars.Net.UT.Core.Clients
 {
     public class ClientCallBackTest
     {
-        private ClientCallBack sut;
+        private readonly ClientCallBack sut;
 
         public ClientCallBackTest()
         {

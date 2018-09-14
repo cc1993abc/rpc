@@ -32,7 +32,8 @@ namespace TcpClient
                     .AddLogging(j => j.AddConsole())
                     .ReigsterRpcClients()
                     .AddConfiguration()
-                    .AddLibuvTcpClient()
+                    //.AddLibuvTcpClient()
+                    .AddUdpClient()
                     .AddAop()
                     .BuildDynamicProxyServiceProvider();
 
@@ -60,7 +61,7 @@ namespace TcpClient
             {
                 Console.WriteLine(ex);
             }
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }
