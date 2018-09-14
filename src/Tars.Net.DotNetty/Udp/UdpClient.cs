@@ -31,7 +31,7 @@ namespace Tars.Net.Clients.Udp
             bootstrap
                 .Group(group)
                 .Channel<SocketDatagramChannel>()
-                .LocalAddress(configuration.UdpCilentPort)
+                .LocalAddress(configuration.UdpLocalPort)
                 .Option(ChannelOption.SoBroadcast, true)
                 .Handler(new ActionChannelInitializer<IChannel>(channel =>
                 {

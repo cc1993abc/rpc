@@ -25,6 +25,6 @@ namespace Tars.Net.Configurations
 
         public int EventLoopCount { get; set; } = Environment.ProcessorCount;
 
-        public int UdpCilentPort { get; set; } = 8787;
+        public int UdpLocalPort { get; set; } = 8787;
     }
 }
