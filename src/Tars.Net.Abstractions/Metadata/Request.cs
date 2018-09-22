@@ -50,6 +50,7 @@ namespace Tars.Net.Metadata
             return new Response()
             {
                 Version = Version,
+                PacketType = PacketType,
                 MessageType = MessageType,
                 RequestId = RequestId,
                 ServantName = ServantName,
