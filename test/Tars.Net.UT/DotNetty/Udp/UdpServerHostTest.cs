@@ -29,16 +29,15 @@ namespace Tars.Net.UT.DotNetty.Udp
             builder.Object.UseUdpHost();
             services.AddSingleton(new Mock<IDecoder<IByteBuffer>>().Object);
             services.AddSingleton(new Mock<IEncoder<IByteBuffer>>().Object);
-            services.AddSingleton(new Mock<IContentDecoder>().Object);
             services.AddSingleton(new Mock<IClientCallBack>().Object);
             services.AddSingleton(new Mock<ILogger<UdpServerHost>>().Object);
             services.AddSingleton(new RpcConfiguration()
             {
-                 ClientConfig = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase)
+                ClientConfig = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase)
                  {
                      { "Tcp",  new ClientConfiguration()}
                  },
-                 Port = 9999
+                Port = 9999
             });
             services.AddUdpClient();
             var host = services.BuildServiceProvider().GetRequiredService<IHostedService>();

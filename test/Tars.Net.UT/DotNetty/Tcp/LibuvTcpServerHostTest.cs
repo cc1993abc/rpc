@@ -28,12 +28,11 @@ namespace Tars.Net.UT.DotNetty.Tcp
             builder.Object.UseLibuvTcpHost();
             services.AddSingleton(new Mock<IDecoder<IByteBuffer>>().Object);
             services.AddSingleton(new Mock<IEncoder<IByteBuffer>>().Object);
-            services.AddSingleton(new Mock<IContentDecoder>().Object);
             services.AddSingleton(new Mock<IClientCallBack>().Object);
             services.AddSingleton(new Mock<ILogger<LibuvTcpServerHost>>().Object);
             services.AddSingleton(new RpcConfiguration()
             {
-                 ClientConfig = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase)
+                ClientConfig = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase)
                  {
                      { "Tcp",  new ClientConfiguration()}
                  }
