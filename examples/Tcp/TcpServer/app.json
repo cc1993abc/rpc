@@ -6,7 +6,7 @@
     "ShutdownTimeoutSeconds": 2,
     "ClientConfig": {
       "TestApp.HelloServer.HelloObj": {
-        "Protocol": "Tcp",
+        "Protocol": "Udp",
         "Host": "127.0.0.1",
         "Port": 8987
       }

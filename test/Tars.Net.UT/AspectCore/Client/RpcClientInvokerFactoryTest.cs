@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Threading.Tasks;
 using Tars.Net.Clients;
-using Tars.Net.Codecs;
 using Tars.Net.Configurations;
 using Tars.Net.Metadata;
 using Tars.Net.UT.Core.Hosting.RpcExtensionsUT;
@@ -17,7 +16,6 @@ namespace Tars.Net.UT.AspectCore.Client
 
         public RpcClientInvokerFactoryTest()
         {
-            var decoder = new Mock<IContentDecoder>();
             var clientFactory = new Mock<IRpcClientFactory>();
             clientFactory.Setup(i => i.SendAsync(It.IsAny<Request>()))
                 .Returns<Request>(i =>
@@ -51,7 +49,6 @@ namespace Tars.Net.UT.AspectCore.Client
                 });
             sut = new ServiceCollection()
                 .AddSingleton(new RpcConfiguration())
-                .AddSingleton(decoder.Object)
                 .AddSingleton(clientFactory.Object)
                 .ReigsterRpcClients()
                 .AddAop()

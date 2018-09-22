@@ -39,11 +39,18 @@ namespace Tars.Net.Metadata
 
         public ParameterInfo[] ParameterTypes { get; set; }
 
+        public MethodInfo Mehtod { get; set; }
+
+        public ParameterInfo[] ReturnParameterTypes { get; set; }
+
+        public Type ServiceType { get; set; }
+
         public Response CreateResponse()
         {
             return new Response()
             {
                 Version = Version,
+                PacketType = PacketType,
                 MessageType = MessageType,
                 RequestId = RequestId,
                 ServantName = ServantName,
@@ -53,10 +60,10 @@ namespace Tars.Net.Metadata
                 ResultDesc = null,
                 ResultStatusCode = RpcStatusCode.ServerSuccess,
                 ReturnValue = null,
-                ReturnParameters = null,
+                ReturnParameters = ReturnParameterTypes == null ? null : new object[ReturnParameterTypes.Length],
                 Codec = Codec.Tars,
-                ReturnParameterTypes = null,
-                ReturnValueType = null
+                ReturnParameterTypes = ReturnParameterTypes,
+                ReturnValueType = Mehtod?.ReturnParameter,
             };
         }
     }

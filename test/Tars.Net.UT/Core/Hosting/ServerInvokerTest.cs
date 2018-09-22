@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
-using Tars.Net.Codecs;
 using Tars.Net.Exceptions;
 using Tars.Net.Hosting;
 using Tars.Net.Metadata;
@@ -37,7 +33,7 @@ namespace Tars.Net.UT.Core.Hosting
         public Task<object> GetOneway(out int p)
         {
             p = 3;
-            return Task.FromResult<object>(3);
+            return Task.FromResult<object>(4);
         }
 
         public void GetVNoP(out int p)
@@ -62,7 +58,7 @@ namespace Tars.Net.UT.Core.Hosting
         public Task<object> GetOneway(out int p)
         {
             p = 3;
-            return Task.FromResult<object>(3);
+            return Task.FromResult<object>(4);
         }
 
         public void GetVNoP(out int p)
@@ -79,16 +75,16 @@ namespace Tars.Net.UT.Core.Hosting
     public class ServerInvokerTest
     {
         private readonly ServerInvoker sut;
+        private readonly IRpcMetadata rpcMetadata;
 
         public ServerInvokerTest()
         {
-            var decoder = new Mock<IContentDecoder>();
             var services = new ServiceCollection();
             services.ReigsterRpcServices();
             services.AddSingleton<ServerInvoker>();
-            services.AddSingleton(decoder.Object);
-            sut = services.BuildServiceProvider()
-                .GetRequiredService<ServerInvoker>();
+            rpcMetadata = services.GetRpcMetadata();
+            var provider = services.BuildServiceProvider();
+            sut = provider.GetRequiredService<ServerInvoker>();
         }
 
         [Fact]
@@ -100,8 +96,8 @@ namespace Tars.Net.UT.Core.Hosting
             };
             var resp = req.CreateResponse();
             var ex = Assert.Throws<TarsException>(() => sut.Invoke(req, resp));
-            Assert.Equal(RpcStatusCode.ServerNoServantErr, ex.RpcStatusCode);
-            Assert.Equal("No found servant, serviceName[O]", ex.Message);
+            Assert.Equal(RpcStatusCode.ServerNoFuncErr, ex.RpcStatusCode);
+            Assert.Equal("No found methodInfo, serviceName[O], methodName[]", ex.Message);
         }
 
         [Fact]
@@ -121,11 +117,16 @@ namespace Tars.Net.UT.Core.Hosting
         [Fact]
         public void InvokeWhenGetVShouldOutParameterBe3()
         {
+            var (methodInfo, isOneway, outParameters, codec, version, serviceType) = rpcMetadata.FindRpcMethod("Test", "GetV");
             var req = new Request()
             {
                 ServantName = "Test",
                 FuncName = "GetV",
-                Parameters = new object[] { 1 }
+                Parameters = new object[] { 1 },
+                Mehtod = methodInfo,
+                ServiceType = serviceType,
+                ReturnParameterTypes = outParameters,
+                IsOneway = isOneway
             };
             var resp = req.CreateResponse();
             sut.Invoke(req, resp);
@@ -138,17 +139,23 @@ namespace Tars.Net.UT.Core.Hosting
         [Fact]
         public void InvokeWhenGetOnewayShouldOutParameterBe3()
         {
+            var (methodInfo, isOneway, outParameters, codec, version, serviceType) = rpcMetadata.FindRpcMethod("Test", "GetOneway");
             var req = new Request()
             {
                 ServantName = "Test",
                 FuncName = "GetOneway",
-                Parameters = new object[] { 1 }
+                Parameters = new object[] { 1 },
+                Mehtod = methodInfo,
+                ServiceType = serviceType,
+                ReturnParameterTypes = outParameters,
+                IsOneway = isOneway
             };
             var resp = req.CreateResponse();
             sut.Invoke(req, resp);
             Assert.Equal(3, req.Parameters[0]);
-            Assert.Equal(3, ((Task<object>)resp.ReturnValue).Result);
-            Assert.Null(resp.ReturnParameters);
+            Assert.Equal(4, ((Task<object>)resp.ReturnValue).Result);
+            Assert.Single(resp.ReturnParameters);
+            Assert.Null(resp.ReturnParameters[0]);
         }
     }
 }

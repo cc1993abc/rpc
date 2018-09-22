@@ -2,11 +2,9 @@
 using AspectCore.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
-using Tars.Net.Codecs;
 using Tars.Net.Metadata;
 
 namespace Tars.Net.Clients
@@ -15,37 +13,34 @@ namespace Tars.Net.Clients
     {
         private readonly IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> invokers;
         private readonly IRpcClientFactory clientFactory;
-        private readonly IContentDecoder decoder;
 
-        public RpcClientInvokerFactory(IRpcMetadata rpcMetadata, IRpcClientFactory clientFactory, IContentDecoder decoder)
+        public RpcClientInvokerFactory(IRpcMetadata rpcMetadata, IRpcClientFactory clientFactory)
         {
-            invokers = CreateRpcClientInvokers(rpcMetadata.Clients);
+            invokers = CreateRpcClientInvokers(rpcMetadata);
             this.clientFactory = clientFactory;
-            this.decoder = decoder;
         }
 
-        public IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> CreateRpcClientInvokers(IEnumerable<Type> rpcClients)
+        public IDictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>> CreateRpcClientInvokers(IRpcMetadata rpcMetadata)
         {
             var dictionary = new Dictionary<MethodInfo, Func<AspectContext, AspectDelegate, Task>>();
-            foreach (var item in rpcClients)
+            foreach (var item in rpcMetadata.Clients)
             {
                 var attribute = item.GetCustomAttribute<RpcAttribute>();
                 foreach (var method in item.GetMethods(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    var isOneway = method.GetReflector().IsDefined<OnewayAttribute>();
-                    var parameters = method.GetParameters();
-                    var outParameters = parameters.Where(i => i.IsOut).ToArray();
+                    var (methodInfo, isOneway, outParameters, codec, version, serviceType) = rpcMetadata.FindRpcMethod(attribute.ServantName, method.Name);
+                    var parameterTypes = methodInfo.GetParameters();
                     dictionary.Add(method, async (context, next) =>
                     {
                         var req = new Request()
                         {
                             ServantName = attribute.ServantName,
                             FuncName = method.Name,
-                            Parameters = context.Parameters,
-                            Codec = attribute.Codec,
+                            Codec = codec,
                             IsOneway = isOneway,
-                            ParameterTypes = parameters,
-                            Version = attribute.Version
+                            ParameterTypes = parameterTypes,
+                            ReturnParameterTypes = outParameters,
+                            Parameters = context.Parameters
                         };
                         req.Context.SetContext(context.AdditionalData);
                         var resp = await clientFactory.SendAsync(req);
@@ -59,7 +54,6 @@ namespace Tars.Net.Clients
                         {
                             resp.ReturnValueType = method.ReturnParameter;
                             resp.ReturnParameterTypes = outParameters;
-                            decoder.DecodeResponseContent(resp);
                             object[] returnParameters = resp.ReturnParameters;
                             if (returnParameters != null && returnParameters.Length > 0)
                             {

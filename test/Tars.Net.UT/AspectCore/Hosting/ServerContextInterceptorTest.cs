@@ -24,7 +24,7 @@ namespace Tars.Net.UT.AspectCore.Hosting
         }
 
         [Fact]
-        public async void SetContextShouldCopyRight()
+        public async Task SetContextShouldCopyRight()
         {
             var additionalData = new Dictionary<string, object>();
             var serverContext = new ServerContext();

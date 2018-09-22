@@ -1,6 +1,7 @@
 ﻿using Moq;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
@@ -11,7 +12,7 @@ namespace Tars.Net.UT.Core.Clients
 {
     public class RpcClientFactoryTest
     {
-        private RpcClientFactory sut;
+        private readonly RpcClientFactory sut;
 
         public RpcClientFactoryTest()
         {
@@ -38,7 +39,7 @@ namespace Tars.Net.UT.Core.Clients
         }
 
         [Fact]
-        public async void SendAsyncWhenNoServantNameConfigShouldThrowEx()
+        public async Task SendAsyncWhenNoServantNameConfigShouldThrowEx()
         {
             var ex = await Assert.ThrowsAsync<KeyNotFoundException>(() => sut.SendRequestAsync(new Request()
             {
@@ -49,7 +50,7 @@ namespace Tars.Net.UT.Core.Clients
         }
 
         [Fact]
-        public async void SendAsyncWhenNoProtocolShouldThrowEx()
+        public async Task SendAsyncWhenNoProtocolShouldThrowEx()
         {
             var ex = await Assert.ThrowsAsync<NotSupportedException>(() => sut.SendRequestAsync(new Request()
             {
@@ -60,7 +61,7 @@ namespace Tars.Net.UT.Core.Clients
         }
 
         [Fact]
-        public async void SendAsyncWhenHasConfigShouldNoEx()
+        public async Task SendAsyncWhenHasConfigShouldNoEx()
         {
             await sut.SendRequestAsync(new Request()
             {
@@ -69,7 +70,7 @@ namespace Tars.Net.UT.Core.Clients
         }
 
         [Fact]
-        public async void SendAsyncWhenOnewayShouldDefaultResponse()
+        public async Task SendAsyncWhenOnewayShouldDefaultResponse()
         {
             var resp = await sut.SendAsync(new Request()
             {
@@ -80,7 +81,7 @@ namespace Tars.Net.UT.Core.Clients
         }
 
         [Fact]
-        public async void SendAsyncWhenReturnParametersNullShouldNoHandleReturnParameters()
+        public async Task SendAsyncWhenReturnParametersNullShouldNoHandleReturnParameters()
         {
             var resp = await sut.SendAsync(new Request()
             {

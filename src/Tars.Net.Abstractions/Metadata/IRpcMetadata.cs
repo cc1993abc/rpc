@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Tars.Net.Codecs;
 
 namespace Tars.Net.Metadata
 {
@@ -12,5 +14,7 @@ namespace Tars.Net.Metadata
         bool IsRpcServiceType(Type type);
 
         bool IsRpcClientType(Type type);
+
+        (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, Type serviceType) FindRpcMethod(string servantName, string funcName);
     }
 }

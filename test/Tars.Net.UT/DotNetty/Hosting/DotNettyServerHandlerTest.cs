@@ -21,7 +21,7 @@ namespace Tars.Net.UT.DotNetty.Hosting
                     return i.CreateResponse();
                 });
             var context = new Mock<IChannelHandlerContext>();
-            context.Setup(i => i.WriteAsync(It.IsAny<object>()))
+            context.Setup(i => i.WriteAndFlushAsync(It.IsAny<object>()))
                 .Callback<object>(i => result = i)
                 .Returns(Task.CompletedTask);
             var handler = new DotNettyServerHandler(mockServerHandler.Object);
