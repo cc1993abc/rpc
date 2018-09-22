@@ -10,6 +10,7 @@ using Tars.Net.Clients;
 using Tars.Net.Codecs;
 using Tars.Net.Configurations;
 using Tars.Net.DotNetty;
+using Tars.Net.Metadata;
 using Xunit;
 
 namespace Tars.Net.UT.DotNetty.Tcp
@@ -32,6 +33,7 @@ namespace Tars.Net.UT.DotNetty.Tcp
             });
             services.AddLibuvTcpClient();
             var client = services.BuildServiceProvider().GetRequiredService<IRpcClient>();
+            Assert.Equal(RpcProtocol.Tcp, client.Protocol);
             await Assert.ThrowsAsync<ConnectException>(() => client.SendAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 333), new Metadata.Request()));
             await Assert.ThrowsAsync<ConnectException>(() => client.SendAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 333), new Metadata.Request()));
             await client.ShutdownGracefullyAsync(TimeSpan.Zero, TimeSpan.Zero);

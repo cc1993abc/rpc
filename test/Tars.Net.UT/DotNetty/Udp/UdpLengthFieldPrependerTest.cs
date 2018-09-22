@@ -26,6 +26,7 @@ namespace Tars.Net.UT.DotNetty.Udp
             Assert.NotNull(result);
             Assert.Equal(9, result.ReadableBytes);
             Assert.Equal(5, result.ReadInt());
+            Assert.True(prepender.IsSharable);
         }
     }
 }

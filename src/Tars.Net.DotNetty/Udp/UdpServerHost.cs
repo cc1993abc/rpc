@@ -64,8 +64,11 @@ namespace Tars.Net.Hosting.Udp
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            if(bootstrapChannel != null)
+            if (bootstrapChannel != null)
+            {
                 await bootstrapChannel.CloseAsync();
+            }
+
             var quietPeriod = configuration.QuietPeriodTimeSpan;
             var shutdownTimeout = configuration.ShutdownTimeoutTimeSpan;
             await workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);

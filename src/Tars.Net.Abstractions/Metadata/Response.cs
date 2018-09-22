@@ -12,6 +12,8 @@ namespace Tars.Net.Metadata
 
         public short Version { get; set; }
 
+        public byte PacketType { get; set; }
+
         public int MessageType { get; set; }
 
         public int RequestId { get; set; }

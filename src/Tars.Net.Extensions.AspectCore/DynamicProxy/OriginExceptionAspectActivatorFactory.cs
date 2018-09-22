@@ -1,5 +1,4 @@
 ﻿using AspectCore.DynamicProxy;
-using System;
 
 namespace Tars.Net.Extensions.AspectCore.DynamicProxy
 {
@@ -8,7 +7,7 @@ namespace Tars.Net.Extensions.AspectCore.DynamicProxy
     {
         private readonly IAspectContextFactory aspectContextFactory;
         private readonly IAspectBuilderFactory aspectBuilderFactory;
-    
+
         public OriginExceptionAspectActivatorFactory(IAspectContextFactory aspectContextFactory, IAspectBuilderFactory aspectBuilderFactory)
         {
             this.aspectContextFactory = aspectContextFactory;

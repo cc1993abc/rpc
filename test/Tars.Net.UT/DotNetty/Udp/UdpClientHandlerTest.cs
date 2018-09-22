@@ -20,7 +20,7 @@ namespace Tars.Net.UT.DotNetty.Udp
             var handler = new UdpClientHandler(mockLogger.Object);
             handler.ChannelRead(context.Object, null);
             handler.WriteAsync(context.Object, Unpooled.Empty);
-            handler.ChannelRead(context.Object, new DatagramPacket(Unpooled.Empty, new IPEndPoint(IPAddress.Any,88)));
+            handler.ChannelRead(context.Object, new DatagramPacket(Unpooled.Empty, new IPEndPoint(IPAddress.Any, 88)));
             handler.ExceptionCaught(context.Object, new Exception("tEST"));
         }
     }
