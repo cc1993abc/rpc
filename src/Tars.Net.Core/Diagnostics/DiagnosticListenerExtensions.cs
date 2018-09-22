@@ -4,7 +4,7 @@ using Tars.Net.Metadata;
 
 namespace Tars.Net.Diagnostics
 {
-    internal static class DiagnosticListenerExtensions
+    public static class DiagnosticListenerExtensions
     {
         public const string DiagnosticListenerName = "Tars.Net";
 
