@@ -10,5 +10,7 @@ namespace Tars.Net.Clients
         Task<Response> NewCallBackTask(int id, int timeout, string servantName, string funcName);
 
         void CallBack(Response msg);
+
+        (string servantName, string funcName)? FindRpcMethod(int callBackId);
     }
 }
