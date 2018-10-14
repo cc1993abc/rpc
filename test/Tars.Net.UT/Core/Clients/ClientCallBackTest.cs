@@ -45,11 +45,15 @@ namespace Tars.Net.UT.Core.Clients
         [Fact]
         public void CallBackWhenResponseShouldBeThrowEx()
         {
-            var task = sut.NewCallBackTask(2, 1, "test", "test");
+            var task = sut.NewCallBackTask(2, 1, "test1", "test");
             var oldResp = new Response()
             {
                 RequestId = 2
             };
+            var (servantName, funcName) = sut.FindRpcMethod(2).Value;
+            Assert.Equal("test1", servantName);
+            Assert.Equal("test", funcName);
+            Assert.False(sut.FindRpcMethod(232).HasValue);
             sut.CallBack(oldResp);
             var resp = task.ConfigureAwait(false).GetAwaiter().GetResult();
             Assert.Same(oldResp, resp);

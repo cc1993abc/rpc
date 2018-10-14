@@ -16,6 +16,6 @@ namespace Tars.Net.Attributes
 
         public Codec Codec { get; }
 
-        public short Version { get; set; }
+        public short Version { get; set; } = 0x03;
     }
 }

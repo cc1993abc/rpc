@@ -78,6 +78,7 @@ namespace Tars.Net.UT.Core.Clients
                 IsOneway = true
             });
             Assert.Equal(RpcStatusCode.ServerSuccess, resp.ResultStatusCode);
+            Assert.NotNull(resp.Context);
         }
 
         [Fact]
