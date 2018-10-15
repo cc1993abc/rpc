@@ -33,7 +33,7 @@ namespace Tars.Net.Clients
                 await SendRequestAsync(req);
                 if (req.IsOneway)
                 {
-                    response = new Response();
+                    response = req.CreateResponse();
                 }
                 else
                 {

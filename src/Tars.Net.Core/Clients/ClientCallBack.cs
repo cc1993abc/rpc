@@ -8,14 +8,27 @@ namespace Tars.Net.Clients
 {
     public class ClientCallBack : IClientCallBack
     {
-        private readonly ConcurrentDictionary<int, TaskCompletionSource<Response>> callBacks = new ConcurrentDictionary<int, TaskCompletionSource<Response>>();
+        private readonly ConcurrentDictionary<int, (TaskCompletionSource<Response> task, (string servantName, string funcName) rpcMethod)> callBacks 
+            = new ConcurrentDictionary<int, (TaskCompletionSource<Response> task, (string servantName, string funcName) rpcMethod)>();
         private int callBackId = 0;
 
         public void CallBack(Response msg)
         {
-            if (callBacks.TryRemove(msg.RequestId, out TaskCompletionSource<Response> source))
+            if (callBacks.TryRemove(msg.RequestId, out (TaskCompletionSource<Response> task, (string servantName, string funcName) rpcMethod) source))
             {
-                source.SetResult(msg);
+                source.task.SetResult(msg);
+            }
+        }
+
+        public (string servantName, string funcName)? FindRpcMethod(int callBackId)
+        {
+            if (callBacks.TryGetValue(callBackId, out (TaskCompletionSource<Response> task, (string servantName, string funcName) rpcMethod) tSource))
+            {
+                return tSource.rpcMethod;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -30,13 +43,14 @@ namespace Tars.Net.Clients
             var tokenSource = new CancellationTokenSource();
             tokenSource.Token.Register(() =>
             {
-                callBacks.TryRemove(id, out TaskCompletionSource<Response> tSource);
+                callBacks.TryRemove(id, out (TaskCompletionSource<Response> task, (string servantName, string funcName) rpcMethod) tSource);
                 if (!source.Task.IsCompleted)
                 {
                     source.TrySetException(new TarsException(RpcStatusCode.AsyncCallTimeout, $"Call {servantName}.{funcName} timeout."));
                 }
             });
-            callBacks.AddOrUpdate(id, source, (x, y) => source);
+            var info = (source, (servantName, funcName));
+            callBacks.AddOrUpdate(id, info, (x, y) => info);
             tokenSource.CancelAfter(timeout * 1000);
             return source.Task;
         }

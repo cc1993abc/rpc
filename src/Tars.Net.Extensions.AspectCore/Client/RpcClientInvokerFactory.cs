@@ -45,13 +45,13 @@ namespace Tars.Net.Clients
                         req.Context.SetContext(context.AdditionalData);
                         var resp = await clientFactory.SendAsync(req);
                         context.AdditionalData.SetContext(resp.Context);
-                        context.ReturnValue = resp.ReturnValue;
                         if (isOneway)
                         {
                             await context.Complete();
                         }
                         else
                         {
+                            context.ReturnValue = resp.ReturnValue;
                             resp.ReturnValueType = method.ReturnParameter;
                             resp.ReturnParameterTypes = outParameters;
                             object[] returnParameters = resp.ReturnParameters;
