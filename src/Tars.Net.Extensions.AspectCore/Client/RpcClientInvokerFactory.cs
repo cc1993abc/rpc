@@ -40,7 +40,8 @@ namespace Tars.Net.Clients
                             IsOneway = isOneway,
                             ParameterTypes = parameterTypes,
                             ReturnParameterTypes = outParameters,
-                            Parameters = context.Parameters
+                            Parameters = context.Parameters,
+                            Version = version
                         };
                         req.Context.SetContext(context.AdditionalData);
                         var resp = await clientFactory.SendAsync(req);
