@@ -17,7 +17,11 @@ namespace Tars.Net.DotNetty.Hosting
 
         protected override async void ChannelRead0(IChannelHandlerContext ctx, Request msg)
         {
-            await ctx.WriteAndFlushAsync(handler.Process(msg));
+            var resp = handler.Process(msg);
+            if (ctx.Channel.IsWritable)
+            {
+                await ctx.WriteAndFlushAsync(resp);
+            }
         }
     }
 }

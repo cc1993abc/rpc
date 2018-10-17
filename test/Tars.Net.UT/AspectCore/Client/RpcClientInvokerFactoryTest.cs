@@ -20,6 +20,7 @@ namespace Tars.Net.UT.AspectCore.Client
             clientFactory.Setup(i => i.SendAsync(It.IsAny<Request>()))
                 .Returns<Request>(i =>
                 {
+                    Assert.Equal(3, i.Version);
                     var resp = i.CreateResponse();
                     if (i.Parameters[0].ToString() == "3")
                     {
