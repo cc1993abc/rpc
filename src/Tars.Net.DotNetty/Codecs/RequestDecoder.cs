@@ -16,10 +16,7 @@ namespace Tars.Net.Codecs
 
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
         {
-            while (input.IsReadable())
-            {
-                output.Add(decoder.DecodeRequest(input));
-            }
+            output.Add(decoder.DecodeRequest(input));
         }
     }
 }
