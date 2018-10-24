@@ -1,6 +1,7 @@
 ﻿using AspectCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tars.Net.Clients;
 using Tars.Net.Configurations;
@@ -49,7 +50,19 @@ namespace Tars.Net.UT.AspectCore.Client
                     }
                 });
             sut = new ServiceCollection()
-                .AddSingleton(new RpcConfiguration())
+                .AddSingleton(new RpcConfiguration()
+                {
+                    ClientConfig = new Dictionary<string, ClientConfiguration>()
+                    {
+                        { "Test", new ClientConfiguration()
+                            {
+                                Interface = "Tars.Net.UT.Core.Hosting.RpcExtensionsUT.ITestRpcInterface",
+                                Servant = "Test",
+                                CodecVersion = 3
+                            }
+                        }
+                    }
+                })
                 .AddSingleton(clientFactory.Object)
                 .ReigsterRpcClients()
                 .AddAop()

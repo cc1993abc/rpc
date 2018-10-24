@@ -3,7 +3,7 @@ using Tars.Net.Metadata;
 
 namespace Tars.Net.Configurations
 {
-    public class ClientConfiguration
+    public class ClientConfiguration : ServiceConfiguration
     {
         public RpcProtocol Protocol { get; set; } = RpcProtocol.Tcp;
 

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
+using Tars.Net.Configurations;
 using Tars.Net.Exceptions;
 using Tars.Net.Hosting;
 using Tars.Net.Metadata;
@@ -9,7 +11,7 @@ using Xunit;
 
 namespace Tars.Net.UT.Core.Hosting
 {
-    [Rpc("Test")]
+    [Rpc]
     public interface ITestServer
     {
         Task<object> GetV(out int p);
@@ -83,7 +85,20 @@ namespace Tars.Net.UT.Core.Hosting
             services.ReigsterRpcServices();
             services.AddSingleton<ServerInvoker>();
             rpcMetadata = services.GetRpcMetadata();
+            services.AddSingleton(new RpcConfiguration()
+            {
+                ServiceConfig = new List<ServiceConfiguration>()
+                 {
+                    new ServiceConfiguration()
+                    {
+                        Interface = "Tars.Net.UT.Core.Hosting.ITestServer",
+                        Servant = "Test",
+                        CodecVersion = 3
+                    }
+                }
+            });
             var provider = services.BuildServiceProvider();
+            rpcMetadata.Init(provider);
             sut = provider.GetRequiredService<ServerInvoker>();
         }
 

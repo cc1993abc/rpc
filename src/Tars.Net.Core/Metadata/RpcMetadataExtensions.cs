@@ -12,6 +12,7 @@ namespace Tars.Net.Metadata
             {
                 descriptor = new ServiceDescriptor(typeof(IRpcMetadata), new RpcMetadata());
                 services.Add(descriptor);
+                services.AddSingleton<IRpcMetadataHandler, RpcMetadataHandler>();
             }
             return (IRpcMetadata)descriptor.ImplementationInstance;
         }
