@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]; then
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "develop" ]; then
   echo "Deploying CI..."
   
   export Version=$(cat version)-beta-$(date +%Y%m%d%H%M%S)
