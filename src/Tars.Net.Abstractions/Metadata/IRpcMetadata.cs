@@ -16,5 +16,9 @@ namespace Tars.Net.Metadata
         bool IsRpcClientType(Type type);
 
         (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, Type serviceType) FindRpcMethod(string servantName, string funcName);
+
+        (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, string servantName, string funcName, ParameterInfo[] allParameters) FindRpcMethod(MethodInfo method);
+
+        void Init(IServiceProvider provider);
     }
 }

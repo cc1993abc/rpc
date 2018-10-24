@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Tars.Net.Attributes;
 using Tars.Net.Codecs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Tars.Net.Metadata
 {
@@ -12,7 +13,8 @@ namespace Tars.Net.Metadata
     {
         private readonly HashSet<Type> clients;
         private readonly HashSet<Type> services;
-        private readonly Dictionary<string, (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, Type serviceType)> rpcMethods;
+        private Dictionary<string, (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, Type serviceType)> rpcMethods;
+        private Dictionary<MethodInfo, (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, string servantName, string funcName, ParameterInfo[] allParameters)> rpcClientMethods;
 
         public IEnumerable<Type> Clients => clients;
 
@@ -25,24 +27,6 @@ namespace Tars.Net.Metadata
             clients = new HashSet<Type>(rpcClients.Distinct());
             services = new HashSet<Type>(rpcServices.Select(i => i.service).Distinct());
             RpcServices = rpcServices;
-            rpcMethods = new Dictionary<string, (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short vrsion, Type serviceType)>(StringComparer.OrdinalIgnoreCase);
-            var tempMethods = rpcServices.Select(i => i.service)
-                .Union(rpcClients)
-                .SelectMany(i =>
-                {
-                    var rpc = i.GetReflector().GetCustomAttribute<RpcAttribute>();
-                    return i.GetMethods().Select(j => (name: $"{rpc.ServantName}.{j.Name}", method: j, codec: rpc.Codec, version: rpc.Version, serviceType: i));
-                })
-                .Distinct();
-            foreach (var item in tempMethods)
-            {
-                if (!rpcMethods.ContainsKey(item.name))
-                {
-                    rpcMethods.Add(item.name,
-                        (item.method, item.method.GetReflector().IsDefined<OnewayAttribute>(),
-                            item.method.GetParameters().Where(i => i.IsOut).ToArray(), item.codec, item.version, item.serviceType));
-                }
-            }
         }
 
         public (IEnumerable<(Type service, Type implementation)> rpcServices, IEnumerable<Type> rpcClients)
@@ -110,6 +94,46 @@ namespace Tars.Net.Metadata
         public (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, Type serviceType) FindRpcMethod(string servantName, string funcName)
         {
             return rpcMethods[$"{servantName}.{funcName}"];
+        }
+
+        public (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, string servantName, string funcName, ParameterInfo[] allParameters) FindRpcMethod(MethodInfo method)
+        {
+            return rpcClientMethods[method];
+        }
+
+        public void Init(IServiceProvider provider)
+        {
+            var handler = provider.GetRequiredService<IRpcMetadataHandler>();
+            rpcMethods = new Dictionary<string, (MethodInfo method, bool isOneway, ParameterInfo[] outParameters, Codec codec, short version, Type serviceType)>(StringComparer.OrdinalIgnoreCase);
+            var tempMethods = RpcServices.Select(i => i.service)
+                .Union(Clients)
+                .SelectMany(i =>
+                {
+                    var (servantName, codec, version) = handler.FindRpcInfo(i.GetReflector().FullDisplayName);
+                    return i.GetMethods().Select(j => (name: $"{servantName}.{j.Name}", method: j, codec: codec, version: version, serviceType: i));
+                })
+                .Distinct();
+
+            foreach (var item in tempMethods)
+            {
+                if (!rpcMethods.ContainsKey(item.name))
+                {
+                    rpcMethods.Add(item.name,
+                        (item.method, item.method.GetReflector().IsDefined<OnewayAttribute>(),
+                            item.method.GetParameters().Where(i => i.IsOut).ToArray(), item.codec, item.version, item.serviceType));
+                }
+            }
+
+            rpcClientMethods = Clients.SelectMany(i =>
+            {
+                var (servantName, codec, version) = handler.FindRpcInfo(i.GetReflector().FullDisplayName);
+                return i.GetMethods().Select(j =>
+                {
+                    var allParameters = j.GetParameters();
+                    return (method: j, isOneway: j.GetReflector().IsDefined<OnewayAttribute>(), outParameters: allParameters.Where(x => x.IsOut).ToArray(),
+                    codec: codec, version: version, servantName: servantName, funcName: j.Name, allParameters: allParameters);
+                });
+            }).ToDictionary(i => i.method);
         }
     }
 }

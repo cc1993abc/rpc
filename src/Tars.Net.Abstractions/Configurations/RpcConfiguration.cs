@@ -21,7 +21,9 @@ namespace Tars.Net.Configurations
 
         public int LengthFieldLength { get; set; } = 4;
 
-        public IDictionary<string, ClientConfiguration> ClientConfig { get; set; } = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, ClientConfiguration> ClientConfig { get; set; } = new Dictionary<string, ClientConfiguration>(StringComparer.OrdinalIgnoreCase);
+
+        public List<ServiceConfiguration> ServiceConfig { get; set; } = new List<ServiceConfiguration>();
 
         public int EventLoopCount { get; set; } = Environment.ProcessorCount;
 

@@ -19,12 +19,12 @@ namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT1
 
 namespace Tars.Net.UT.Core.Hosting.RpcExtensionsUT
 {
-    [Rpc("")]
+    [Rpc]
     public interface ITestAttributeTypeScan
     {
     }
 
-    [Rpc("")]
+    [Rpc]
     public interface ITestRpcInterface : ITestAttributeTypeScan
     {
         [TestInterceptor]
