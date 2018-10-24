@@ -19,7 +19,7 @@ namespace Tars.Net.UT.Core.Hosting
                 .Throws(new TarsException(RpcStatusCode.ServerNoFuncErr, "Test"));
             invoker.Setup(i => i.Invoke(It.Is<Request>(j => j.FuncName == "ThrowException"), It.IsAny<Response>()))
                 .Throws(new Exception("ThrowException"));
-            sut = new ServerHandler(invoker.Object);
+            sut = new ServerHandler(invoker.Object, new Mock<IRpcMetadata>().Object, new Mock<IServiceProvider>().Object);
         }
 
         [Fact]

@@ -11,8 +11,9 @@ namespace Tars.Net.Hosting
         private static readonly DiagnosticListener s_diagnosticListener = new DiagnosticListener(DiagnosticListenerExtensions.DiagnosticListenerName);
         private readonly IServerInvoker serverInvoker;
 
-        public ServerHandler(IServerInvoker serverInvoker)
+        public ServerHandler(IServerInvoker serverInvoker, IRpcMetadata rpcMetadata, IServiceProvider provider)
         {
+            rpcMetadata.Init(provider);
             this.serverInvoker = serverInvoker;
         }
 
