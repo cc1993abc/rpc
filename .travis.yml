@@ -26,7 +26,7 @@ deploy:
   - provider: script
     script: chmod +x ./deploy-branch.sh && ./deploy-branch.sh
     on:
-     branch: master
+     branch: develop
   - provider: script
     script: chmod +x ./deploy-tag.sh && ./deploy-tag.sh
     on:
