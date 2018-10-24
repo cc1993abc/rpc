@@ -9,7 +9,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]; 
   dotnet build -c Release
   dotnet pack -c Release
 
-  for nupkg in ./src/Tars.Net.*/bin/Release/Tars.Net.*.nupkg; do dotnet nuget push $nupkg -k $NUGET_KEY -s https://api.nuget.org/v3/index.json; done
+  for nupkg in ./src/Tars.Net.*/bin/Release/Tars.Net.*.nupkg; do dotnet nuget push $nupkg -k $MYNUGET_KEY -s https://www.myget.org/F/tarsnet; done
   
 else
   echo "Skipping CI deploy"
