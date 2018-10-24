@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dotnet restore
+dotnet restore --configfile scripts/NuGet.Config
 dotnet build
 cd test/Tars.Net.UT
 dotnet minicover instrument --workdir ../../ --assemblies test/**/bin/**/*.dll --sources src/**/*.cs 
@@ -9,6 +9,6 @@ cd ../../
 for project in test/**/*.csproj; do dotnet test --no-build $project; done
 cd test/Tars.Net.UT
 dotnet minicover uninstrument --workdir ../../
-dotnet minicover htmlreport --workdir ../../ --threshold 10
-dotnet minicover report --workdir ../../ --threshold 10
+dotnet minicover report --workdir ../../ --threshold 80
+dotnet minicover coverallsreport --workdir ../../ --output "coveralls.json" --branch "$TRAVIS_BRANCH" --service-name "$COVERALLS_SERVICE" --service-job-id "$TRAVIS_JOB_ID" --repo-token "$COVERALLS_TOKEN"
 cd ../../
