@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tars.Net.Attributes;
+using Tars.Net.Codecs;
 using Tars.Net.Configurations;
 using Tars.Net.Exceptions;
 using Tars.Net.Hosting;
@@ -22,6 +23,11 @@ namespace Tars.Net.UT.Core.Hosting
         void GetVNoP(out int p);
 
         void GetVNoP();
+
+        void GetVNoPddd(out int p);
+
+        void GetTarsEx();
+
     }
 
     public class TestServer : ITestServer
@@ -47,6 +53,16 @@ namespace Tars.Net.UT.Core.Hosting
         {
             // Method intentionally left empty.
         }
+
+        public void GetVNoPddd(out int p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetTarsEx()
+        {
+            throw new TarsException(RpcStatusCode.ServerEncodeErr, "Test");
+        }
     }
 
     public class TestServerOne : ITestServer
@@ -71,6 +87,16 @@ namespace Tars.Net.UT.Core.Hosting
         public void GetVNoP()
         {
             // Method intentionally left empty.
+        }
+
+        public void GetVNoPddd(out int p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetTarsEx()
+        {
+            throw new TarsException(RpcStatusCode.ServerEncodeErr, "Test");
         }
     }
 
@@ -110,9 +136,9 @@ namespace Tars.Net.UT.Core.Hosting
                 ServantName = "O"
             };
             var resp = req.CreateResponse();
-            var ex = await Assert.ThrowsAsync<TarsException>(() => sut.InvokeAsync(req, resp));
-            Assert.Equal(RpcStatusCode.ServerNoFuncErr, ex.RpcStatusCode);
-            Assert.Equal("No found methodInfo, serviceName[O], methodName[]", ex.Message);
+            resp = await sut.InvokeAsync(req, resp);
+            Assert.Equal(RpcStatusCode.ServerNoFuncErr, resp.ResultStatusCode);
+            Assert.Equal("No found methodInfo, serviceName[O], methodName[]", resp.ResultDesc);
         }
 
         [Fact]
@@ -124,9 +150,9 @@ namespace Tars.Net.UT.Core.Hosting
                 FuncName = "Go"
             };
             var resp = req.CreateResponse();
-            var ex = await Assert.ThrowsAsync<TarsException>(() => sut.InvokeAsync(req, resp));
-            Assert.Equal(RpcStatusCode.ServerNoFuncErr, ex.RpcStatusCode);
-            Assert.Equal("No found methodInfo, serviceName[Test], methodName[Go]", ex.Message);
+            resp = await sut.InvokeAsync(req, resp);
+            Assert.Equal(RpcStatusCode.ServerNoFuncErr, resp.ResultStatusCode);
+            Assert.Equal("No found methodInfo, serviceName[Test], methodName[Go]", resp.ResultDesc);
         }
 
         [Fact]
@@ -171,6 +197,57 @@ namespace Tars.Net.UT.Core.Hosting
             Assert.Equal(4, ((Task<object>)resp.ReturnValue).Result);
             Assert.Single(resp.ReturnParameters);
             Assert.Null(resp.ReturnParameters[0]);
+        }
+
+        [Fact]
+        public async Task ProcessWhenThrowTarsExceptionShouldGetRpcStatusCode()
+        {
+            var req = new Request()
+            {
+                Version = 1,
+                MessageType = 4,
+                RequestId = 2,
+                ServantName = "test",
+                FuncName = "GetTarsEx",
+                Timeout = 33,
+                Mehtod = typeof(TestServer).GetMethod("GetTarsEx"),
+                ServiceType = typeof(ITestServer)
+            };
+            var resp = await sut.InvokeAsync(req, req.CreateResponse());
+            Assert.Equal(req.Version, resp.Version);
+            Assert.Equal(req.MessageType, resp.MessageType);
+            Assert.Equal(req.RequestId, resp.RequestId);
+            Assert.Equal(req.ServantName, resp.ServantName);
+            Assert.Equal(req.FuncName, resp.FuncName);
+            Assert.Equal(req.Timeout, resp.Timeout);
+            Assert.Equal(Codec.Tars, resp.Codec);
+            Assert.Equal(RpcStatusCode.ServerEncodeErr, resp.ResultStatusCode);
+            Assert.Equal("Test", resp.ResultDesc);
+        }
+
+        [Fact]
+        public async Task ProcessWhenThrowExceptionShouldGetServerUnknownErr()
+        {
+            var req = new Request()
+            {
+                Version = 1,
+                MessageType = 4,
+                RequestId = 2,
+                ServantName = "test",
+                FuncName = "ThrowException",
+                Timeout = 33,
+                Mehtod = typeof(TestServerOne).GetMethod("GetVNoPddd")
+            };
+            var resp = await sut.InvokeAsync(req, req.CreateResponse());
+            Assert.Equal(req.Version, resp.Version);
+            Assert.Equal(req.MessageType, resp.MessageType);
+            Assert.Equal(req.RequestId, resp.RequestId);
+            Assert.Equal(req.ServantName, resp.ServantName);
+            Assert.Equal(req.FuncName, resp.FuncName);
+            Assert.Equal(req.Timeout, resp.Timeout);
+            Assert.Equal(Codec.Tars, resp.Codec);
+            Assert.Equal(RpcStatusCode.ServerUnknownErr, resp.ResultStatusCode);
+            Assert.StartsWith("Value cannot be null.",resp.ResultDesc);
         }
     }
 }

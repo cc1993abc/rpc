@@ -46,52 +46,6 @@ namespace Tars.Net.UT.Core.Hosting
             Assert.Equal(RpcStatusCode.ServerSuccess, resp.ResultStatusCode);
         }
 
-        [Fact]
-        public async Task ProcessWhenThrowTarsExceptionShouldGetRpcStatusCode()
-        {
-            var req = new Request()
-            {
-                Version = 1,
-                MessageType = 4,
-                RequestId = 2,
-                ServantName = "test",
-                FuncName = "ThrowTarsException",
-                Timeout = 33
-            };
-            var resp = await sut.ProcessAsync(req);
-            Assert.Equal(req.Version, resp.Version);
-            Assert.Equal(req.MessageType, resp.MessageType);
-            Assert.Equal(req.RequestId, resp.RequestId);
-            Assert.Equal(req.ServantName, resp.ServantName);
-            Assert.Equal(req.FuncName, resp.FuncName);
-            Assert.Equal(req.Timeout, resp.Timeout);
-            Assert.Equal(Codec.Tars, resp.Codec);
-            Assert.Equal(RpcStatusCode.ServerNoFuncErr, resp.ResultStatusCode);
-            Assert.Equal("Test", resp.ResultDesc);
-        }
-
-        [Fact]
-        public async Task ProcessWhenThrowExceptionShouldGetServerUnknownErr()
-        {
-            var req = new Request()
-            {
-                Version = 1,
-                MessageType = 4,
-                RequestId = 2,
-                ServantName = "test",
-                FuncName = "ThrowException",
-                Timeout = 33
-            };
-            var resp = await sut.ProcessAsync(req);
-            Assert.Equal(req.Version, resp.Version);
-            Assert.Equal(req.MessageType, resp.MessageType);
-            Assert.Equal(req.RequestId, resp.RequestId);
-            Assert.Equal(req.ServantName, resp.ServantName);
-            Assert.Equal(req.FuncName, resp.FuncName);
-            Assert.Equal(req.Timeout, resp.Timeout);
-            Assert.Equal(Codec.Tars, resp.Codec);
-            Assert.Equal(RpcStatusCode.ServerUnknownErr, resp.ResultStatusCode);
-            Assert.Equal("ThrowException", resp.ResultDesc);
-        }
+        
     }
 }
