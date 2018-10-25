@@ -103,20 +103,20 @@ namespace Tars.Net.UT.Core.Hosting
         }
 
         [Fact]
-        public void InvokeWhenNoServantShouldThrowEx()
+        public async Task InvokeWhenNoServantShouldThrowEx()
         {
             var req = new Request()
             {
                 ServantName = "O"
             };
             var resp = req.CreateResponse();
-            var ex = Assert.Throws<TarsException>(() => sut.Invoke(req, resp));
+            var ex = await Assert.ThrowsAsync<TarsException>(() => sut.InvokeAsync(req, resp));
             Assert.Equal(RpcStatusCode.ServerNoFuncErr, ex.RpcStatusCode);
             Assert.Equal("No found methodInfo, serviceName[O], methodName[]", ex.Message);
         }
 
         [Fact]
-        public void InvokeWhenNoFuncShouldThrowEx()
+        public async Task InvokeWhenNoFuncShouldThrowEx()
         {
             var req = new Request()
             {
@@ -124,13 +124,13 @@ namespace Tars.Net.UT.Core.Hosting
                 FuncName = "Go"
             };
             var resp = req.CreateResponse();
-            var ex = Assert.Throws<TarsException>(() => sut.Invoke(req, resp));
+            var ex = await Assert.ThrowsAsync<TarsException>(() => sut.InvokeAsync(req, resp));
             Assert.Equal(RpcStatusCode.ServerNoFuncErr, ex.RpcStatusCode);
             Assert.Equal("No found methodInfo, serviceName[Test], methodName[Go]", ex.Message);
         }
 
         [Fact]
-        public void InvokeWhenGetVShouldOutParameterBe3()
+        public async Task InvokeWhenGetVShouldOutParameterBe3()
         {
             var (methodInfo, isOneway, outParameters, codec, version, serviceType) = rpcMetadata.FindRpcMethod("Test", "GetV");
             var req = new Request()
@@ -144,7 +144,7 @@ namespace Tars.Net.UT.Core.Hosting
                 IsOneway = isOneway
             };
             var resp = req.CreateResponse();
-            sut.Invoke(req, resp);
+            await sut.InvokeAsync(req, resp);
             Assert.Equal(3, req.Parameters[0]);
             Assert.Equal(3, ((Task<object>)resp.ReturnValue).Result);
             Assert.Single(resp.ReturnParameters);
@@ -152,7 +152,7 @@ namespace Tars.Net.UT.Core.Hosting
         }
 
         [Fact]
-        public void InvokeWhenGetOnewayShouldOutParameterBe3()
+        public async Task InvokeWhenGetOnewayShouldOutParameterBe3()
         {
             var (methodInfo, isOneway, outParameters, codec, version, serviceType) = rpcMetadata.FindRpcMethod("Test", "GetOneway");
             var req = new Request()
@@ -166,7 +166,7 @@ namespace Tars.Net.UT.Core.Hosting
                 IsOneway = isOneway
             };
             var resp = req.CreateResponse();
-            sut.Invoke(req, resp);
+            await sut.InvokeAsync(req, resp);
             Assert.Equal(3, req.Parameters[0]);
             Assert.Equal(4, ((Task<object>)resp.ReturnValue).Result);
             Assert.Single(resp.ReturnParameters);

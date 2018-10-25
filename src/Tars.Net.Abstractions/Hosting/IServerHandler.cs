@@ -1,9 +1,10 @@
-﻿using Tars.Net.Metadata;
+﻿using System.Threading.Tasks;
+using Tars.Net.Metadata;
 
 namespace Tars.Net.Hosting
 {
     public interface IServerHandler
     {
-        Response Process(Request req);
+        Task<Response> ProcessAsync(Request req);
     }
 }

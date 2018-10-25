@@ -13,26 +13,27 @@ namespace Tars.Net.UT.DotNetty.Hosting
         [Fact]
         public void TestDecoDotNettyClientHandlerWhenChannelWritable()
         {
-            object result = null;
             var mockServerHandler = new Mock<IServerHandler>();
-            mockServerHandler.Setup(i => i.Process(It.IsAny<Request>()))
+            mockServerHandler.Setup(i => i.ProcessAsync(It.IsAny<Request>()))
                 .Returns<Request>(i =>
                 {
-                    return i.CreateResponse();
+                    return Task.FromResult(i.CreateResponse());
                 });
             var context = new Mock<IChannelHandlerContext>();
             var channel = new Mock<IChannel>();
             context.SetupGet(i => i.Channel).Returns(channel.Object);
             channel.SetupGet(i => i.IsWritable).Returns(true);
             context.Setup(i => i.WriteAndFlushAsync(It.IsAny<object>()))
-                .Callback<object>(i => result = i)
+                .Callback<object>(result => 
+                {
+                    Assert.NotNull(result);
+                    Assert.IsType<Response>(result);
+                    Assert.Equal(3, ((Response)result).Version);
+                })
                 .Returns(Task.CompletedTask);
             var handler = new DotNettyServerHandler(mockServerHandler.Object);
             Assert.True(handler.IsSharable);
             handler.ChannelRead(context.Object, new Request() { Version = 3 });
-            Assert.NotNull(result);
-            Assert.IsType<Response>(result);
-            Assert.Equal(3, ((Response)result).Version);
         }
 
         [Fact]
@@ -40,10 +41,10 @@ namespace Tars.Net.UT.DotNetty.Hosting
         {
             object result = null;
             var mockServerHandler = new Mock<IServerHandler>();
-            mockServerHandler.Setup(i => i.Process(It.IsAny<Request>()))
+            mockServerHandler.Setup(i => i.ProcessAsync(It.IsAny<Request>()))
                 .Returns<Request>(i =>
                 {
-                    return i.CreateResponse();
+                    return Task.FromResult(i.CreateResponse());
                 });
             var context = new Mock<IChannelHandlerContext>();
             var channel = new Mock<IChannel>();

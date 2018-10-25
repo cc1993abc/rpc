@@ -1,5 +1,6 @@
 ﻿using AspectCore.Extensions.Reflection;
 using System;
+using System.Threading.Tasks;
 using Tars.Net.Exceptions;
 using Tars.Net.Metadata;
 
@@ -14,7 +15,7 @@ namespace Tars.Net.Hosting
             this.provider = provider;
         }
 
-        public void Invoke(Request req, Response resp)
+        public async Task<Response> InvokeAsync(Request req, Response resp)
         {
             if (req.Mehtod == null)
             {
@@ -27,6 +28,10 @@ namespace Tars.Net.Hosting
             try
             {
                 resp.ReturnValue = req.Mehtod.GetReflector().Invoke(serviceInstance, req.Parameters);
+                if (resp.ReturnValue is Task task)
+                {
+                    await task;
+                }
             }
             finally
             {
@@ -34,7 +39,7 @@ namespace Tars.Net.Hosting
             }
             if (req.IsOneway)
             {
-                return;
+                return resp;
             }
 
             var index = 0;
@@ -42,6 +47,8 @@ namespace Tars.Net.Hosting
             {
                 resp.ReturnParameters[index++] = req.Parameters[item.Position];
             }
+
+            return resp;
         }
     }
 }

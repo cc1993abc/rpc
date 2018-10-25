@@ -1,5 +1,6 @@
 ﻿using Moq;
 using System;
+using System.Threading.Tasks;
 using Tars.Net.Codecs;
 using Tars.Net.Exceptions;
 using Tars.Net.Hosting;
@@ -15,15 +16,15 @@ namespace Tars.Net.UT.Core.Hosting
         public ServerHandlerTest()
         {
             var invoker = new Mock<IServerInvoker>();
-            invoker.Setup(i => i.Invoke(It.Is<Request>(j => j.FuncName == "ThrowTarsException"), It.IsAny<Response>()))
+            invoker.Setup(i => i.InvokeAsync(It.Is<Request>(j => j.FuncName == "ThrowTarsException"), It.IsAny<Response>()))
                 .Throws(new TarsException(RpcStatusCode.ServerNoFuncErr, "Test"));
-            invoker.Setup(i => i.Invoke(It.Is<Request>(j => j.FuncName == "ThrowException"), It.IsAny<Response>()))
+            invoker.Setup(i => i.InvokeAsync(It.Is<Request>(j => j.FuncName == "ThrowException"), It.IsAny<Response>()))
                 .Throws(new Exception("ThrowException"));
             sut = new ServerHandler(invoker.Object, new Mock<IRpcMetadata>().Object, new Mock<IServiceProvider>().Object);
         }
 
         [Fact]
-        public void ProcessWhenPingShouldBeDefaultRseponse()
+        public async Task ProcessWhenPingShouldBeDefaultRseponse()
         {
             var req = new Request()
             {
@@ -34,7 +35,7 @@ namespace Tars.Net.UT.Core.Hosting
                 FuncName = "tars_ping",
                 Timeout = 33
             };
-            var resp = sut.Process(req);
+            var resp = await sut.ProcessAsync(req);
             Assert.Equal(req.Version, resp.Version);
             Assert.Equal(req.MessageType, resp.MessageType);
             Assert.Equal(req.RequestId, resp.RequestId);
@@ -46,7 +47,7 @@ namespace Tars.Net.UT.Core.Hosting
         }
 
         [Fact]
-        public void ProcessWhenThrowTarsExceptionShouldGetRpcStatusCode()
+        public async Task ProcessWhenThrowTarsExceptionShouldGetRpcStatusCode()
         {
             var req = new Request()
             {
@@ -57,7 +58,7 @@ namespace Tars.Net.UT.Core.Hosting
                 FuncName = "ThrowTarsException",
                 Timeout = 33
             };
-            var resp = sut.Process(req);
+            var resp = await sut.ProcessAsync(req);
             Assert.Equal(req.Version, resp.Version);
             Assert.Equal(req.MessageType, resp.MessageType);
             Assert.Equal(req.RequestId, resp.RequestId);
@@ -70,7 +71,7 @@ namespace Tars.Net.UT.Core.Hosting
         }
 
         [Fact]
-        public void ProcessWhenThrowExceptionShouldGetServerUnknownErr()
+        public async Task ProcessWhenThrowExceptionShouldGetServerUnknownErr()
         {
             var req = new Request()
             {
@@ -81,7 +82,7 @@ namespace Tars.Net.UT.Core.Hosting
                 FuncName = "ThrowException",
                 Timeout = 33
             };
-            var resp = sut.Process(req);
+            var resp = await sut.ProcessAsync(req);
             Assert.Equal(req.Version, resp.Version);
             Assert.Equal(req.MessageType, resp.MessageType);
             Assert.Equal(req.RequestId, resp.RequestId);

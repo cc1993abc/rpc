@@ -1,9 +1,10 @@
-﻿using Tars.Net.Metadata;
+﻿using System.Threading.Tasks;
+using Tars.Net.Metadata;
 
 namespace Tars.Net.Hosting
 {
     public interface IServerInvoker
     {
-        void Invoke(Request req, Response resp);
+        Task<Response> InvokeAsync(Request req, Response resp);
     }
 }

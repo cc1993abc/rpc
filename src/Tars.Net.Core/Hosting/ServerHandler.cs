@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Tars.Net.Diagnostics;
 using Tars.Net.Exceptions;
 using Tars.Net.Metadata;
@@ -17,7 +18,7 @@ namespace Tars.Net.Hosting
             this.serverInvoker = serverInvoker;
         }
 
-        public Response Process(Request req)
+        public async Task<Response> ProcessAsync(Request req)
         {
             s_diagnosticListener.HostingRequest(req);
             var response = req.CreateResponse();
@@ -25,7 +26,7 @@ namespace Tars.Net.Hosting
             {
                 if (!"tars_ping".Equals(req.FuncName, StringComparison.OrdinalIgnoreCase))
                 {
-                    serverInvoker.Invoke(req, response);
+                    response = await serverInvoker.InvokeAsync(req, response);
                 }
             }
             catch (TarsException ex)
