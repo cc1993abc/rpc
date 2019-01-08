@@ -21,15 +21,14 @@ namespace Tars.Net.Hosting.Udp
     public class UdpServerHost : IHostedService
     {
         public IServiceProvider Provider { get; }
-
+        private MultithreadEventLoopGroup workerGroup;
+        private IChannel bootstrapChannel;
+        #region before
         private readonly RpcConfiguration configuration;
         private readonly ILogger<UdpServerHost> logger;
         private readonly IDecoder<IByteBuffer> decoder;
         private readonly IEncoder<IByteBuffer> encoder;
         private readonly DotNettyServerHandler handler;
-        private MultithreadEventLoopGroup workerGroup;
-        private IChannel bootstrapChannel;
-
         public UdpServerHost(IServiceProvider provider, RpcConfiguration configuration,
             ILogger<UdpServerHost> logger, IDecoder<IByteBuffer> decoder, IEncoder<IByteBuffer> encoder,
             DotNettyServerHandler handler)
@@ -41,10 +40,22 @@ namespace Tars.Net.Hosting.Udp
             this.encoder = encoder;
             this.handler = handler;
         }
+        #endregion
+        private ServantAdapterConfig servantAdapterConfig;
+        public UdpServerHost(IServiceProvider provider, ServantAdapterConfig servantAdapterConfig)
+        {
+            Provider = provider;
+            this.servantAdapterConfig = servantAdapterConfig;
+            this.logger = provider.GetRequiredService<ILogger<UdpServerHost>>();
+            this.decoder = provider.GetRequiredService<IDecoder<IByteBuffer>>();
+            this.encoder = provider.GetRequiredService<IEncoder<IByteBuffer>>();
+            this.handler = provider.GetRequiredService<DotNettyServerHandler>();
+        }
+
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            workerGroup = new MultithreadEventLoopGroup(configuration.EventLoopCount);
+            workerGroup = new MultithreadEventLoopGroup(servantAdapterConfig.Threads);
             var bootstrap = new Bootstrap();
             bootstrap.Group(workerGroup)
                 .Channel<SocketDatagramChannel>()
@@ -53,13 +64,13 @@ namespace Tars.Net.Hosting.Udp
                {
                    IChannelPipeline pipeline = channel.Pipeline;
                    pipeline.AddLast(new UdpHandler(Provider.GetRequiredService<ILogger<UdpHandler>>()));
-                   var lengthFieldLength = configuration.LengthFieldLength;
+                   var lengthFieldLength = servantAdapterConfig.LengthFieldLength;
                    pipeline.AddLast(new LengthFieldBasedFrameDecoder(ByteOrder.BigEndian,
-                        configuration.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
+                        servantAdapterConfig.MaxFrameLength, 0, lengthFieldLength, 0, lengthFieldLength, true));
                    pipeline.AddLast(new RequestDecoder(decoder), new UdpLengthFieldPrepender(lengthFieldLength), new ResponseEncoder(encoder), handler);
                }));
-            logger.LogInformation($"Server start at {IPAddress.Any}:{configuration.Port}.");
-            bootstrapChannel = await bootstrap.BindAsync(configuration.Port);
+            logger.LogInformation($"Server start at {IPAddress.Any}:{servantAdapterConfig.Endpoint.Port}.");
+            bootstrapChannel = await bootstrap.BindAsync(servantAdapterConfig.Endpoint.Host, servantAdapterConfig.Endpoint.Port);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -69,8 +80,8 @@ namespace Tars.Net.Hosting.Udp
                 await bootstrapChannel.CloseAsync();
             }
 
-            var quietPeriod = configuration.QuietPeriodTimeSpan;
-            var shutdownTimeout = configuration.ShutdownTimeoutTimeSpan;
+            var quietPeriod = servantAdapterConfig.QuietPeriodTimeSpan;
+            var shutdownTimeout = servantAdapterConfig.ShutdownTimeoutTimeSpan;
             await workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
             foreach (var item in Provider.GetServices<IRpcClient>())
             {

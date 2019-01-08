@@ -9,6 +9,7 @@ using Tars.Net.DotNetty.Hosting;
 using Tars.Net.Hosting;
 using Tars.Net.Hosting.Tcp;
 using Tars.Net.Hosting.Udp;
+using Tars.Net.UT.DotNetty;
 
 namespace Tars.Net.DotNetty
 {
@@ -43,5 +44,17 @@ namespace Tars.Net.DotNetty
                 services.AddHostedService<UdpServerHost>();
             });
         }
+
+
+        public static IHostBuilder UseTarsHost(this IHostBuilder builder, params Assembly[] assemblies)
+        {
+          return  builder.ConfigureServices((hostContext, services) =>
+            {
+                services.ReigsterRpcServices(assemblies);
+                services.TryAddSingleton<DotNettyServerHandler>();
+                services.AddHostedService<LibuvTarsServerHost>();
+            });
+        }
+
     }
 }
